@@ -1,0 +1,479 @@
+---
+title: "IGF1R"
+author: "Shelley"
+date: "December 16, 2014"
+output: html_document
+---
+
+This file contained the code for validating the IGF1R signature using ASSIGN
+
+IGFR Summary
+-------------------------------
+IGFR1 is implicated in several cancers including breast, prostate, corectal, ovariam, scarcoma and lung cancers.
+
+In breast cancer, EGFR inhibitors(erlotinib) are used to inhibit the EGFR signaling pathway, IGF-1R confers resistance by forming one half of a heterodimer , allowing EGFR signaling to resume in the presence of a suitable inhibitor. This process is referred to as crosstalk between EGFR and IGF-1R.
+
+Causes resistance to Pi3K inhibitors
+
+Increased levels of the IGF-IR are expressed in  primary/metastatic prostate cancer patient tumors, required for survival and growth when prostate cancer cells progress to androgen independence.
+
+Gene amplification main mechanism for IGF1R overexpression
+
+Target with an antibody or the tyrosine kinase: Linsitinib & dalotuzumab in clinical trials
+
+```{r}
+library(sva)
+library(ASSIGN)
+```
+
+Read in the datasets
+```{r}
+setwd("~/Documents/ThesisWork/GitRepos/bild_signature_validation/Datasets")
+
+GFP18_AKT_BAD_HER2_IGF1R_RAF_ERK <- as.matrix(read.table("~/Documents/ThesisWork/GitRepos/bild_signature_validation/Datasets/GFP18_AKT_BAD_HER2_IGF1R_RAF_ERK.tpmlog", stringsAsFactors=FALSE, row.names=1))
+
+head(GFP18_AKT_BAD_HER2_IGF1R_RAF_ERK)
+row.names(GFP18_AKT_BAD_HER2_IGF1R_RAF_ERK)
+colnames(GFP18_AKT_BAD_HER2_IGF1R_RAF_ERK)
+
+icbp<-as.matrix(read.table("ICBP/icbp_Rsubread_tpmlog.txt", sep='\t', stringsAsFactors=FALSE, header=1, row.names=1, check.names = FALSE))
+head(icbp)
+length(colnames(icbp))
+
+gfp_IGF1R <-subset(GFP18_AKT_BAD_HER2_IGF1R_RAF_ERK,select=c(GFP.1:GFP.12,IGF1R.1:IGF1R.6))
+head(gfp_IGF1R)
+length(colnames(gfp_IGF1R))
+
+# the 1 means by row name (gene names), if ~80% are zero then we don't want that gene 
+gfp_IGF1R_1 <- gfp_IGF1R[apply(gfp_IGF1R[,1:17]==0,1,mean) < 0.8,]###if not removed over 83%; error occurs in batch adjustment
+nrow(gfp_IGF1R_1)
+removed= nrow(gfp_IGF1R)-nrow(gfp_IGF1R_1)
+print( "number of genes removed after filtering = ") 
+removed
+```
+
+Some function to make life easier :)
+```{r}
+merge_drop<-function(x,y,by=0)
+{
+  new_m<-merge(x,y,by=by)
+  rownames(new_m)<-new_m$Row.names
+  return(new_m[,2:length(colnames(new_m))])
+}
+
+pcaplot<-function(mat,sub,scale=T){
+  if(sum(sub)!=length(mat)){
+    print("verify the subscripts...exiting now")
+    }
+  else{
+    pca_mat <- prcomp(t(mat), center=T,scale=scale)
+    plot(pca_mat)
+    plot(pca_mat$x[,1],pca_mat$x[,2])
+    index= 1
+    for(i in 1:length(sub)){
+      #print(rownames(pca_mat$x)[index:sub[i]+index-1],"has color", )
+      print(i)
+      if(i==1){
+        points(pca_mat$x[1:sub[i]],pca_mat$x[1:sub[i],2],col=i+1)
+        }
+      else if(i==length(sub)){
+         points(pca_mat$x[index:length(rownames(pca_mat$x))],pca_mat$x[index:length(rownames(pca_mat$x)),2],col=i+1)
+         }
+      else{
+        points(pca_mat$x[index:index+sub[i]],pca_mat$x[index:index+sub[i],2],col=i+1)
+        }
+       index=index+sub[i]
+      }
+  }
+}
+```
+
+
+# Can use the commented out ones or not. Filtering out lowered expression or low varything genes 
+# With adaptive and non-adaptive you don't really need too. It might make a different with non-adaptive 
+```{r, cache=TRUE}
+#AVG_IN <- apply(gfp_her2_1[,1:17], 1, mean)
+#VAR_IN <- apply(gfp_her2_1[,1:17], 1, var)
+#threshold_E <- sort(AVG_IN)[round(length(AVG_IN)*0.1)]
+#threshold_V <- sort(VAR_IN)[round(length(VAR_IN)*0.1)]
+#gfp_her2_1<- gfp_her2_1[which((AVG_IN > threshold_E)&(VAR_IN > threshold_V)),]
+#nrow(gfp_her2_1)
+# merging the test and traning data in order to use combat, need to be in the same matrix
+
+dim(gfp_IGF1R_1)
+gfp_IGF1R_1_icbp<-merge_drop(gfp_IGF1R_1,icbp,by=0)
+dim(gfp_IGF1R_1_icbp)
+head(gfp_IGF1R_1_icbp)
+# specify the number of gfp,igf1r, and icbp
+sub<-c(12,6,55)
+#creates PCA to look at batch differences
+pcaplot(mat =gfp_IGF1R_1_icbp,sub=sub)
+```
+
+
+Running combat with covariates
+```{r}
+bat1<-as.matrix(cbind(c(colnames(gfp_IGF1R_1),colnames(icbp)),c(rep(1,length(colnames(gfp_IGF1R_1))),rep(2,length(colnames(icbp)))),c(rep(1,12),rep(2,6),rep(1,55))))
+bat1
+bat1[,2]
+bat1[,3]
+
+mod <- model.matrix(~as.factor(bat1[,3]))
+mod
+combat_expr1<-ComBat(gfp_IGF1R_1_icbp, batch=bat1[,2], mod=mod, numCovs=NULL)
+pcaplot(combat_expr1,sub)
+```
+
+
+Running combat without covariates
+```{r}
+##############Batch adjustment is needed############
+# creating a matrix that tells combact which ones comes from which batch
+bat2<-as.matrix(cbind(c(colnames(gfp_IGF1R_1),colnames(icbp)),c(rep(1,length(colnames(gfp_IGF1R_1))),rep(2,length(colnames(icbp))))))
+bat2
+bat2[,2]
+# calls combat, and batch says what the batches for each sample are, usually always do "Null", using diff covariates did not get better results 
+combat_expr2<-ComBat(dat=gfp_IGF1R_1_icbp, batch=bat2[,2], mod=NULL, numCovs=NULL)
+# want to see them mixed together
+pcaplot(combat_expr2,sub)
+```
+
+Run ASSIGN with no covariates and different number of genes
+```{r}
+ncol(combat_expr2)
+trainingLabel1 <- list(control = list(igf1r=1:12), igf1r=13:18) 
+trainingLabel1
+# what are the labels for the training set
+train_igfr1<-combat_expr2[,1:18] # 18 is training
+head(train_igfr1)
+test<-combat_expr2[,19:73] # the test
+head(train_igfr1)
+head(test)
+ncol(test)
+ncol(train_igfr1)
+
+#create the output directory for ASSIGN 
+dir.create("igf1r_single_100_adap_tpmlog_v2/")#, 
+set.seed(1234)
+assign.wrapper(trainingData=train_igfr1, testData=test, trainingLabel=trainingLabel1, testLabel=NULL, geneList=NULL, n_sigGene=100, adaptive_B=T, adaptive_S=F, mixture_beta=F, outputDir="igf1r_single_100_adap_tpmlog_v2/", theta0=0.05, theta1=0.9, iter=2000, burn_in=1000)
+
+dir.create("igfr1_single_100_nonadap_tmplog_v2/")#, 
+set.seed(1234)
+assign.wrapper(trainingData=train_igfr1, testData=test, trainingLabel=trainingLabel1, testLabel=NULL, geneList=NULL, n_sigGene=100, adaptive_B=F, adaptive_S=F, mixture_beta=F, outputDir="igfr1_single_100_nonadap_tmplog_v2/", theta0=0.05, theta1=0.9, iter=2000, burn_in=1000)
+
+# Now try with 50 genes
+dir.create("igf1r_single_50_adap_tpmlog_v2/")#, 
+set.seed(1234)
+assign.wrapper(trainingData=train_igfr1, testData=test, trainingLabel=trainingLabel1, testLabel=NULL, geneList=NULL, n_sigGene=50, adaptive_B=T, adaptive_S=F, mixture_beta=F, outputDir="igf1r_single_50_adap_tpmlog_v2/", theta0=0.05, theta1=0.9, iter=2000, burn_in=1000)
+
+dir.create("igfr1_single_50_nonadap_tmplog_v2/")#, 
+set.seed(1234)
+assign.wrapper(trainingData=train_igfr1, testData=test, trainingLabel=trainingLabel1, testLabel=NULL, geneList=NULL, n_sigGene=50, adaptive_B=F, adaptive_S=F, mixture_beta=F, outputDir="igfr1_single_50_nonadap_tmplog_v2/", theta0=0.05, theta1=0.9, iter=2000, burn_in=1000)
+
+# Now try with 25 genes
+dir.create("igf1r_single_25_adap_tpmlog_v2/")#, 
+set.seed(1234)
+assign.wrapper(trainingData=train_igfr1, testData=test, trainingLabel=trainingLabel1, testLabel=NULL, geneList=NULL, n_sigGene=25, adaptive_B=T, adaptive_S=F, mixture_beta=F, outputDir="igf1r_single_25_adap_tpmlog_v2/", theta0=0.05, theta1=0.9, iter=2000, burn_in=1000)
+
+dir.create("igfr1_single_25_nonadap_tmplog_v2/")#, 
+set.seed(1234)
+assign.wrapper(trainingData=train_igfr1, testData=test, trainingLabel=trainingLabel1, testLabel=NULL, geneList=NULL, n_sigGene=25, adaptive_B=F, adaptive_S=F, mixture_beta=F, outputDir="igfr1_single_25_nonadap_tmplog_v2/", theta0=0.05, theta1=0.9, iter=2000, burn_in=1000)
+
+
+# background adjustment will take into account other varitions not addressed by combat. 
+# adaptive = it will it into account, could be too much, could be too little
+# nonadaptive= means dont worry it, don't do anything. LIKE BINREG, good comparion
+# mooms been doing both. 
+```
+
+Run ASSIGN with covariates for difffernt numbers of genes
+```{r}
+ncol(combat_expr1)
+trainingLabel1 <- list(control = list(igf1r=1:12), igf1r=13:18) 
+trainingLabel1
+# what are the labels for the training set
+train_igfr1_1<-combat_expr1[,1:18] # 18 is training
+head(train_igfr1_1)
+test_1<-combat_expr1[,19:73] # the test
+head(test_1)
+
+#create the output directory for ASSIGN 
+dir.create("igf1r_single_100_adap_tpmlog_v2_coVar/")#, 
+set.seed(1234)
+assign.wrapper(trainingData=train_igfr1_1, testData=test_1, trainingLabel=trainingLabel1, testLabel=NULL, geneList=NULL, n_sigGene=100, adaptive_B=T, adaptive_S=F, mixture_beta=F, outputDir="igf1r_single_100_adap_tpmlog_v2_coVar/", theta0=0.05, theta1=0.9, iter=2000, burn_in=1000)
+
+dir.create("igf1r_single_100_nonadap_tmplog_v2_coVar/")#, 
+set.seed(1234)
+assign.wrapper(trainingData=train_igfr1_1, testData=test_1, trainingLabel=trainingLabel1, testLabel=NULL, geneList=NULL, n_sigGene=100, adaptive_B=F, adaptive_S=F, mixture_beta=F, outputDir="igf1r_single_100_nonadap_tmplog_v2_coVar/", theta0=0.05, theta1=0.9, iter=2000, burn_in=1000)
+
+# try 50
+dir.create("igf1r_single_50_adap_tpmlog_v2_coVar/")#, 
+set.seed(1234)
+assign.wrapper(trainingData=train_igfr1_1, testData=test_1, trainingLabel=trainingLabel1, testLabel=NULL, geneList=NULL, n_sigGene=50, adaptive_B=T, adaptive_S=F, mixture_beta=F, outputDir="igf1r_single_50_adap_tpmlog_v2_coVar/", theta0=0.05, theta1=0.9, iter=2000, burn_in=1000)
+
+dir.create("igf1r_single_50_nonadap_tmplog_v2_coVar/")#, 
+set.seed(1234)
+assign.wrapper(trainingData=train_igfr1_1, testData=test_1, trainingLabel=trainingLabel1, testLabel=NULL, geneList=NULL, n_sigGene=50, adaptive_B=F, adaptive_S=F, mixture_beta=F, outputDir="igf1r_single_50_nonadap_tmplog_v2_coVar/", theta0=0.05, theta1=0.9, iter=2000, burn_in=1000)
+
+# and 25 genes
+
+dir.create("igf1r_single_25_adap_tpmlog_v2_coVar/")#, 
+set.seed(1234)
+assign.wrapper(trainingData=train_igfr1_1, testData=test_1, trainingLabel=trainingLabel1, testLabel=NULL, geneList=NULL, n_sigGene=25, adaptive_B=T, adaptive_S=F, mixture_beta=F, outputDir="igf1r_single_25_adap_tpmlog_v2_coVar/", theta0=0.05, theta1=0.9, iter=2000, burn_in=1000)
+
+dir.create("igf1r_single_25_nonadap_tmplog_v2_coVar/")#, 
+set.seed(1234)
+assign.wrapper(trainingData=train_igfr1_1, testData=test_1, trainingLabel=trainingLabel1, testLabel=NULL, geneList=NULL, n_sigGene=25, adaptive_B=F, adaptive_S=F, mixture_beta=F, outputDir="igf1r_single_25_nonadap_tmplog_v2_coVar/", theta0=0.05, theta1=0.9, iter=2000, burn_in=1000)
+```
+
+
+Making the File with all the ASSIGN Corelations
+```{r}
+getwd()
+filenames<-system("ls /Users/shelley/Documents/ThesisWork/GitRepos/bild_signature_validation/Results/IGF1R/*/pathway_activity_testset*", intern=TRUE)
+filenames
+
+for(i in 1:length(filenames)){
+   f<-read.csv(filenames[i], header=1,row.names=1) ###reading in the files one at a time
+  colnames(f)<-filenames[i]
+  if(i==1){
+    data<-f
+  }else{
+    data<-cbind(data,f)
+  }
+}
+
+data
+head(data)
+dim(data)
+row.names(data)
+```
+
+
+Combine the ASSIGN results with the ICBP data and Correlate with ICBP drug response data
+-log(G150) = drug sensitivity, expect to see a positive corelation with rereg pathway. 
+```{r}
+ICBP_drugs <- read.delim("~/Documents/ThesisWork/GitRepos/bild_signature_validation/Datasets/ICBP_drugs_1.txt", row.names=1)
+row.names(ICBP_drugs)
+dim(ICBP_drugs)
+
+results_icbp<-merge(data, ICBP_drugs ,by=0)
+
+# missing three cell lines from the orinal ICBP data set
+dim(results_icbp)
+results_icbp
+
+summary(results_icbp$Tykerb.IGF1R..1.1.)
+
+# Correlations between Predictions and Drug response data (only response data for 35 cells lines)
+# does a correlation anaylsis really do use justice since the spread of the response data is not that large??
+
+#IGF1R inhibitor
+cor(results_icbp[,2],results_icbp$Tykerb.IGF1R..1.1., use="complete.obs") # igf1r_single_100_adap_tpmlog_v2 , 0.01277489
+cor(results_icbp[,11],results_icbp$Tykerb.IGF1R..1.1., use="complete.obs") #igfr1_single_100_nonadap_tmplog_v2 , 0.01094297
+
+cor(results_icbp[,3],results_icbp$Tykerb.IGF1R..1.1., use="complete.obs") #igf1r_single_100_adap_tpmlog_v2_coVar, -0.1638966
+cor(results_icbp[,4],results_icbp$Tykerb.IGF1R..1.1., use="complete.obs") #igf1r_single_100_nonadap_tmplog_v2_coVar, -0.09611917
+
+cor(results_icbp[,5],results_icbp$Tykerb.IGF1R..1.1., use="complete.obs") #igf1r_single_25_adap_tpmlog_v2, -0.1197104
+cor(results_icbp[,12],results_icbp$Tykerb.IGF1R..1.1., use="complete.obs") # igfr1_single_25_nonadap_tmplog_v2, -0.1230504
+
+cor(results_icbp[,6],results_icbp$Tykerb.IGF1R..1.1., use="complete.obs") #igf1r_single_25_adap_tpmlog_v2_coVar,-0.1616389
+cor(results_icbp[,7],results_icbp$Tykerb.IGF1R..1.1., use="complete.obs") #igf1r_single_25_nonadap_tmplog_v2_coVar, -0.1257636
+
+cor(results_icbp[,8],results_icbp$Tykerb.IGF1R..1.1., use="complete.obs") #igf1r_single_50_adap_tpmlog_v2, -0.1430332
+cor(results_icbp[,13],results_icbp$Tykerb.IGF1R..1.1., use="complete.obs") # igfr1_single_50_nonadap_tmplog_v2 -0.1441474
+
+cor(results_icbp[,9],results_icbp$Tykerb.IGF1R..1.1., use="complete.obs") # igf1r_single_50_adap_tpmlog_v2_coVar, -0.2041042
+cor(results_icbp[,10],results_icbp$Tykerb.IGF1R..1.1., use="complete.obs") #igf1r_single_50_nonadap_tmplog_v2_coVar, -0.1424113
+
+Over all: IGFR1 inhibitor (Tykerb.IGF1R..1.1.) is not a good validation. Does not work that well. Might be because it also targets other pathways.
+```
+
+Correlate Drug Response with a Different IGF1R inhibitor(GSK1838705)
+```{r}
+
+results_icbp$GSK1838705
+cor(results_icbp[,2],results_icbp$GSK1838705, use="complete.obs") # igf1r_single_100_adap_tpmlog_v2 , -0.3453591
+cor(results_icbp[,11],results_icbp$GSK1838705, use="complete.obs") #igfr1_single_100_nonadap_tmplog_v2 , -0.3469378
+
+cor(results_icbp[,3],results_icbp$GSK1838705, use="complete.obs") #igf1r_single_100_adap_tpmlog_v2_coVar, -0.5006833
+cor(results_icbp[,4],results_icbp$GSK1838705, use="complete.obs") #igf1r_single_100_nonadap_tmplog_v2_coVar,-0.4119899
+
+cor(results_icbp[,5],results_icbp$GSK1838705, use="complete.obs") #igf1r_single_25_adap_tpmlog_v2, -0.2674597
+cor(results_icbp[,12],results_icbp$GSK1838705, use="complete.obs") # igfr1_single_25_nonadap_tmplog_v2, -0.2720832
+
+cor(results_icbp[,6],results_icbp$GSK1838705, use="complete.obs") #igf1r_single_25_adap_tpmlog_v2_coVar, -0.4662894
+cor(results_icbp[,7],results_icbp$GSK1838705, use="complete.obs") #igf1r_single_25_nonadap_tmplog_v2_coVar, -0.4130507
+
+cor(results_icbp[,8],results_icbp$GSK1838705, use="complete.obs") #igf1r_single_50_adap_tpmlog_v2, -0.4055626
+cor(results_icbp[,13],results_icbp$GSK1838705, use="complete.obs") # igfr1_single_50_nonadap_tmplog_v2, -0.4131063
+
+cor(results_icbp[,9],results_icbp$GSK1838705, use="complete.obs") # igf1r_single_50_adap_tpmlog_v2_coVar,-0.5023617
+cor(results_icbp[,10],results_icbp$GSK1838705, use="complete.obs") #igf1r_single_50_nonadap_tmplog_v2_coVar, -0.3978805
+
+Over all: Better but negative may be use to its ALK inhibition, may ALK is inverse in these cells.
+  100 genes with covariates is the bestm 25 with no variaties is good, and 50 with co variaties is too. But its negative?
+```
+
+
+Correlate with AKT inhibitor: Looks good
+```{r}
+cor(results_icbp[,2],results_icbp$Sigma.AKT1.2.inhibitor, use="complete.obs") # igf1r_single_100_adap_tpmlog_v2 , 0.4864112
+cor(results_icbp[,11],results_icbp$Sigma.AKT1.2.inhibitor, use="complete.obs") #igfr1_single_100_nonadap_tmplog_v2 , 0.4863322
+
+cor(results_icbp[,3],results_icbp$Sigma.AKT1.2.inhibitor, use="complete.obs") #igf1r_single_100_adap_tpmlog_v2_coVar, 0.3182924
+cor(results_icbp[,4],results_icbp$Sigma.AKT1.2.inhibitor, use="complete.obs") #igf1r_single_100_nonadap_tmplog_v2_coVar, 0.3049189
+
+cor(results_icbp[,5],results_icbp$Sigma.AKT1.2.inhibitor, use="complete.obs") #igf1r_single_25_adap_tpmlog_v2, 0.5445731
+cor(results_icbp[,12],results_icbp$Sigma.AKT1.2.inhibitor, use="complete.obs") # igfr1_single_25_nonadap_tmplog_v2,  0.5448916
+
+cor(results_icbp[,6],results_icbp$Sigma.AKT1.2.inhibitor, use="complete.obs") #igf1r_single_25_adap_tpmlog_v2_coVar,0.3006561
+cor(results_icbp[,7],results_icbp$Sigma.AKT1.2.inhibitor, use="complete.obs") #igf1r_single_25_nonadap_tmplog_v2_coVar, 0.2629175
+
+cor(results_icbp[,8],results_icbp$Sigma.AKT1.2.inhibitor, use="complete.obs") #igf1r_single_50_adap_tpmlog_v2, 0.3784261
+cor(results_icbp[,13],results_icbp$Sigma.AKT1.2.inhibitor, use="complete.obs") # igfr1_single_50_nonadap_tmplog_v2, 0.3765225
+
+cor(results_icbp[,9],results_icbp$Sigma.AKT1.2.inhibitor, use="complete.obs") # igf1r_single_50_adap_tpmlog_v2_coVar, 0.311552
+cor(results_icbp[,10],results_icbp$Sigma.AKT1.2.inhibitor, use="complete.obs") #igf1r_single_50_nonadap_tmplog_v2_coVar,0.2879709
+
+Overall: Adaptive vs. Not-adaptive does not seem to make a big differnce without co-variates, but adaptive seems to be working better when using co-variates.
+The use of co-variates is always worse.
+25 genes is the best, so far. 
+
+#AKT inhbitor did not work well: not a good drug
+cor(results_icbp[,2],results_icbp$Triciribine, use="complete.obs") # 0.02115863
+cor(results_icbp[,11],results_icbp$Triciribine, use="complete.obs") #  -0.1812215
+cor(results_icbp[,3],results_icbp$Triciribine, use="complete.obs") #
+cor(results_icbp[,4],results_icbp$Triciribine, use="complete.obs") #
+cor(results_icbp[,5],results_icbp$Triciribine, use="complete.obs") #
+cor(results_icbp[,12],results_icbp$Triciribine, use="complete.obs") #
+cor(results_icbp[,6],results_icbp$Triciribine, use="complete.obs") #
+cor(results_icbp[,7],results_icbp$Triciribine, use="complete.obs")#
+cor(results_icbp[,8],results_icbp$Triciribine, use="complete.obs") # 0.00240436
+cor(results_icbp[,13],results_icbp$Triciribine, use="complete.obs") #
+cor(results_icbp[,9],results_icbp$Triciribine, use="complete.obs") #
+cor(results_icbp[,10],results_icbp$Triciribine, use="complete.obs") # -0.2410229
+
+Overall: really bad higest -0.24
+```
+
+Read in the IFGR binReg Results
+
+The probabilties don't really change much with the more genes you add. 
+The coefficnt goes down as you add more genes to the model. 
+q and Dwd have similar model numbers
+100-dwd bild-1 - alot with the contols, heat map looks good, not too many high ones
+200-dwd bild-1 - good, probilties so up as you add more genes
+300-dwd bild-1
+400-dwd bild-1
+500-dwd bild-1
+
+Probailites a litter high with 200 and 300 genes than 100 or 500
+Higher weight of IGFR1 with less genes
+100-q-1 meta -  many with controls, similar to dwd bild
+200-q-1 meta
+300-q-1 meta 
+400-q-1 meta
+500-q-1 meta
+
+NO to DWD Normaliztin, it over predicts
+NO to all with 2 meta genes
+
+Read in the BinReg Files
+```{r}
+#binRegFile100_dwdbild_1=read.delim("~/Documents/ThesisWork/GitRepos/bild_signature_validation/Results/IGF1R/BinReg/IGFIR/IGFIR_ICBP_1Metagene_100_--dwd_bild/probabilities.txt")
+                                 
+binRegFile200_dwdbild_1=read.delim("~/Documents/ThesisWork/GitRepos/bild_signature_validation/Results/IGF1R/BinReg/IGFIR/IGFIR_ICBP_1Metagene_200_--dwd_bild/probabilities.txt")
+
+summary(binRegFile200_dwdbild_1)
+binRegFile200_dwdbild_1$Sample
+dim(binRegFile200_dwdbild_1) #91 x 9
+head(binRegFile200_dwdbild_1)
+
+#ICBPcells_100=binRegFile100_dwdbild_1[37:nrow(binRegFile100_dwdbild_1),]
+ICBPcells_200=binRegFile200_dwdbild_1[37:nrow(binRegFile200_dwdbild_1),]
+
+#ICBPsamples_100 = ICBPcells_100$Sample
+ICBPsamples_200 = ICBPcells_200$Sample
+ICBPsamples_200
+dim(ICBPcells_200) # 55 x 9
+ICBPprobs= subset(ICBPcells_200, select=c("Probability"))
+ICBPprobs
+ICBPprobTable= data.frame(ICBPsamples_200,ICBPprobs)
+class(ICBPprobTable)
+row.names(ICBPprobTable)=ICBPsamples_200
+ICBPprobTable$ICBPsamples <- NULL
+head(ICBPprobTable)
+
+dim(ICBP_drugs)
+dim(ICBPprobTable)
+ICBP_Probs_Drugs=merge(ICBPprobTable,ICBP_drugs, by=0)
+View(ICBP_Probs_Drugs)
+#ICBP_Probs_Drugs=merge(ICBPprobTable,ICBP_drugs, by=0, all.x=TRUE) #keeps all
+#dim(ICBP_Probs_Drugs)
+
+cor(ICBP_Probs_Drugs$Probability, ICBP_Probs_Drugs$Tykerb.IGF1R..1.1., use="complete.obs") #-0.06019889
+cor(ICBP_Probs_Drugs$Probability, ICBP_Probs_Drugs$Sigma.AKT1.2.inhibitor, use="complete.obs") #0.4225113
+cor(ICBP_Probs_Drugs$Probability, ICBP_Probs_Drugs$Triciribine, use="complete.obs") #-0.2322041 
+cor(ICBP_Probs_Drugs$Probability, ICBP_Probs_Drugs$GSK1838705, use="complete.obs") #-0.274716  Also negative with ASSIGN
+cor(ICBP_Probs_Drugs$Probability, ICBP_Probs_Drugs$AS.252424, use="complete.obs") # 0.2053028 Pi3k
+
+cor(ICBP_Probs_Drugs$Probability, ICBP_Probs_Drugs$BEZ235, use="complete.obs") # 0.1519295, Pi3k/mTOR
+cor(ICBP_Probs_Drugs$Probability, ICBP_Probs_Drugs$GSK2119563, use="complete.obs") # 0.2428557 PI3K
+cor(ICBP_Probs_Drugs$Probability, ICBP_Probs_Drugs$GSK2126458, use="complete.obs") # 0.2652762 PI3K
+cor(ICBP_Probs_Drugs$Probability, ICBP_Probs_Drugs$GSK1059615, use="complete.obs") # -0.1192411 PI3K
+cor(ICBP_Probs_Drugs$Probability, ICBP_Probs_Drugs$PF.4691502, use="complete.obs") # -0.2622142 PI3K
+cor(ICBP_Probs_Drugs$Probability, ICBP_Probs_Drugs$Temsirolimus, use="complete.obs") # --0.1111335 mTor
+
+#Negative Controls
+cor(ICBP_Probs_Drugs$Probability, ICBP_Probs_Drugs$Tamoxifen, use="complete.obs") # -0.15893 NEG
+cor(ICBP_Probs_Drugs$Probability, ICBP_Probs_Drugs$Velcade, use="complete.obs") # -0.05099915 PROTESOME
+```
+
+
+Reading in ccle CNV data to Correlate with ASSIGN predictions and filtering for Breast cell lines only
+```{r}
+ccle_cnv<-read.table("CCLE/CCLE_copynumber_byGene_2013-12-03.txt", header=1)
+rownames(ccle_cnv)<-ccle_cnv$SYMBOL
+igf1r_cnv<-ccle_cnv["IGF1R",]
+
+igf1r_interested_cnv<-igf1r_cnv[,grep("_BREAST",colnames(igf1r_cnv))]
+colnames(igf1r_interested_cnv)
+colnames(igf1r_interested_cnv)<-gsub(pattern = "_BREAST",replacement = "",colnames(igf1r_interested_cnv)) 
+colnames(igf1r_interested_cnv)
+```
+
+
+Now, moving on to correlating the IGF1R predictions with CNV data from CCLE 
+```{r}
+results_ccle<-merge_drop(data,t(igf1r_interested_cnv["IGF1R",]),by=0)
+View(results_ccle)
+colnames(results_ccle)
+
+#corrlate the ASSIGN predictions without covaritates with IGF1R CNV data
+cor(results_ccle[,1], final_mat$IGF1R) #100_adap   -0.04465064
+cor(results_ccle[,2], final_mat$IGF1R) # 100_adap_tpmlog_v2_coVar, 0.3093737
+cor(results_ccle[,3], final_mat$IGF1R) # 100_nonadap_tmplog_v2_coVar, 0.2304624
+cor(results_ccle[,4], final_mat$IGF1R) # 25_adap_tpmlog_v2, -0.05442617
+cor(results_ccle[,5], final_mat$IGF1R) # 25_adap_tpmlog_v2_coVar, 0.1438074
+cor(results_ccle[,6], final_mat$IGF1R) # 25_nonadap_tmplog_v2_coVar, 0.09062539
+cor(results_ccle[,7], final_mat$IGF1R) # 50_adap_tpmlog_v2,  -0.09469717
+cor(results_ccle[,8], final_mat$IGF1R) # 50_adap_tpmlog_v2_coVar, 0.2364518
+cor(results_ccle[,9], final_mat$IGF1R) # 50_nonadap_tmplog_v2_coVar, 0.1797137
+cor(results_ccle[,10], final_mat$IGF1R) # 100_nonadap_tmplog_v2,  -0.04466689
+cor(results_ccle[,11], final_mat$IGF1R) # single_25_nonadap_tmplog_v2, -0.05531753
+cor(results_ccle[,12], final_mat$IGF1R) # 50_nonadap_tmplog_v2, -0.09929077
+
+Over all : Highest correlation is 0.30
+  Using the co-variates gave the highest corelation, 100 genes nonadaptive was better, and 50 adap and 100 non adat where similar. 
+
+```
+
+
+Print the time
+```{r echo=FALSE}
+time<-format(Sys.time(),"%a %b %d %X %Y")
+time
+```
+This analysis was run on `r time` 
