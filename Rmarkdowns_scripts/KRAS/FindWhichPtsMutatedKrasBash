@@ -1,0 +1,4 @@
+#!/bin/bash
+
+python FindWhichPtsMutatedGenesOfInterest.py /data/ARF6_TCGA/Shared/Data/pancan_cleaned_filtered_annotated.txt KRAS InputFiles/TCGAcodes.txt OutputFiles/pancan_cleaned_filtered_annotated_KRAS.txt
+

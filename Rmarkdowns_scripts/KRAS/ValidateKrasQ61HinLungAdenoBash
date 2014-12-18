@@ -1,0 +1,5 @@
+#!/bin/bash
+
+Rscript ValidateKrasQ61HinLungAdeno.R ../2014.11.21_KRAS-Q61H_BinReg_toLungAdeno/OutputFiles/ InputFiles/pancan_cleaned_filtered_annotated_KRAS_LungOnly.txt OutputFiles/KrasQ61Hvalidation.pdf
+
+

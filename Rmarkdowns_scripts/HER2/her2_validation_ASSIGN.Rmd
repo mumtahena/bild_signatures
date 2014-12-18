@@ -1,0 +1,273 @@
+---
+title: "her2_opt_assign"
+author: "Mumtahena Rahman"
+date: "December 5, 2014"
+output: html_document
+---
+
+The goal of the document is to validate HER2 signature in ICBP breast cancer cell lines and in TCGA brca dataset.
+
+```{r}
+library(sva)
+library(ASSIGN)
+```
+Reading in the datasets
+```{r}
+setwd("~/Dropbox/EVAN/9_17/")
+feature<-as.matrix(read.table("hmec_gfp_akt_bad_gfp48_p110_rpkmlog.txt", sep='\t', stringsAsFactors=FALSE, header=1, row.names=1))
+head(feature)
+icbp<-as.matrix(read.table("icbp_Rsubread_rpkmlog.txt", sep='\t', stringsAsFactors=FALSE, header=1, row.names=1))
+head(icbp)
+
+gfp_her2<-subset(feature,select=c(GFP.1:GFP.12,HER2.1:HER2.6))
+head(gfp_her2)
+gfp_her2_1 <- gfp_her2[apply(gfp_her2[,1:17]==0,1,mean) < 0.8,]###if not removed over 83%; error occurs in batch adjustment
+nrow(gfp_her2)
+nrow(gfp_her2_1)
+```
+
+Some function to make life easier :)
+```{r}
+merge_drop<-function(x,y,by=0)
+{
+  new_m<-merge(x,y,by=by)
+  rownames(new_m)<-new_m$Row.names
+  return(new_m[,2:length(colnames(new_m))])
+}
+
+pcaplot<-function(mat,sub,scale=T){
+  if(sum(sub)!=length(mat)){
+    print("verify the subscripts...exiting now")
+    }
+  else{
+    pca_mat <- prcomp(t(mat), center=T,scale=scale)
+    plot(pca_mat)
+    plot(pca_mat$x[,1],pca_mat$x[,2])
+    index= 1
+    for(i in 1:length(sub)){
+      #print(rownames(pca_mat$x)[index:sub[i]+index-1],"has color", )
+      print(i)
+      if(i==1){
+        points(pca_mat$x[1:sub[i]],pca_mat$x[1:sub[i],2],col=i+1)
+        }
+      else if(i==length(sub)){
+         points(pca_mat$x[index:length(rownames(pca_mat$x))],pca_mat$x[index:length(rownames(pca_mat$x)),2],col=i+1)
+         }
+      else{
+        points(pca_mat$x[index:index+sub[i]],pca_mat$x[index:index+sub[i],2],col=i+1)
+        }
+       index=index+sub[i]
+      }
+  }
+}
+```
+
+
+```{r, cache=TRUE}
+#AVG_IN <- apply(gfp_her2_1[,1:17], 1, mean)
+#VAR_IN <- apply(gfp_her2_1[,1:17], 1, var)
+#threshold_E <- sort(AVG_IN)[round(length(AVG_IN)*0.1)]
+#threshold_V <- sort(VAR_IN)[round(length(VAR_IN)*0.1)]
+#gfp_her2_1<- gfp_her2_1[which((AVG_IN > threshold_E)&(VAR_IN > threshold_V)),]
+#nrow(gfp_her2_1)
+gfp_her2_1_icbp<-merge_drop(gfp_her2_1,icbp,by=0)
+head(gfp_her2_1_icbp)
+sub<-c(12,5,55)
+pcaplot(mat = gfp_her2_1_icbp,sub=sub)
+```
+
+```{r}
+##############Batch adjustment is needed############
+###running combat without covariates
+bat2<-as.matrix(cbind(c(colnames(gfp_her2_1),colnames(icbp)),c(rep(1,length(colnames(gfp_her2_1))),rep(2,length(colnames(icbp))))))
+head(bat2)
+bat2[,2]
+combat_expr2<-ComBat(dat=gfp_her2_1_icbp, batch=bat2[,2], mod=NULL, numCovs=NULL)
+pcaplot(combat_expr2,sub)
+trainingLabel1 <- list(control = list(her2=1:12), her2=13:17) 
+trainingLabel1
+train_her2<-combat_expr2[,1:17]
+test<-combat_expr2[,18:72]
+head(train_her2)
+nrow(train_her2)
+#dir.create("~/Desktop/pi3k_analysis/final_analysis/her2_single_200_adap/")#, 
+#assign.wrapper(trainingData=train_her2, testData=test, trainingLabel=trainingLabel1, testLabel=NULL, geneList=NULL, n_sigGene=200, adaptive_B=T, adaptive_S=F, mixture_beta=F, outputDir="~/Desktop/pi3k_analysis/final_analysis/her2_single_200_adap/", theta0=0.05, theta1=0.9, iter=2000, burn_in=1000)
+
+#dir.create("~/Desktop/pi3k_analysis/final_analysis/her2_single_150_adap/")#, 
+#assign.wrapper(trainingData=train_her2, testData=test, trainingLabel=trainingLabel1, testLabel=NULL, geneList=NULL, n_sigGene=150, adaptive_B=T, adaptive_S=F, mixture_beta=F, outputDir="~/Desktop/pi3k_analysis/final_analysis/her2_single_150_adap/", theta0=0.05, theta1=0.9, iter=2000, burn_in=1000)
+
+dir.create("~/Desktop/pi3k_analysis/final_analysis/her2_single_100_adap/")#, 
+set.seed(1234)
+assign.wrapper(trainingData=train_her2, testData=test, trainingLabel=trainingLabel1, testLabel=NULL, geneList=NULL, n_sigGene=100, adaptive_B=T, adaptive_S=F, mixture_beta=F, outputDir="~/Desktop/pi3k_analysis/final_analysis/her2_single_100_adap//", theta0=0.05, theta1=0.9, iter=2000, burn_in=1000)
+
+dir.create("~/Desktop/pi3k_analysis/final_analysis/her2_single_100_nonadap/")#, 
+set.seed(1234)
+assign.wrapper(trainingData=train_her2, testData=test, trainingLabel=trainingLabel1, testLabel=NULL, geneList=NULL, n_sigGene=100, adaptive_B=F, adaptive_S=F, mixture_beta=F, outputDir="~/Desktop/pi3k_analysis/final_analysis/her2_single_100_nonadap//", theta0=0.05, theta1=0.9, iter=2000, burn_in=1000)
+
+############ASSIGN after dwd-bild###########
+dwd_bild<-read.table("dataset.dwd_bild.txt", header=1, row.names=1)
+pcaplot(mat = dwd_bild,sub = sub,scale=F)
+train_her2<-dwd_bild[,1:17]
+test<-dwd_bild[,18:72]
+head(train_her2)
+nrow(train_her2)
+dir.create("~/Desktop/pi3k_analysis/final_analysis/her2_single_100_dwd_adap/")#, 
+set.seed(1234)
+assign.wrapper(trainingData=train_her2, testData=test, trainingLabel=trainingLabel1, testLabel=NULL, geneList=NULL, n_sigGene=100, adaptive_B=T, adaptive_S=F, mixture_beta=F, outputDir="~/Desktop/pi3k_analysis/final_analysis/her2_single_100_dwd_adap/", theta0=0.05, theta1=0.9, iter=2000, burn_in=1000)
+
+dir.create("~/Desktop/pi3k_analysis/final_analysis/her2_single_100_dwd_non_adap/")#, 
+set.seed(1234)
+assign.wrapper(trainingData=train_her2, testData=test, trainingLabel=trainingLabel1, testLabel=NULL, geneList=NULL, n_sigGene=100, adaptive_B=F, adaptive_S=F, mixture_beta=F, outputDir="~/Desktop/pi3k_analysis/final_analysis/her2_single_100_dwd_non_adap/", theta0=0.05, theta1=0.9, iter=2000, burn_in=1000)
+```
+Reading in ccle CNV data and filtering for Breast cell lines only
+```{r}
+ccle_cnv<-read.table("CCLE_copynumber_byGene_2013-12-03.txt", header=1)
+rownames(ccle_cnv)<-ccle_cnv$SYMBOL
+her2_cnv<-ccle_cnv["ERBB2",]
+her2interested_cnv<-her2_cnv[,grep("_BREAST",colnames(her2_cnv))]
+colnames(her2interested_cnv)
+colnames(her2interested_cnv)<-gsub(pattern = "_BREAST",replacement = "",colnames(her2interested_cnv)) 
+colnames(her2interested_cnv)
+```
+Now, moving on to correlating the her2 prediction with her2 CNV data from CCLE 
+```{r}
+results<-read.table("9_17_results.txt", header=1, row.names=1)
+final_mat<-merge_drop(scaled_results,t(her2interested_cnv["ERBB2",]),by=0)
+head(final_mat)
+
+###checking binreg outputs######
+cor(final_mat$B_her2_100,final_mat$ERBB2)
+cor(final_mat$B_her2_150,final_mat$ERBB2)
+cor(final_mat$B_her2_200,final_mat$ERBB2)
+cor(final_mat$ComBat_cov_BinReg,final_mat$ERBB2)
+cor(final_mat$ComBat_w_O_cov_BinReg,final_mat$ERBB2)
+#####checking ASSIGN No Combat output###
+cor(final_mat$No_ComBat_A,final_mat$ERBB2)
+cor(final_mat$No_ComBat_NA,final_mat$ERBB2)
+#####checking ASSIGN Combat with covariate output###
+cor(final_mat$cov_ComBat_NA,final_mat$ERBB2)
+cor(final_mat$cov_ComBat_A,final_mat$ERBB2)
+#####checking ASSIGN simple Combat output###
+cor(final_mat$ComBat_NA,final_mat$ERBB2)
+cor(final_mat$ComBat_A,final_mat$ERBB2)
+#####checking dwd_bild ASSIGN output###
+cor(final_mat$DWD_ASSIGN_NA,final_mat$ERBB2)
+cor(final_mat$DWD_ASSIGN_A,final_mat$ERBB2)
+```
+Now validating in TCGA BRCA dataset
+
+```{r,cache=TRUE}
+setwd("~/Dropbox/EVAN/9_17/")
+feature<-as.matrix(read.table("hmec_gfp_akt_bad_gfp48_p110_rpkmlog.txt", sep='\t', stringsAsFactors=FALSE, header=1, row.names=1))
+head(feature)
+tcga<-as.matrix(read.table("TCGA_PANCAN20_Rsubread_BRCA_RPKMlog.txt", sep='\t', stringsAsFactors=FALSE, header=1, row.names=1,check.names=F))
+head(tcga)
+gfp_her2<-subset(feature,select=c(GFP.1:GFP.12,HER2.1:HER2.6))
+head(gfp_her2)
+nrow(gfp_her2)
+gfp_her2_1 <- gfp_her2[apply(gfp_her2[,1:17]==0,1,mean) < 0.8,]###if not removed over 83%; error occurs in batch adjustment
+nrow(gfp_her2_1)
+AVG_IN <- apply(gfp_her2_1[,1:17], 1, mean)
+VAR_IN <- apply(gfp_her2_1[,1:17], 1, var)
+threshold_E <- sort(AVG_IN)[round(length(AVG_IN)*0.1)]
+threshold_V <- sort(VAR_IN)[round(length(VAR_IN)*0.1)]
+filtered_feature <- gfp_her2_1[which((AVG_IN > threshold_E)&(VAR_IN > threshold_V)),]
+nrow(filtered_feature)
+nrow(gfp_her2)
+nrow(gfp_her2_1)
+gfp_her2_1_tcga<-merge_drop(filtered_feature,tcga,by=0)
+```
+
+Run ASSIGN after batch normalizing
+```{r,cache=TRUE}
+bat2<-as.matrix(cbind(c(colnames(gfp_her2_1),colnames(tcga)),c(rep(1,length(colnames(gfp_her2_1))),rep(2,length(colnames(tcga))))))
+head(bat2)
+bat2[,2]
+##running combat without covariates
+combat_expr1<-ComBat(dat=gfp_her2_1_tcga, batch=bat2[,2], mod=NULL, numCovs=NULL)
+sub_her2_tcga<-c(12,5,ncol(tcga))
+pcaplot(mat=combat_expr1,sub_her2_tcga)
+
+ncol(combat_expr1)
+train_her2<-combat_expr1[,1:17]
+test<-combat_expr1[,18:1099]
+head(train_her2)
+nrow(train_her2)
+
+dir.create("her2_single_100_adap_wo_cov_tcga_f/")#, 
+set.seed(1234)
+assign.wrapper(trainingData=train_her2, testData=test, trainingLabel=trainingLabel1, testLabel=NULL, geneList=NULL, n_sigGene=100, adaptive_B=T, adaptive_S=F, mixture_beta=F, outputDir="her2_single_100_adap_wo_cov_tcga_f/", theta0=0.05, theta1=0.9, iter=2000, burn_in=1000)
+
+dir.create("her2_single_100_nonadap_wo_cov_tcga_f/")#, 
+set.seed(1234)
+assign.wrapper(trainingData=train_her2, testData=test, trainingLabel=trainingLabel1, testLabel=NULL, geneList=NULL, n_sigGene=100, adaptive_B=F, adaptive_S=F, mixture_beta=F, outputDir="her2_single_100_nonadap_wo_cov_tcga_f/", theta0=0.05, theta1=0.9, iter=2000, burn_in=1000)
+
+```
+
+
+Now correlating TCGA CNV for ERBB2 with the pathway predictions 
+```{r}
+setwd("~/Dropbox/EVAN/9_17/")
+cnv<-read.table("cnv_erbb2_tumor.txt", sep='\t',row.names=1, header=1, check.names = F)
+##converting to shorter barcode ids
+a<-NULL
+tmp<-NULL
+a<-strsplit(rownames(cnv),'-')
+for(i in 1:length(a)){tmp[[i]]<-paste(a[[i]][1:3],collapse='-')}
+#head(tmp)
+#tmp
+for(i in 1:length(a)){cnv[i,"truncated"]<-tmp[[i]][1]}
+head(cnv)
+
+results<-read.table("10_6.txt", header=1, row.names=1)
+head(results)
+
+##converting to shorter barcode ids
+a<-NULL
+tmp<-NULL
+a<-strsplit(rownames(results),'-')
+for(i in 1:length(a)){tmp[[i]]<-paste(a[[i]][1:3],collapse='-')}
+head(tmp)
+#tmp
+for(i in 1:length(a)){results[i,"truncated"]<-tmp[[i]][1]}
+head(results)
+final_mat<-merge(results,cnv,by.x='truncated',by.y='truncated')
+head(final_mat)
+sum(duplicated(final_mat$truncated))
+
+###checking ASSIGN outputs######
+cor(final_mat$A_no_bat_NonAdap,final_mat$ERBB2)
+cor(final_mat$A_no_bat_Adap,final_mat$ERBB2)
+cor(final_mat$A_combat_cov_NonAdap,final_mat$ERBB2)
+cor(final_mat$A_combat_cov_adap,final_mat$ERBB2)
+cor(final_mat$A_combat_wo_cov_NonAdap,final_mat$ERBB2)
+cor(final_mat$A_combat_wo_cov_adap,final_mat$ERBB2)
+cor(final_mat$A_combat_wo_cov_NonAdap_nofilter,final_mat$ERBB2)
+cor(final_mat$A_combat_wo_cov_adap_no_filter,final_mat$ERBB2)
+cor(final_mat$A_dwd_bild_NonAdaptive_f,final_mat$ERBB2)
+cor(final_mat$A_dwd_bild_Adaptive_f,final_mat$ERBB2)
+
+#####checking ASSIGN No Combat output###
+cor(final_mat$B_dwd_bild_f,final_mat$ERBB2)
+cor(final_mat$B_dwd_bild,final_mat$ERBB2)
+cor(final_mat$B_combat_wo_cov_f,final_mat$ERBB2)
+cor(final_mat$B_combat_cov_f,final_mat$ERBB2)
+#####checking ASSIGN Combat with covariate output###
+cor(final_mat$A_combat_cov_NonAdap,final_mat$ERBB2)
+cor(final_mat$A_combat_cov_adap,final_mat$ERBB2)
+#####checking ASSIGN simple Combat output###
+cor(final_mat$A_combat_wo_cov_NonAdap,final_mat$ERBB2)
+cor(final_mat$A_combat_wo_cov_adap,final_mat$ERBB2)
+#####checking dwd_bild ASSIGN output###
+cor(final_mat$A_dwd_bild_NonAdaptive_f,final_mat$ERBB2)
+cor(final_mat$A_dwd_bild_Adaptive_f,final_mat$ERBB2)
+```
+
+```{r echo=FALSE}
+time<-format(Sys.time(),"%a %b %d %X %Y")
+```
+This analysis was run on `r time` 
+
+
+
+
