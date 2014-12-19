@@ -1,6 +1,6 @@
 ---
 title: "EGFR_signature_optimization_multi"
-output: html_document
+output: pdf_document
 ---
 
 
@@ -66,10 +66,10 @@ assign.wrapper(trainingData=trainingData, testData=testData, trainingLabel=train
 
 
 setwd("~/Dropbox/egfr_opt/")
-gfp <- read.table("36hr_gfp_TPMlog.txt",header = 1, row.names=1)
-dim(gfp)
-egfr<- read.table("36hr_EGFR_train_TPMlog.txt",header = 1, row.names=1)
-dim(egfr)
+# gfp <- read.table("36hr_gfp_TPMlog.txt",header = 1, row.names=1)
+# dim(gfp)
+# egfr<- read.table("36hr_EGFR_train_TPMlog.txt",header = 1, row.names=1)
+# dim(egfr)
 multi<-read.table("hmec_multi_egfr_mek_FeatureCount.tpmlog", sep='\t', header=1, row.names=1)
 head(multi)
 dim(multi)
@@ -82,41 +82,23 @@ head(egfr_l)
 head(control_l)
 
 #icbp[!rownames(icbp)%in%rownames(gfp),]
-gfp_egfr<-cbind(gfp,egfr)
-
-dim(gfp_egfr)
 control_egfr_l<-cbind(control_l,egfr_l)
-
-gfp_egfr_multi<-merge_drop(gfp_egfr,control_egfr_l,by=0)
-colnames(gfp_egfr_multi)
-gfp_egfr_multi_f <- gfp_egfr_multi[apply(gfp_egfr_multi[,19:30]==0,1,mean) < 0.8,]
+gfp_egfr_multi_f <- control_egfr_l[apply(control_egfr_l[,1:12]==0,1,mean) < 0.8,]
 dim(gfp_egfr_multi_f)
 icbp<-read.table("icbp_Rsubread_tpmlog.txt", sep='\t', header=1, row.names=1)
 gfp_egfr_icbp_f<-merge_drop(gfp_egfr_multi_f,icbp,by=0)
 colnames(gfp_egfr_icbp_f)
 
-AVG_IN <- apply(gfp_egfr_icbp_f[,19:30], 1, mean)
-VAR_IN <- apply(gfp_egfr_icbp_f[,19:30], 1, var)
-threshold_E <- sort(AVG_IN)[round(length(AVG_IN)*0.1)]
-threshold_V <- sort(VAR_IN)[round(length(VAR_IN)*0.1)]
-gfp_egfr_icbp_f<- gfp_egfr_icbp_f[which((AVG_IN > threshold_E)&(VAR_IN > threshold_V)),]
-dim(gfp_egfr_icbp_f)
 ```
 
 Now checking the PCA plot for batch adjustment
 
 ```{r}
-sub<-c(9,9,6,6,55)
+sub<-c(6,6,55)
 pcaplot(mat = gfp_egfr_icbp_f,sub = sub)
 length(colnames(gfp_egfr_icbp_f))
-# pca_combat <- prcomp(t(gfp_egfr_multi_f), center=T,scale=T)
-# plot(pca_combat)
-# plot(pca_combat$x[,1],pca_combat$x[,2])
-# #ncol(pca_combat)
-# points(pca_combat$x[1:9],pca_combat$x[1:9,2],col=2)#gfp in red
-# points(pca_combat$x[10:18],pca_combat$x[10:18,2],col=4)#her3 in blue
-# points(pca_combat$x[19:42],pca_combat$x[19:42,2],col=3)#icbp greens
-bat1<-as.matrix(cbind(c(colnames(gfp_egfr),colnames(control_egfr_l),colnames(icbp)),c(rep(1,length(colnames(gfp_egfr))),rep(2,length(colnames(control_egfr_l))),rep(3,length(colnames(icbp))))))
+
+bat1<-as.matrix(cbind(c(colnames(gfp_egfr_multi_f),colnames(icbp)),c(rep(1,length(colnames(gfp_egfr_multi_f))),rep(2,length(colnames(icbp))))))
 ##running combat without covariates
 library(sva)
 combat_expr1<-ComBat(dat=gfp_egfr_icbp_f, batch=bat1[,2], mod=NULL, numCovs=NULL)
@@ -128,8 +110,8 @@ Now running ASSIGN with 500 genes
 ```{r cache=TRUE, echo=FALSE}
 trainingLabel1 <- list(control = list(egfr=1:6), egfr=7:12) 
 #trainingLabel1
-train_egfr<-combat_expr1[,19:30]
-test<-combat_expr1[,31:85]
+train_egfr<-combat_expr1[,1:12]
+test<-combat_expr1[,13:67]
 #head(train_egfr)
 #nrow(train_egfr)
 
@@ -147,7 +129,7 @@ assign_easy(trainingData = train_egfr,test=test,trainingLabel1 = trainingLabel1,
 
 Now let's correlate with drug response
 ```{r}
-drugs<- read.delim("ICBP_drugs.txt", header=1, row.names=1,check.names = F)
+drugs<- read.delim("~/Dropbox/ICBP/ICBP_drugs_1.txt", header=1, row.names=1,check.names = F)
 #colnames(drugs)
 filenames<-system("ls ~/Desktop/tmp/egfr/*/pathway_activity_testset*", intern=TRUE)
 filenames
@@ -180,7 +162,7 @@ for(i in 1:length(filenames)){
 ```
 
 Check correlation with amplification data
-```{r}
+```{r, cache=TRUE}
 ccle_cnv<-read.table("CCLE_copynumber_byGene_2013-12-03.txt", header=1)
 rownames(ccle_cnv)<-ccle_cnv$SYMBOL
 egfr_cnv<-ccle_cnv["EGFR",]
