@@ -43,7 +43,7 @@ pcaplot<-function(mat,sub,scale=T){
 Reading datasets in...and calling assign..
 
 ```{r, cache=TRUE, include=FALSE}
-feature<-as.matrix(read.table("~/Dropbox/Datasets/GFP18_bad_BAD_HER2_IGF1R_RAF_ERK.tpmlog", sep='\t', stringsAsFactors=FALSE, header=1, row.names=1))
+feature<-as.matrix(read.table("~/Dropbox/Datasets/GFP18_AKT_BAD_HER2_IGF1R_RAF_ERK.tpmlog", sep='\t', stringsAsFactors=FALSE, header=1, row.names=1))
 #head(feature)
 icbp<-as.matrix(read.table("~/Dropbox/ICBP/icbp_Rsubread_tpmlog.txt", sep='\t', stringsAsFactors=FALSE, header=1, row.names=1))
 #head(icbp)
@@ -100,17 +100,17 @@ test<-combat_expr2[,19:73]
 
 trainingLabel1=list(control = list(bad=1:12), bad = 13:18)
 dir.create("~/Desktop/tmp/bad")
-assign_easy(trainingData=train_bad, testData = test,trainingLabel1=trainingLabel1,g=350,out_dir_base="~/Desktop/tmp/bad")
-assign_easy(trainingData=train_bad, testData = test,trainingLabel1=trainingLabel1,g=250,out_dir_base="~/Desktop/tmp/bad/")
-assign_easy(trainingData=train_bad, testData = test,trainingLabel1=trainingLabel1,g=200,out_dir_base="~/Desktop/tmp/bad/")
-assign_easy(trainingData=train_bad, testData = test,trainingLabel1=trainingLabel1,g=150,out_dir_base="~/Desktop/tmp/bad/")
-assign_easy(trainingData=train_bad, testData = test,trainingLabel1=trainingLabel1,g=300,out_dir_base="~/Desktop/tmp/bad/")
-assign_easy(trainingData=train_bad_cov, testData = test_cov,trainingLabel1=trainingLabel1,g=300,cov=1,out_dir_base="~/Desktop/tmp/bad/")
-assign_easy(trainingData=train_bad_cov, testData = test_cov,trainingLabel1=trainingLabel1,g=300,cov=1,out_dir_base="~/Desktop/tmp/bad/")
+# assign_easy(trainingData=train_bad, testData = test,trainingLabel1=trainingLabel1,g=350,out_dir_base="~/Desktop/tmp/bad")
+# assign_easy(trainingData=train_bad, testData = test,trainingLabel1=trainingLabel1,g=250,out_dir_base="~/Desktop/tmp/bad/")
+# assign_easy(trainingData=train_bad, testData = test,trainingLabel1=trainingLabel1,g=200,out_dir_base="~/Desktop/tmp/bad/")
+# assign_easy(trainingData=train_bad, testData = test,trainingLabel1=trainingLabel1,g=150,out_dir_base="~/Desktop/tmp/bad/")
+# assign_easy(trainingData=train_bad, testData = test,trainingLabel1=trainingLabel1,g=300,out_dir_base="~/Desktop/tmp/bad/")
+# assign_easy(trainingData=train_bad_cov, testData = test_cov,trainingLabel1=trainingLabel1,g=300,cov=1,out_dir_base="~/Desktop/tmp/bad/")
+# assign_easy(trainingData=train_bad_cov, testData = test_cov,trainingLabel1=trainingLabel1,g=300,cov=1,out_dir_base="~/Desktop/tmp/bad/")
 
 setwd("~/Desktop/tmp/bad/")
 filenames<-system("ls */pathway_activity_testset*", intern=TRUE)
-#filenames
+filenames
 
 for(i in 1:length(filenames))
   {
@@ -133,19 +133,19 @@ pred_drug<-merge_drop(data,drugs,by=0)
 for(i in 1:length(colnames(data)))
   {
   #print(colnames(data)[i])
-  print("correlation with Lapatinib..an EGFR/HER2 inhibitor")
-  print(cor(pred_drug[i],pred_drug$Lapatinib,use="na.or.complete"))
-  print("correlation with BEZ235..a pi3k/mtor inhibitor")
-  print(cor(pred_drug[i],pred_drug$BEZ235,use="na.or.complete"))
-  print("correlation with Everolimus..an mtor inhibitor")
-  print(cor(pred_drug[i],pred_drug$Everolimus,use="na.or.complete"))
-  print("correlation with Temsirolimus..an mtor inhibitor")
-  print(cor(pred_drug[i],pred_drug$Temsirolimus,use="na.or.complete"))
-  print("correlation with Sigma bad1/2..an bad  inhibitor")
-  print(cor(pred_drug[i],pred_drug$Sigma.bad1.2.inhibitor,use="na.or.complete"))
-  print("correlation with GSK2126458..an bad  inhibitor")
+  #print("correlation with Lapatinib..an EGFR/HER2 inhibitor")
+  #print(cor(pred_drug[i],pred_drug$Lapatinib,use="na.or.complete"))
+  #print("correlation with BEZ235..a pi3k/mtor inhibitor")
+  #print(cor(pred_drug[i],pred_drug$BEZ235,use="na.or.complete"))
+  #print("correlation with Everolimus..an mtor inhibitor")
+  #print(cor(pred_drug[i],pred_drug$Everolimus,use="na.or.complete"))
+  #print("correlation with Temsirolimus..an mtor inhibitor")
+  #print(cor(pred_drug[i],pred_drug$Temsirolimus,use="na.or.complete"))
+  print("correlation with Sigma AKT1/2..an akt  inhibitor")
+  print(cor(pred_drug[i],pred_drug$Sigma.AKT1.2.inhibitor,use="na.or.complete"))
+  print("correlation with GSK2126458..an akt  inhibitor")
   print(cor(pred_drug[i],pred_drug$GSK2126458,use="na.or.complete"))
-  print("correlation with TRIciribine..an bad  inhibitor")
+  print("correlation with TRIciribine..an akt  inhibitor")
   print(cor(pred_drug[i],pred_drug$Triciribine,use="na.or.complete"))
 #   
   }
