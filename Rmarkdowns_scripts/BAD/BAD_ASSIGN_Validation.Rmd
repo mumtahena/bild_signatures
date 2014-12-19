@@ -71,16 +71,16 @@ pcaplot(mat = combat_expr2,sub=sub)
 assign_easy<-function(trainingData=train, testData=test, trainingLabel1=NULL,g=100,out_dir_base="~/Desktop/tmp/bad",cov=0){
 dir.create(out_dir_base)
 if(cov==0){
-  adap_folder<-paste(out_dir,paste( "adap",g,sep=''),sep='/')
-  dir.create(file.path(out_dir,paste( "adap",g,sep='')))
-  nonadap_folder<-paste(out_dir,paste( "nonadap",g,sep=''),sep='/')
-  dir.create(file.path(out_dir,paste( "nonadap",g,sep='')))
+  adap_folder<-paste(out_dir_base,paste( "adap",g,sep=''),sep='/')
+  dir.create(file.path(out_dir_base,paste( "adap",g,sep='')))
+  nonadap_folder<-paste(out_dir_base,paste( "nonadap",g,sep=''),sep='/')
+  dir.create(file.path(out_dir_base,paste( "nonadap",g,sep='')))
   }
 else{
-  adap_folder<-paste(out_dir,paste( "adap_cov",g,sep=''),sep='/')
-  dir.create(file.path(out_dir,paste( "adap_cov",g,sep='')))
-  nonadap_folder<-paste(out_dir,paste( "nonadap_cov",g,sep=''),sep='/')
-  dir.create(file.path(out_dir,paste( "nonadap_cov",g,sep='')))
+  adap_folder<-paste(out_dir_base,paste( "adap_cov",g,sep=''),sep='/')
+  dir.create(file.path(out_dir_base,paste( "adap_cov",g,sep='')))
+  nonadap_folder<-paste(out_dir_base,paste( "nonadap_cov",g,sep=''),sep='/')
+  dir.create(file.path(out_dir_base,paste( "nonadap_cov",g,sep='')))
 }
 
 set.seed(1234)
