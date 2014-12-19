@@ -100,7 +100,7 @@ test_cov<-combat_expr1[,18:72]
 
 train_her2<-combat_expr2[,1:17]
 test<-combat_expr2[,18:72]
-
+trainingLabel1=list(control = list(her2=1:12), her2 = 13:17)
 # dir.create("~/Desktop/tmp/her2_single_100_genelist_cov/")#, 
 # set.seed(1234)
 # assign.wrapper(trainingData=train_her2_cov, testData=test_cov,trainingLabel=trainingLabel1, testLabel=NULL,  geneList=brlist, n_sigGene=100, adaptive_B=F, adaptive_S=T, mixture_beta=F, outputDir="~/Desktop/tmp/her2_single_100_genelist_cov/", theta0=0.05, theta1=0.9, iter=2000, burn_in=1000)
