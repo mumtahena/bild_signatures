@@ -225,32 +225,39 @@ row.names(data)
 Combine the ASSIGN results with the ICBP data and Correlate with ICBP drug response data
 -log(G150) = drug sensitivity, expect to see a positive corelation with rereg pathway. 
 ```{r}
-ICBP_drugs <- read.delim("~/Documents/ThesisWork/GitRepos/bild_signature_validation/Datasets/ICBP_drugs_1.txt", row.names=1)
+ICBP_drugs <- read.delim("~/Dropbox/bild_signatures/Datasets/ICBP_drugs.txt", row.names=1)
 row.names(ICBP_drugs)
 dim(ICBP_drugs)
 
-results_icbp<-merge(data, ICBP_drugs ,by=0)
+results_icbp<-merge_drop(data, ICBP_drugs ,by=0)
 
 # missing three cell lines from the orinal ICBP data set
 dim(results_icbp)
 results_icbp
 
 summary(results_icbp$Tykerb.IGF1R..1.1.)
-
+summary(results_icbp$GSK1838705)
+summary(results_icbp$Sigma.AKT1.2.inhibitor)
+summary(results_icbp$Triciribine)
 # Correlations between Predictions and Drug response data (only response data for 35 cells lines)
 # does a correlation anaylsis really do use justice since the spread of the response data is not that large??
 for(i in 1:length(colnames(data)))
-  {
+{
+  print(colnames(data)[i])
   print("correlation with Tykerb.IGF1R...a HER2/EGFR/IGF1R inhibitor")
-  print(cor(pred_drug[i],pred_drug$Tykerb.IGF1R..1.1.="na.or.complete"))
-  print("correlation with GSK1838705")
-  print(cor(pred_drug[i],pred_drug$GSK1838705.="na.or.complete"))
-  print(cor(pred_drug[i],pred_drug$Sigma.AKT1.2.inhibitor,use="na.or.complete"))
+  print(cor(results_icbp[i],results_icbp$Tykerb.IGF1R..1.1.,use="na.or.complete"))
+  print("correlation with GSK1838705...an IGF1R inhibitor")
+  print(cor(results_icbp[i],results_icbp$GSK1838705, use = "na.or.complete"))
+  print("correlation with Sigma.AKT1.2 inhibitor.")
+  print(cor(results_icbp[i],results_icbp$Sigma.AKT1.2.inhibitor,use="na.or.complete"))
   print("correlation with GSK2126458..an AKT  inhibitor")
-  print(cor(pred_drug[i],pred_drug$GSK2126458,use="na.or.complete"))
+  print(cor(results_icbp[i],results_icbp$GSK2126458,use="na.or.complete"))
   print("correlation with TRIciribine..an AKT  inhibitor")
-  print(cor(pred_drug[i],pred_drug$Triciribine,use="na.or.complete"))
-  }
+  print(cor(results_icbp[i],results_icbp$Triciribine,use="na.or.complete"))
+  print("correlation with AS.252424..an pi3k inhibitor")
+  print(cor(results_icbp[i], results_icbp$AS.252424, use="complete.obs"))
+}
+
 #IGF1R inhibitor
 # cor(results_icbp[,2],results_icbp$Tykerb.IGF1R..1.1., use="complete.obs") # igf1r_single_100_adap_tpmlog_v2 , 0.01277489
 # cor(results_icbp[,11],results_icbp$Tykerb.IGF1R..1.1., use="complete.obs") #igfr1_single_100_nonadap_tmplog_v2 , 0.01094297
@@ -417,7 +424,8 @@ cor(ICBP_Probs_Drugs$Probability, ICBP_Probs_Drugs$Velcade, use="complete.obs") 
 
 Reading in ccle CNV data to Correlate with ASSIGN predictions and filtering for Breast cell lines only
 ```{r}
-ccle_cnv<-read.table("CCLE/CCLE_copynumber_byGene_2013-12-03.txt", header=1)
+setwd("~/Dropbox/bild_signatures/Datasets/")
+ccle_cnv<-read.table("CCLE_copynumber_byGene_2013-12-03.txt", header=1)
 rownames(ccle_cnv)<-ccle_cnv$SYMBOL
 igf1r_cnv<-ccle_cnv["IGF1R",]
 
@@ -433,10 +441,11 @@ Now, moving on to correlating the IGF1R predictions with CNV data from CCLE
 results_ccle<-merge_drop(data,t(igf1r_interested_cnv["IGF1R",]),by=0)
 View(results_ccle)
 colnames(results_ccle)
-for(i in 2:(length(colnames(data))+1))
+colnames(data)
+for(i in 1:(length(colnames(data))))
 {
 
-  print(paste("pearson's correlation between IGF1R CNV and ",colnames(combined)[i]),sep='')
+  print(paste("pearson's correlation between IGF1R CNV and ",colnames(results_ccle)[i]),sep='')
   print(cor(as.numeric(results_ccle$IGF1R),as.numeric(results_ccle[,i]),use="na.or.complete"))
 
   }
