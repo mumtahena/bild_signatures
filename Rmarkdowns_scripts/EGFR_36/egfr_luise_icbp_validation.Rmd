@@ -129,7 +129,7 @@ assign_easy(trainingData = train_egfr,test=test,trainingLabel1 = trainingLabel1,
 
 Now let's correlate with drug response
 ```{r}
-drugs<- read.delim("~/Dropbox/ICBP/ICBP_drugs_1.txt", header=1, row.names=1,check.names = F)
+drugs<- read.delim("~/Dropbox/bild_signatures//Datasets//ICBP_drugs.txt", header=1, row.names=1)
 #colnames(drugs)
 filenames<-system("ls ~/Desktop/tmp/egfr/*/pathway_activity_testset*", intern=TRUE)
 filenames
@@ -150,11 +150,17 @@ pred_drug<-merge_drop(data,drugs,by=0)
 dim(pred_drug)
 for(i in 1:length(filenames)){
   print(colnames(pred_drug)[i])
+  print("for Gefitinib")
   print(cor(pred_drug[,i],pred_drug$Gefitinib,use="na.or.complete"))
+  print("for Erlotinib")
   print(cor(pred_drug[,i],pred_drug$Erlotinib,use="na.or.complete"))
+  print("for BIBW2992")
   print(cor(pred_drug[,i],pred_drug$BIBW2992,use="na.or.complete"))
+  print("for AG1478")
   print(cor(pred_drug[,i],pred_drug$AG1478,use="na.or.complete"))
+  print("for Sigma AKT 1/2 inhibitor")
   print(cor(pred_drug[,i],pred_drug$Sigma.AKT1.2.inhibitor,use="na.or.complete"))
+  print("for Lapatinib")
   print(cor(pred_drug[,i],pred_drug$Lapatinib,use="na.or.complete"))
 }
 
@@ -163,6 +169,7 @@ for(i in 1:length(filenames)){
 
 Check correlation with amplification data
 ```{r, cache=TRUE}
+setwd("~/Dropbox/bild_signatures/Datasets/")
 ccle_cnv<-read.table("CCLE_copynumber_byGene_2013-12-03.txt", header=1)
 rownames(ccle_cnv)<-ccle_cnv$SYMBOL
 egfr_cnv<-ccle_cnv["EGFR",]
@@ -202,6 +209,19 @@ for(i in 1:(length(colnames(data))))
   print(cor(as.numeric(combined$V1),as.numeric(combined[,i]),use="na.or.complete"))
 
   }
+
+```
+Staring to validate in TCGA
+```{r}
+EGFRStatus <- read.delim("~/Dropbox/bild_signatures//Datasets/EGFR/PANCAN12_EGFR_MutationStatus.txt", , row.names=1,header=FALSE)
+head(EGFRStatus)
+combined_egfr_status = merge_drop(EGFRStatus, data, by=0)
+head(combined_egfr_status)
+boxplot(combined_egfr_status$EGFR_Status,combined_egfr_status[,1])
+# box plot the mutation status
+
+plot(combined_egfr_status$EGFR_Status, combined_egfr_status[,1], main= "EGFR", ylab = "Probability")
+plot(GBMmergeMutations$GBMprobabilites, main="EGFR Probabilities GBM", ylab="Probabilities", col=as.factor(GBMmergeMutations$EGFR_Status))
 
 ```
 
