@@ -1,0 +1,272 @@
+---
+title: "multipathway_ASSIGN"
+author: "Mumtahena Rahman"
+date: "December 23, 2014"
+output: pdf_document
+---
+
+
+```{r,echo=FALSE,cache=TRUE,include=FALSE}
+library(sva)
+library(ASSIGN)
+merge_drop<-function(x,y,by=0)
+{
+  new_m<-merge(x,y,by=by)
+  rownames(new_m)<-new_m$Row.names
+  return(new_m[,2:length(colnames(new_m))])
+}
+
+pcaplot<-function(mat,sub){
+  if(sum(sub)!=length(mat))
+    {
+    print("verify the subscripts...exiting now")
+    }
+  else{
+    pca_mat <- prcomp(t(mat), center=T,scale=T)
+    plot(pca_mat)
+    plot(pca_mat$x[,1],pca_mat$x[,2])
+    for(i in 1:length(sub))
+      {
+      #print(rownames(pca_mat$x)[index:sub[i]+index-1],"has color", )
+      print(i)
+      if(i==1)
+        {
+        points(pca_mat$x[1:sub[i]],pca_mat$x[1:sub[i],2],col=i)
+        }
+      else if(i==length(sub))
+         {
+         points(pca_mat$x[sum(sub[1:i-1]):length(rownames(pca_mat$x))],pca_mat$x[sum(sub[1:i-1]):length(rownames(pca_mat$x)),2],col=i)
+        }
+       else
+        {
+          
+        points(pca_mat$x[sum(sub[1:i-1]):sum(sub[1:i])],pca_mat$x[sum(sub[1:i-1]):sum(sub[1:i]),2],col=i)
+        }
+      }
+  }
+}
+assign_easy_multi<-function(trainingData=train, testData=test, trainingLabel1=NULL,g=100,out_dir_base="~/Desktop/tmp",cov=0){
+if(cov==0){
+  adap_folder<-paste(out_dir_base,paste( "adap_multi",sep=''),sep='/')
+  dir.create(file.path(out_dir_base,paste( "adap_multi",sep='')))
+  nonadap_folder<-paste(out_dir_base,paste( "nonadap_multi",sep=''),sep='/')
+  dir.create(file.path(out_dir_base,paste( "nonadap_multi",sep='')))
+  }
+else{
+  adap_folder<-paste(out_dir_base,paste( "adap_cov",sep=''),sep='/')
+  dir.create(file.path(out_dir_base,paste( "adap_cov",sep='')))
+  nonadap_folder<-paste(out_dir_base,paste( "nonadap_cov",sep=''),sep='/')
+  dir.create(file.path(out_dir_base,paste( "nonadap_cov",sep='')))
+}
+
+set.seed(1234)
+assign.wrapper(trainingData=trainingData, testData=testData, trainingLabel=trainingLabel1, testLabel=NULL, geneList=NULL, n_sigGene=g, adaptive_B=T, adaptive_S=F, mixture_beta=F, outputDir=adap_folder, theta0=0.05, theta1=0.9, iter=10000, burn_in=1000)  
+
+set.seed(1234)
+assign.wrapper(trainingData=trainingData, testData=testData, trainingLabel=trainingLabel1, testLabel=NULL, geneList=NULL, n_sigGene=g, adaptive_B=F, adaptive_S=F, mixture_beta=F, outputDir=nonadap_folder, theta0=0.05, theta1=0.9, iter=10000, burn_in=1000)  
+
+}
+# training_label_generation<-function(items,sub,label){
+#   print(dim(items))
+#   print(sub)
+#   print(label)
+#   {
+#     traininglabel=list(control=list(for(i in 2:length(sub)){label[i]=1:sub[i]}),)
+#     trainingLabel1<-list(control=list(egfr=1:6,akt=13:24,bad=13:24,her2=13:24,igf1r=13:24), egfr=7:12,akt=25:30, bad=31:36,her2=37:41,igf1r=42:47)
+#   }
+#   
+# }
+```
+Reading in the signature datasets...
+```{r include=FALSE,echo=FALSE}
+setwd("~/Dropbox/bild_signatures/Datasets/")
+expr<-as.matrix(read.table("GFP18_AKT_BAD_HER2_IGF1R_RAF_ERK.tpmlog",sep='\t',row.names=1,header=1))
+control<-subset(expr, select=GFP.1:GFP.12)
+her2<-subset(expr, select=HER2.1:HER2.6)
+akt<-subset(expr,select=AKT.1:AKT.6)
+bad<-subset(expr,select=BAD.1:BAD.6)
+igf1r<-subset(expr,select=IGF1R.1:IGF1R.6)
+expr_all<-cbind(control,akt,bad,her2,igf1r)
+icbp<-as.matrix(read.table("~/Dropbox/ICBP/icbp_Rsubread_tpmlog.txt", sep='\t', stringsAsFactors=FALSE, header=1, row.names=1))
+expr_all_f <-expr_all[apply(expr_all[,1:35]==0,1,mean) < 0.85,]
+dim(expr_all_f)
+expr_all_icbp_f<-merge_drop(expr_all_f,icbp,by=0)
+sub<-c(12,6,6,5,6,55)
+pcaplot(expr_all_icbp_f,sub)
+bat1<-as.matrix(cbind(c(colnames(expr_all_f),colnames(icbp)),c(rep(1,length(colnames(expr_all_f))),rep(2,length(colnames(icbp))))))
+#bat1
+combat_expr1<-ComBat(dat=expr_all_icbp_f, batch=bat1[,2], mod=NULL, numCovs=NULL)
+pcaplot(combat_expr1,sub)
+c_gfp<-subset(combat_expr1, select=GFP.1:GFP.12)
+c_akt<-subset(combat_expr1, select=AKT.1:AKT.6)
+c_bad<-subset(combat_expr1, select=BAD.1:BAD.6)
+c_her2<-subset(combat_expr1, select=HER2.1:HER2.6)
+c_igf1r<-subset(combat_expr1, select=IGF1R.1:IGF1R.6)
+
+#############trying two pathways at a time in multipathway#############
+#1. HER2 & AKT
+trainha<-cbind(c_gfp,c_akt,c_her2)
+testha<-combat_expr1[,36:90]
+trainingLabelha<-list(control=list(akt=1:12,her2=1:12),akt=13:18,her2=19:23)
+dir.create( "~/Desktop/tmp/multi_icbp_expr_pc/Her2_AKT")
+# 
+assign_easy_multi(trainingData = trainha,test=testha,trainingLabel1 = trainingLabelha,g=c(150,15),out_dir_base = "~/Desktop/tmp/multi_icbp_expr_pc/Her2_AKT/")
+
+#2. HER2 & BAD
+
+trainhb<-cbind(c_gfp,c_bad,c_her2)
+testhb<-combat_expr1[,36:90]
+trainingLabelhb<-list(control=list(bad=1:12,her2=1:12),bad=13:18,her2=19:23)
+dir.create( "~/Desktop/tmp/multi_icbp_expr_pc/Her2_BAD")
+# 
+assign_easy_multi(trainingData = trainhb,test=testhb,trainingLabel1 = trainingLabelhb,g=c(150,15),out_dir_base = "~/Desktop/tmp/multi_icbp_expr_pc/Her2_BAD/")
+
+#3. HER2 & IGF1R
+trainhi<-cbind(c_gfp,c_igf1r,c_her2)
+testhi<-combat_expr1[,36:90]
+trainingLabelhi<-list(control=list(igf1r=1:12,her2=1:12),igf1r=13:18,her2=19:23)
+dir.create( "~/Desktop/tmp/multi_icbp_expr_pc/Her2_IGF1R")
+# 
+assign_easy_multi(trainingData = trainhi,test=testhi,trainingLabel1 = trainingLabelhi,g=c(100,15),out_dir_base = "~/Desktop/tmp/multi_icbp_expr_pc/Her2_IGF1R/")
+
+#4. AKT & BAD
+trainab<-cbind(c_gfp,c_akt,c_bad)
+testab<-combat_expr1[,36:90]
+trainingLabelab<-list(control=list(akt=1:12,bad=1:12),akt=13:18,bad=19:24)
+dir.create( "~/Desktop/tmp/multi_icbp_expr_pc/AKT_BAD")
+# 
+assign_easy_multi(trainingData = trainab,test=testab,trainingLabel1 = trainingLabelab,g=c(150,150),out_dir_base = "~/Desktop/tmp/multi_icbp_expr_pc/AKT_BAD/")
+
+#5. AKT & IGF1R
+trainai<-cbind(c_gfp,c_akt,c_igf1r)
+testai<-combat_expr1[,36:90]
+trainingLabelai<-list(control=list(akt=1:12,igf1r=1:12),akt=13:18,igf1r=19:24)
+dir.create( "~/Desktop/tmp/multi_icbp_expr_pc/AKT_IGF1R")
+# 
+assign_easy_multi(trainingData = trainai,test=testai,trainingLabel1 = trainingLabelai,g=c(150,100),out_dir_base = "~/Desktop/tmp/multi_icbp_expr_pc/AKT_IGF1R")
+
+#6. BAD & IGF1R
+trainbi<-cbind(c_gfp,c_bad,c_igf1r)
+testbi<-combat_expr1[,36:90]
+trainingLabelbi<-list(control=list(bad=1:12,igf1r=1:12),bad=13:18,igf1r=19:24)
+dir.create( "~/Desktop/tmp/multi_icbp_expr_pc/BAD_IGF1R")
+# 
+assign_easy_multi(trainingData = trainbi,test=testbi,trainingLabel1 = trainingLabelbi,g=c(150,100),out_dir_base = "~/Desktop/tmp/multi_icbp_expr_pc/BAD_IGF1R")
+
+#############trying three pathways at a time in multipathway#############
+#1. HER2, AKT & BAD
+trainhab<-cbind(c_gfp,c_akt,c_bad,c_her2)
+testhab<-combat_expr1[,36:90]
+trainingLabelhab<-list(control=list(akt=1:12,bad=1:12,her2=1:12),akt=13:18,bad=19:24,her2=25:29)
+dir.create( "~/Desktop/tmp/multi_icbp_expr_pc/AKT_BAD_HER2")
+# 
+assign_easy_multi(trainingData = trainhab,test=testhab,trainingLabel1 = trainingLabelhab,g=c(150,150,15),out_dir_base = "~/Desktop/tmp/multi_icbp_expr_pc/AKT_BAD_HER2")
+
+#2. HER2, BAD & IGF1R
+trainhbi<-cbind(c_gfp,c_igf1r,c_bad,c_her2)
+testhbi<-combat_expr1[,36:90]
+trainingLabelhbi<-list(control=list(igf1r=1:12,bad=1:12,her2=1:12),igf1r=13:18,bad=19:24,her2=25:29)
+dir.create( "~/Desktop/tmp/multi_icbp_expr_pc/IGF1R_BAD_HER2")
+# 
+assign_easy_multi(trainingData = trainhbi,test=testhbi,trainingLabel1 = trainingLabelhbi,g=c(100,150,15),out_dir_base = "~/Desktop/tmp/multi_icbp_expr_pc/IGF1R_BAD_HER2")
+
+#3. AKT, BAD & IGF1R
+trainabi<-cbind(c_gfp,c_akt,c_bad,c_igf1r)
+testabi<-combat_expr1[,36:90]
+trainingLabelabi<-list(control=list(akt=1:12,bad=1:12,igf1r=1:12),akt=13:18,bad=19:24,igf1r=25:30)
+dir.create( "~/Desktop/tmp/multi_icbp_expr_pc/AKT_BAD_IGF1R")
+# 
+assign_easy_multi(trainingData = trainhabi,test=testabi,trainingLabel1 = trainingLabelabi,g=c(150,150,100),out_dir_base = "~/Desktop/tmp/multi_icbp_expr_pc/AKT_BAD_IGF1R")
+
+########################trying all four at once#####################
+trainhall<-cbind(c_gfp,c_akt,c_bad,c_her2,c_igf1r)
+testall<-combat_expr1[,36:90]
+trainingLabel<-list(control=list(akt=1:12,bad=1:12,her2=1:12,igf1r=1:12),akt=13:18, bad=19:24,her2=25:29,igf1r=30:35)
+dir.create( "~/Desktop/tmp/multi_icbp_expr_pc/all_4")
+# 
+assign_easy_multi(trainingData = trainhall,test=testall,trainingLabel1 = trainingLabel,g=c(150,150,15,100),out_dir_base = "~/Desktop/tmp/multi_icbp_expr_pc/all_4")
+
+```
+Checking for correlation..
+
+```{r include=FALSE}
+setwd("~/Desktop/tmp/multi_icbp_expr_pc/")
+filenames<-system("ls */adap*/pathway_activity_testset*", intern=TRUE)
+filenames
+
+for(i in 1:length(filenames))
+  {
+   f<-read.csv(filenames[i], header=1,row.names=1) ###reading in the filess one at a time
+  colnames(f)<-paste(filenames[i],colnames(f),sep='/')
+  if(i==1){
+    data<-f
+    }
+  else{
+    data<-cbind(data,f)
+    }
+  }
+write.table(data,"~/Desktop/multipathway_preds.txt",sep='\t', col.names = NA,quote=F)
+```
+
+Now correlating multi pathway predictions with ICBP drugs..
+```{r, cache=TRUE,include=FALSE,echo=FALSE}
+drugs<-read.delim("~/Dropbox/bild_signatures/Datasets/ICBP_drugs.txt", header=1, sep='\t',row.names=1)
+# mk2206<-read.table("~/Desktop/Drug reponse analysis/bildlab_drug response/mk2206.txt",sep='\t',row.names=1,header=1)
+# mk2206
+
+pred_drug<-merge_drop(data,drugs,by=0)
+# mk2206<-subset(mk2206,select="Sensitivity..logEC50")
+# pred_drug<-merge_drop(pred_drug,mk2206,by=0)
+#dim(pred_drug)
+for(i in 1:length(colnames(data)))
+  {
+  print(colnames(data)[i])
+#   print("correlation with MK2206..an AKT  inhibitor")
+#   print(cor(pred_drug[i],as.numeric(pred_drug$Sensitivity..logEC50),use="na.or.complete"))
+  print("correlation with Sigma AKT1/2..an AKT  inhibitor")
+  print(cor(pred_drug[i],pred_drug$Sigma.AKT1.2.inhibitor,use="na.or.complete"))
+  print("correlation with GSK2126458..an AKT  inhibitor")
+  print(cor(pred_drug[i],pred_drug$GSK2126458,use="na.or.complete"))
+  print("correlation with TRIciribine..an AKT  inhibitor")
+  print(cor(pred_drug[i],pred_drug$Triciribine,use="na.or.complete"))
+#   print("correlation with Tykerb.IGF1R..1.1...EGFR/HER2/IGF1R inhibitor")
+#   print(cor(pred_drug[i],pred_drug$Tykerb.IGF1R..1.1.,use="na.or.complete"))
+#   print("correlation with GSK1838705...an IGF1R inhibitor")
+#   print(cor(pred_drug[i],pred_drug$GSK1838705, use = "na.or.complete"))
+# #   
+  }
+```
+
+
+Creating heatmaps
+```{r }
+multi<-read.table("~/Desktop/multipathway_preds.txt", sep='\t',row.names=1,header=1)
+single<-read.csv("~/Desktop/tmp/single_pathway_results.csv", row.names=1,header=1)
+comb<-cbind(multi,single)
+dim(comb)
+colnames(comb)<-gsub(pattern = "adap_multi.pathway_activity_testset.csv",replacement = "A",x = colnames(comb))
+#colnames(comb)<-gsub(pattern = "non",replacement = "NA",x = colnames(comb))
+library(gplots)
+pdf(file='~/Dropbox/bild_signatures//bild_signatures/activity_subtype.pdf')
+par(mfrow=c(2,1))
+heatmap.2(as.matrix(comb[,22:25]),col=bluered,trace="none",main="Multipathway activity", ylab="ICBP Cell lines")
+heatmap.2(as.matrix(comb[,26:29]),col=bluered,lmat=rbind( c(0, 3, 4), c(2,1,0 ) ), lwid=c(1.5, 4, 2 ), trace="none",main="Single pathway activity", ylab="ICBP Cell lines",scale="column")
+
+comb_drug<-merge_drop(comb,drugs,by=0)
+#plot(hclust(dist(comb_drug[,1:48]), method = "complete", members = NULL))
+
+basal<-subset(comb_drug[,1:44],comb_drug$Transcriptional.subtype...ERBB2.status=="Basal")
+heatmap.2(as.matrix(basal),col=bluered,lmat=rbind( c(0, 3, 4), c(2,1,0 ) ), lwid=c(1.5, 4, 2 ), trace="none",main="Basal Multi",scale="column")
+her<-subset(comb_drug[,1:44],comb_drug$Transcriptional.subtype...ERBB2.status=="ERBB2-amp"|comb_drug$Transcriptional.subtype...ERBB2.status=="ERBB2Amp")
+heatmap.2(as.matrix(her),col=bluered,lmat=rbind( c(0, 3, 4), c(2,1,0 ) ), lwid=c(1.5, 4, 2 ), trace="none",main="HER2 Multi",scale="column")
+claudin<-subset(comb_drug[,1:44],comb_drug$Transcriptional.subtype...ERBB2.status=="Claudin-low")
+heatmap.2(as.matrix(claudin),col=bluered,lmat=rbind( c(0, 3, 4), c(2,1,0 ) ), lwid=c(1.5, 4, 2 ), trace="none",main="Claudin Multi",scale="column")
+luminal<-subset(comb_drug[,1:44],comb_drug$Transcriptional.subtype...ERBB2.status=="Luminal")
+heatmap.2(as.matrix(luminal),col=bluered,lmat=rbind( c(0, 3, 4), c(2,1,0 ) ), lwid=c(1.5, 4, 2 ), trace="none",main="Claudin low Multi",scale="column")
+dev.off()
+```
+
+```{r echo=FALSE}
+time<-format(Sys.time(),"%a %b %d %X %Y")
+```
+This analysis was run on `r time` 
