@@ -190,7 +190,7 @@ assign_easy_multi(trainingData = trainhall,test=testall,trainingLabel1 = trainin
 Checking for correlation..
 
 ```{r include=FALSE}
-setwd("~/Desktop/tmp/multi_icbp_expr_pc/")
+setwd("~/Dropbox/bild_signatures/multi_icbp_expr_pc/")
 filenames<-system("ls */adap*/pathway_activity_testset*", intern=TRUE)
 filenames
 
@@ -205,7 +205,7 @@ for(i in 1:length(filenames))
     data<-cbind(data,f)
     }
   }
-write.table(data,"~/Desktop/multipathway_preds.txt",sep='\t', col.names = NA,quote=F)
+#write.table(data,"~/Desktop/multipathway_preds.txt",sep='\t', col.names = NA,quote=F)
 ```
 
 Now correlating multi pathway predictions with ICBP drugs..
@@ -240,29 +240,56 @@ for(i in 1:length(colnames(data)))
 
 Creating heatmaps
 ```{r }
-multi<-read.table("~/Desktop/multipathway_preds.txt", sep='\t',row.names=1,header=1)
-single<-read.csv("~/Desktop/tmp/single_pathway_results.csv", row.names=1,header=1)
+
+if (!require("gplots")) {
+   install.packages("gplots", dependencies = TRUE)
+   library(gplots)
+   }
+if (!require("RColorBrewer")) {
+   install.packages("RColorBrewer", dependencies = TRUE)
+   library(RColorBrewer)
+   }
+multi<-data#read.table("~/Desktop/multipathway_preds.txt", sep='\t',row.names=1,header=1)
+single<-read.csv("~/Dropbox/bild_signatures/multi_icbp_expr_pc/single_pathway_results.csv", row.names=1,header=1)
+my_palette <- colorRampPalette(c("darkblue","aliceblue","brown4"))(n = 299)
+# creates a 5 x 5 inch image
+png("heatmaps_in_r.png",    # create PNG for the heat map        
+  width = 5*300,        # 5 x 300 pixels
+  height = 5*300,
+  res = 300,            # 300 pixels per inch
+  pointsize = 8)  
 comb<-cbind(multi,single)
 dim(comb)
 colnames(comb)<-gsub(pattern = "adap_multi.pathway_activity_testset.csv",replacement = "A",x = colnames(comb))
 #colnames(comb)<-gsub(pattern = "non",replacement = "NA",x = colnames(comb))
-library(gplots)
 pdf(file='~/Dropbox/bild_signatures//bild_signatures/activity_subtype.pdf')
 par(mfrow=c(2,1))
-heatmap.2(as.matrix(comb[,22:25]),col=bluered,trace="none",main="Multipathway activity", ylab="ICBP Cell lines")
-heatmap.2(as.matrix(comb[,26:29]),col=bluered,lmat=rbind( c(0, 3, 4), c(2,1,0 ) ), lwid=c(1.5, 4, 2 ), trace="none",main="Single pathway activity", ylab="ICBP Cell lines",scale="column")
+heatmap.2(as.matrix(comb[,22:29]),col=my_palette,trace="none",main="Multipathway activity",margins=c(12,9), ylab="ICBP Cell lines",scale="row")
+heatmap.2(as.matrix(comb[,26:29]),margins=c(12,9),col=my_palette,lmat=rbind( c(0, 3, 4), c(2,1,0 ) ), lwid=c(1.5, 4, 2 ), trace="none",main="Single pathway activity", ylab="ICBP Cell lines",scale="row")
 
 comb_drug<-merge_drop(comb,drugs,by=0)
 #plot(hclust(dist(comb_drug[,1:48]), method = "complete", members = NULL))
 
-basal<-subset(comb_drug[,1:44],comb_drug$Transcriptional.subtype...ERBB2.status=="Basal")
-heatmap.2(as.matrix(basal),col=bluered,lmat=rbind( c(0, 3, 4), c(2,1,0 ) ), lwid=c(1.5, 4, 2 ), trace="none",main="Basal Multi",scale="column")
+basal<-subset(comb_drug,comb_drug$Transcriptional.subtype...ERBB2.status=="Basal")
+heatmap.2(as.matrix(basal[,22:25]),col=my_palette,margins=c(12,9),dendrogram="none", trace="none",main="Basal Multi")
+heatmap.2(as.matrix(basal[,26:29]),col=my_palette,margins=c(12,9),dendrogram="none",lmat=rbind( c(0, 3, 4), c(2,1,0 ) ), lwid=c(1.5, 4, 2 ), trace="none",main="Basal single")
+cor(basal[,22],basal$Sigma.AKT1.2.inhibitor,use="pairwise")
+
 her<-subset(comb_drug[,1:44],comb_drug$Transcriptional.subtype...ERBB2.status=="ERBB2-amp"|comb_drug$Transcriptional.subtype...ERBB2.status=="ERBB2Amp")
-heatmap.2(as.matrix(her),col=bluered,lmat=rbind( c(0, 3, 4), c(2,1,0 ) ), lwid=c(1.5, 4, 2 ), trace="none",main="HER2 Multi",scale="column")
-claudin<-subset(comb_drug[,1:44],comb_drug$Transcriptional.subtype...ERBB2.status=="Claudin-low")
-heatmap.2(as.matrix(claudin),col=bluered,lmat=rbind( c(0, 3, 4), c(2,1,0 ) ), lwid=c(1.5, 4, 2 ), trace="none",main="Claudin Multi",scale="column")
-luminal<-subset(comb_drug[,1:44],comb_drug$Transcriptional.subtype...ERBB2.status=="Luminal")
-heatmap.2(as.matrix(luminal),col=bluered,lmat=rbind( c(0, 3, 4), c(2,1,0 ) ), lwid=c(1.5, 4, 2 ), trace="none",main="Claudin low Multi",scale="column")
+heatmap.2(as.matrix(her[,22:25]),col=my_palette,dendrogram="none",lmat=rbind( c(0, 3, 4), c(2,1,0 ) ), lwid=c(1.5, 4, 2 ), trace="none",margins=c(12,9),main="HER2 Multi")
+heatmap.2(as.matrix(her[,26:29]),col=my_palette,dendrogram="none",lmat=rbind( c(0, 3, 4), c(2,1,0 ) ), lwid=c(1.5, 4, 2 ), trace="none",margins=c(12,9),main="HER2 Single",scale="column")
+cor(her[,22],her$Sigma.AKT1.2.inhibitor,use="pairwise")
+
+claudin<-subset(comb_drug,comb_drug$Transcriptional.subtype...ERBB2.status=="Claudin-low")
+heatmap.2(as.matrix(claudin[,22:25]),col=my_palette,dendrogram="none",lmat=rbind( c(0, 3, 4), c(2,1,0 ) ), lwid=c(1.5, 4, 2 ), trace="none",margins=c(12,9),main="Claudin Multi")
+heatmap.2(as.matrix(claudin[,26:29]),col=my_palette,dendrogram="none",lmat=rbind( c(0, 3, 4), c(2,1,0 ) ), lwid=c(1.5, 4, 2 ), trace="none",margins=c(12,9),main="Claudin Single",scale="column")
+cor(claudin[,22],claudin$Sigma.AKT1.2.inhibitor,use="na.or.complete")
+
+luminal<-subset(comb_drug,comb_drug$Transcriptional.subtype...ERBB2.status=="Luminal")
+heatmap.2(as.matrix(luminal[,22:25]),col=my_palette,dendrogram="none",lmat=rbind( c(0, 3, 4), c(2,1,0 ) ), lwid=c(1.5, 4, 2 ), trace="none",margins=c(12,9),main="Luminal Multi")
+heatmap.2(as.matrix(luminal[,26:29]),col=my_palette,dendrogram="none",lmat=rbind( c(0, 3, 4), c(2,1,0 ) ), lwid=c(1.5, 4, 2 ), trace="none",margins=c(12,9),main="Luminal Single",scale="row")
+cor(luminal[,22],luminal$Sigma.AKT1.2.inhibitor,use="na.or.complete")
+
 dev.off()
 ```
 
