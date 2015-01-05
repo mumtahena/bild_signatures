@@ -5,6 +5,14 @@ single<-read.csv("~/Desktop/tmp/single_pathway_results.csv", row.names=1, header
 dat<-cbind(multi,single)
 rownames(dat)[1:7]<-c("184A1","184B5","21MT1","21MT2","21NT","21PT","600MPE")
 drugs<-read.delim("~/Dropbox/bild_signatures/Datasets/ICBP_drugs.txt", header=1, sep='\t',row.names=1)
+merge_drop<-function(x,y,by=0)
+{
+  new_m<-merge(x,y,by=by)
+  rownames(new_m)<-new_m$Row.names
+  return(new_m[,2:length(colnames(new_m))])
+}
+
+
 dat<-merge_drop(drugs,dat,by=0)
 colnames(dat)
 snp <- t(read.table("snp_all_v2.txt", row.names=1, header=T)) #71 250
@@ -39,21 +47,21 @@ pathway = dat[,101:104]
 #colnames(pathway)=c('akt_multi','bad_multi','her2_multi','erk_multi','igf1r_multi','raf_multi')
 
 #### Pathway by subtype ####
-pdf(file='activity_subtype.pdf',width=15,height=7.5)
-par(mfrow=c(2,1))
-for (i in 1:ncol(pathway)){
-	plot(pathway[,i]~subtype)
-	title(colnames(pathway)[i])
-}
-dev.off()
-
-pdf(file='activity_subtype_ERBB2.pdf',width=15,height=7.5)
-par(mfrow=c(2,1))
-for (i in 1:ncol(pathway)){
-	plot(pathway[,i]~subtype_ERBB2)
-	title(colnames(pathway)[i])
-}
-dev.off()
+# pdf(file='activity_subtype.pdf',width=15,height=7.5)
+# par(mfrow=c(2,1))
+# for (i in 1:ncol(pathway)){
+# 	plot(pathway[,i]~subtype)
+# 	title(colnames(pathway)[i])
+# }
+# dev.off()
+# 
+# pdf(file='activity_subtype_ERBB2.pdf',width=15,height=7.5)
+# par(mfrow=c(2,1))
+# for (i in 1:ncol(pathway)){
+# 	plot(pathway[,i]~subtype_ERBB2)
+# 	title(colnames(pathway)[i])
+# }
+# dev.off()
 
 
 #### Corellation analysis ####
@@ -72,7 +80,8 @@ cors
 
 
 ### Regression analysis ###
-pathway = dat[,101:104]
+multipathway = dat[,101:104]
+singlepathway= dat[,105:108]
 ##colnames(pathway)=c('akt_multi','bad_multi','her2_multi','erk_multi','igf1r_multi','raf_multi','akt_single','bad_single','her2_single','erk_single','igf1r_single','raf_single')
 #pathway = pathway[,1:6]
 #pathway = pathway[,7:12]
@@ -88,21 +97,36 @@ drugs_short=drugs[,match(shortlist,colnames(drugs))]
 rownames(drugs_short)=cell
 
 #### results ####
-
-results=models=list()
+library(MASS)
+############for multipathway predictions########
+multiresults=multimodels=list()
 for (i in 1:ncol(drugs_short)){
-  fit1 <- lm(drugs_short[,i]~.,data=pathway)
+  fit1 <- lm(drugs_short[,i]~.,data=multipathway)
   step1 <- stepAIC(fit1, direction="both")
   
-  fit2 <- lm(drugs_short[,i]~.+subtype,data=pathway)
+  fit2 <- lm(drugs_short[,i]~.+subtype,data=multipathway)
   step2 <- stepAIC(fit2, direction="both")
   
   fit3 <- lm(drugs_short[,i]~subtype)
   
-  results[[shortlist[i]]]=list(R2=summary(step1)$r.squared,model=round(summary(step1)$coeff,4),R2_sub=summary(step2)$r.squared,model_sub=round(summary(step2)$coeff,4),R2_sub_only=summary(fit3)$r.squared,model_sub_only=round(summary(fit3)$coeff,4))
-  models[[shortlist[i]]]=list(mod=step1,mod_sub=step2,mod_sub_only=fit3)
+  multiresults[[shortlist[i]]]=list(R2=summary(step1)$r.squared,model=round(summary(step1)$coeff,4),R2_sub=summary(step2)$r.squared,model_sub=round(summary(step2)$coeff,4),R2_sub_only=summary(fit3)$r.squared,model_sub_only=round(summary(fit3)$coeff,4))
+  multimodels[[shortlist[i]]]=list(mod=step1,mod_sub=step2,mod_sub_only=fit3)
 }
 
+###########for single pathway predictions#############
+singleresults=singlemodels=list()
+for (i in 1:ncol(drugs_short)){
+  fit1 <- lm(drugs_short[,i]~.,data=singlepathway)
+  step1 <- stepAIC(fit1, direction="both")
+  
+  fit2 <- lm(drugs_short[,i]~.+subtype,data=singlepathway)
+  step2 <- stepAIC(fit2, direction="both")
+  
+  fit3 <- lm(drugs_short[,i]~subtype)
+  
+  singleresults[[shortlist[i]]]=list(R2=summary(step1)$r.squared,model=round(summary(step1)$coeff,4),R2_sub=summary(step2)$r.squared,model_sub=round(summary(step2)$coeff,4),R2_sub_only=summary(fit3)$r.squared,model_sub_only=round(summary(fit3)$coeff,4))
+  singlemodels[[shortlist[i]]]=list(mod=step1,mod_sub=step2,mod_sub_only=fit3)
+}
 
 
 

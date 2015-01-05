@@ -1,6 +1,6 @@
 ---
 title: "heatmaps of HER2, AKT, BAD and IGF1R activation status in ICBP cell lines"
-output: html_document
+output: word_document
 ---
 
 ```{r ,include=FALSE}
@@ -71,22 +71,33 @@ comb_drug<-merge_drop(comb,drugs,by=0)
 basal<-subset(comb_drug,comb_drug$Transcriptional.subtype...ERBB2.status=="Basal")
 heatmap.2(as.matrix(basal[,22:25]),col=my_palette,margins=c(12,9),dendrogram="none", density.info = "none",trace="none",main="Basal Multi")
 heatmap.2(as.matrix(basal[,26:29]),col=my_palette,margins=c(12,9),dendrogram="none",density.info = "none",trace="none",main="Basal single")
-cor(basal[,22],basal$Sigma.AKT1.2.inhibitor,use="pairwise")
+print(paste("Multipathway AKT correlation with Sigma AKT inhibitor",cor(basal[,22],basal$Sigma.AKT1.2.inhibitor,use="pairwise")))
+print(paste("Single pathway AKT correlation with Sigma AKT inhibitor",cor(basal[,26],basal$Sigma.AKT1.2.inhibitor,use="pairwise")))
+
+
 
 her<-subset(comb_drug[,1:44],comb_drug$Transcriptional.subtype...ERBB2.status=="ERBB2-amp"|comb_drug$Transcriptional.subtype...ERBB2.status=="ERBB2Amp")
 heatmap.2(as.matrix(her[,22:25]),col=my_palette,dendrogram="none",density.info="none",  trace="none",margins=c(12,9),main="HER2 Multi")
 heatmap.2(as.matrix(her[,26:29]),col=my_palette,dendrogram="none",density.info="none",  trace="none",margins=c(12,9),main="HER2 Single")
-cor(her[,22],her$Sigma.AKT1.2.inhibitor,use="pairwise")
+print(paste("Multipathway AKT correlation with Sigma AKT inhibitor",cor(her[,22],her$Sigma.AKT1.2.inhibitor,use="pairwise")))
+print(paste("Singlepathway AKT correlation with Sigma AKT inhibitor",cor(her[,26],her$Sigma.AKT1.2.inhibitor,use="pairwise")))
+
 
 claudin<-subset(comb_drug,comb_drug$Transcriptional.subtype...ERBB2.status=="Claudin-low")
 heatmap.2(as.matrix(claudin[,22:25]),col=my_palette,dendrogram="none", density.info="none", trace="none",margins=c(12,9),main="Claudin Multi")
 heatmap.2(as.matrix(claudin[,26:29]),col=my_palette,dendrogram="none", density.info="none", trace="none",margins=c(12,9),main="Claudin Single",scale="column")
-cor(claudin[,22],claudin$Sigma.AKT1.2.inhibitor,use="na.or.complete")
+print(paste("Multipathway AKT correlation with Sigma AKT inhibitor",cor(claudin[,22],claudin$Sigma.AKT1.2.inhibitor,use="pairwise")))
+print(paste("Singlepathway AKT correlation with Sigma AKT inhibitor",cor(claudin[,26],claudin$Sigma.AKT1.2.inhibitor,use="pairwise")))
+
+
 
 luminal<-subset(comb_drug,comb_drug$Transcriptional.subtype...ERBB2.status=="Luminal")
 heatmap.2(as.matrix(luminal[,22:25]),col=my_palette,dendrogram="none",density.info="none", trace="none",margins=c(12,9),main="Luminal Multi")
 heatmap.2(as.matrix(luminal[,26:29]),col=my_palette,dendrogram="none",density.info="none", trace="none",margins=c(12,9),main="Luminal Single",scale="row")
-cor(luminal[,22],luminal$Sigma.AKT1.2.inhibitor,use="na.or.complete")
+print(paste("Multipathway AKT correlation with Sigma AKT inhibitor",cor(luminal[,22],luminal$Sigma.AKT1.2.inhibitor,use="pairwise")))
+print(paste("Singlepathway AKT correlation with Sigma AKT inhibitor",cor(luminal[,26],luminal$Sigma.AKT1.2.inhibitor,use="pairwise")))
+
+
 
 #dev.off()
 ```

@@ -263,8 +263,9 @@ dim(comb)
 colnames(comb)<-gsub(pattern = "adap_multi.pathway_activity_testset.csv",replacement = "A",x = colnames(comb))
 #colnames(comb)<-gsub(pattern = "non",replacement = "NA",x = colnames(comb))
 pdf(file='~/Dropbox/bild_signatures//bild_signatures/activity_subtype.pdf')
-par(mfrow=c(2,1))
-heatmap.2(as.matrix(comb[,22:29]),col=my_palette,trace="none",main="Multipathway activity",margins=c(12,9), ylab="ICBP Cell lines",scale="row")
+
+heatmap.2(as.matrix(comb),col=my_palette,margins=c(12,9),dendrogram="none", trace="none",main="All possibilities")
+heatmap.2(as.matrix(comb[,22:29]),col=my_palette,trace="none",main="Multipathway activity",margins=c(12,9), ylab="ICBP Cell lines")
 heatmap.2(as.matrix(comb[,26:29]),margins=c(12,9),col=my_palette,lmat=rbind( c(0, 3, 4), c(2,1,0 ) ), lwid=c(1.5, 4, 2 ), trace="none",main="Single pathway activity", ylab="ICBP Cell lines",scale="row")
 
 comb_drug<-merge_drop(comb,drugs,by=0)
