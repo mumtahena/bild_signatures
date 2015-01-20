@@ -1,6 +1,6 @@
 ---
 title: "heatmaps of HER2, AKT, BAD and IGF1R activation status in ICBP cell lines"
-output: word_document
+output: pdf_document
 ---
 
 ```{r ,include=FALSE}
