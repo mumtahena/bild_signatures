@@ -1,0 +1,53 @@
+---
+title: "Parse HMEC Files"
+author: "Shelley"
+date: "December 16, 2014"
+output: html_document
+---
+
+GFP18_AKT_BAD_HER2_IGF1R_RAF_ERK <- as.matrix(read.table("~/Documents/ThesisWork/GitRepos/bild_signature_validation/Datasets/GFP18_AKT_BAD_HER2_IGF1R_RAF_ERK.tpmlog", stringsAsFactors=FALSE, row.names=1))
+head(GFP18_AKT_BAD_HER2_IGF1R_RAF_ERK)
+dim(GFP18_AKT_BAD_HER2_IGF1R_RAF_ERK)
+
+GFP <-subset(GFP18_AKT_BAD_HER2_IGF1R_RAF_ERK,select=c(GFP.1:GFP.12))
+head(GFP)
+length(colnames(GFP))
+write.table(GFP , file="~/Documents/ThesisWork/GitRepos/bild_signature_validation/Datasets/GFP18_tpmlog.txt" ,col.names=NA,sep='\t',quote=F)
+
+
+IGF1R <-subset(GFP18_AKT_BAD_HER2_IGF1R_RAF_ERK,select=c(IGF1R.1:IGF1R.6))
+head(IGF1R)
+length(colnames(IGF1R))
+write.table(IGF1R, file="~/Documents/ThesisWork/GitRepos/bild_signature_validation/Datasets/IGF1R_tpmlog.txt" ,col.names=NA,sep='\t',quote=F)
+
+
+AKT <-subset(GFP18_AKT_BAD_HER2_IGF1R_RAF_ERK,select=c(AKT.1:AKT.6))
+head(AKT)
+length(colnames(AKT))
+write.table(AKT , file="~/Documents/ThesisWork/GitRepos/bild_signature_validation/Datasets/AKT_tpmlog.txt" ,col.names=NA,sep='\t',quote=F)
+
+
+HER2 <-subset(GFP18_AKT_BAD_HER2_IGF1R_RAF_ERK,select=c(HER2.1:HER2.6))
+head(HER2)
+length(colnames(HER2))
+write.table(HER2 , file="~/Documents/ThesisWork/GitRepos/bild_signature_validation/Datasets/HER2_tpmlog.txt" ,col.names=NA,sep='\t',quote=F)
+
+
+RAF <-subset(GFP18_AKT_BAD_HER2_IGF1R_RAF_ERK,select=c(RAF.1:RAF.6))
+head(RAF)
+length(colnames(RAF))
+write.table(RAF , file="~/Documents/ThesisWork/GitRepos/bild_signature_validation/Datasets/RAF_tpmlog.txt" ,col.names=NA,sep='\t',quote=F)
+
+
+ERK <-subset(GFP18_AKT_BAD_HER2_IGF1R_RAF_ERK,select=c(ERK.1:ERK.6))
+head(ERK)
+length(colnames(ERK))
+write.table(ERK, file="~/Documents/ThesisWork/GitRepos/bild_signature_validation/Datasets/ERK_tpmlog.txt" ,col.names=NA,sep='\t',quote=F)
+
+
+BAD <-subset(GFP18_AKT_BAD_HER2_IGF1R_RAF_ERK,select=c(BAD.1:BAD.6))
+head(BAD)
+length(colnames(BAD))
+write.table(BAD , file="~/Documents/ThesisWork/GitRepos/bild_signature_validation/Datasets/BAD_tpmlog.txt" ,col.names=NA,sep='\t',quote=F)
+
+
