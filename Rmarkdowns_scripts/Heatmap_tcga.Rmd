@@ -1,0 +1,109 @@
+---
+title: "heatmaps using icbp breast cancer cell line dataset"
+output: pdf_document
+---
+
+```{r include=FALSE}
+merge_drop<-function(x,y,by=0)
+{
+  new_m<-merge(x,y,by=by)
+  rownames(new_m)<-new_m$Row.names
+  return(new_m[,2:length(colnames(new_m))])
+}
+
+
+setwd("~/Dropbox/bild_signatures/multi_tcga_expr_pc/")
+filenames<-system("ls */*/pathway_activity_testset*", intern=TRUE)
+filenames<-c(filenames,system("ls */*/*/pathway_activity_testset*", intern=TRUE))
+filenames
+
+for(i in 1:length(filenames))
+  {
+   f<-read.csv(filenames[i], header=1,row.names=1) ###reading in the filess one at a time
+  colnames(f)<-paste(filenames[i],colnames(f),sep='/')
+  if(i==1){
+    data<-f
+    }
+  else{
+    data<-cbind(data,f)
+    }
+  }
+#write.table(data,"~/Desktop/multipathway_preds.txt",sep='\t', col.names = NA,quote=F)
+```
+
+Creating heatmaps
+
+```{r include=FALSE}
+
+if (!require("gplots")) {
+   install.packages("gplots", dependencies = TRUE)
+   library(gplots)
+   }
+if (!require("RColorBrewer")) {
+   install.packages("RColorBrewer", dependencies = TRUE)
+   library(RColorBrewer)
+   }
+prediction_heatmap<-function(x,type=NULL)
+{
+    x_m<-x[,1:4]
+    colnames(x_m)<-c("AKT_multi","BAD_multi","HER2_multi","IGF1R_multi")
+    heatmap.2(as.matrix(x_m),col=my_palette,margins=c(10,9),dendrogram="none", trace="none",main=paste("Multi Adap Pathway","Activation Status",type,sep = "\n "),Rowv = NULL, Colv = NULL,density.info = "none",scale = 'row')
+    x_s<-subset(x, select=c(9,11,13,15))
+    colnames(x_s)<-c("AKT","BAD","HER2","IGF1R")
+    heatmap.2(as.matrix(x_s),col=my_palette,margins=c(10,9),dendrogram="none",Rowv = NULL, Colv = NULL, trace="none",main=paste("Single Adap Pathway"," Activation Status",type,sep = "\n"),density.info = 'none',scale = 'row')
+}
+
+pam50<-read.table("~/Dropbox/Datasets/tcga_breast_pam50.txt",sep='\t', stringsAsFactors = T,header=T, row.names=1)
+partial_sample_names<-rownames(pam50)
+sample_names<-rownames(data)
+counter=0
+for (j in 1:length(partial_sample_names)){
+    if(!is.na(pmatch(partial_sample_names[j],sample_names))){
+      partial_sample_names[j]<-sample_names[pmatch(partial_sample_names[j],sample_names, duplicates.ok=F)]  
+      counter=counter+1
+    }
+}
+rownames(pam50)<-partial_sample_names
+my_palette <- colorRampPalette(c("darkblue","aliceblue","brown4"))(n = 299)
+col_breaks = c(seq(0,0.2,length=100), seq(0.2,0.4,length=100), seq(0.4,1,length=100)) 
+
+pred_sub<-merge_drop(data,pam50,by=0)
+colnames(pred_sub)<-gsub(pattern = "pathway_activity_testset.csv",replacement = "",x = colnames(pred_sub))
+
+```
+
+Creating  heatmaps for predictions and drug response correlatins with pathway activity within subtypes
+
+```{r}
+basal<-subset(pred_sub,pred_sub$PAM50.mRNA=="Basal-like")
+prediction_heatmap(x=basal,type = "Basal")
+
+her<-subset(pred_sub,pred_sub$PAM50.mRNA=="HER2-enriched")
+prediction_heatmap(x=her,type = "ERBB2 Amplified")
+
+luminal<-subset(pred_sub,pred_sub$PAM50.mRNA=="Luminal A"|pred_sub$PAM50.mRNA=="Luminal B")
+prediction_heatmap(x=luminal,type = "Luminal")
+normal<-subset(pred_sub,pred_sub$PAM50.mRNA=="Normal-like")
+prediction_heatmap(x=normal,type = "Normal-like")
+```
+
+Now, trying to see patterns across all the subtypes in ICBP breast cancer cell lines
+
+```{r}
+multi_4<- rbind(basal[,1:4],her[,1:4],luminal[,1:4],normal[,1:4])
+heatmap.2(as.matrix(multi_4), RowSideColors = c(rep("gray", length(rownames(basal))),rep("blue", length(rownames(her))),rep("black", length(rownames(luminal))),rep("green",length(rownames(normal)))),col=my_palette,dendrogram="none", trace="none",margins=c(12,9),main="Multi Preds within Subtypes",scale='row',Rowv=F,Colv=NULL)
+par(lend = 1)           # square line ends for the color legend
+legend("topright",legend = c("Basal", "HER2", "Luminal","Normal-like"), col = c("gray", "blue", "black","green"),  lty= 1,lwd = 10)
+
+single_4<-rbind(basal[,c(9,11,13,15)],her[,c(9,11,13,15)],luminal[,c(9,11,13,15)],normal[,c(9,11,13,15)])
+heatmap.2(as.matrix(single_4), RowSideColors = c(rep("gray", length(rownames(basal))),rep("blue", length(rownames(her))),rep("black", length(rownames(luminal))),rep("green",length(rownames(normal)))),col=my_palette,dendrogram="none", trace="none",margins=c(12,9),main="Single Preds within Subtypes",scale="row",Rowv=F,Colv=NULL)
+par(lend = 1)           # square line ends for the color legend
+legend("topright",legend = c("Basal", "HER2", "Luminal","Normal-like"), col = c("gray", "blue", "black","green"),  lty= 1,lwd = 10)
+
+```
+
+```{r echo=FALSE}
+time<-format(Sys.time(),"%a %b %d %X %Y")
+```
+This analysis was run on `r time` 
+
