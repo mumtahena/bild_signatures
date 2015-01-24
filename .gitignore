@@ -7,3 +7,7 @@ bild_signature_validation/*
 */.DS_Store
 Rmarkdowns_scripts/*/*_cache/
 Rmarkdowns_scripts/*/*_files/
+Rmarkdowns_scripts/*/*_cache/*
+Rmarkdowns_scripts/*/*_files/*
+Rmarkdowns_scripts/*.png
+Rmarkdowns_scripts/.Rapp.history
