@@ -45,6 +45,7 @@ pcaplot<-function(mat,sub){
       }
   }
 }
+
 assign_easy_multi<-function(trainingData=train, testData=test, trainingLabel1=NULL,g=100,out_dir_base="~/Desktop/tmp",cov=0){
 if(cov==0){
   adap_folder<-paste(out_dir_base,paste( "adap_multi",sep=''),sep='/')
@@ -191,7 +192,7 @@ Checking for correlation..
 
 ```{r include=FALSE}
 setwd("~/Dropbox/bild_signatures/multi_icbp_expr_pc/")
-filenames<-system("ls */*/pathway_activity_testset*", intern=TRUE)
+filenames<-system("ls */adap*/pathway_activity_testset*", intern=TRUE)
 filenames
 
 for(i in 1:length(filenames))
@@ -210,53 +211,94 @@ for(i in 1:length(filenames))
 
 Now correlating multi pathway predictions with ICBP drugs..
 ```{r, cache=TRUE,include=FALSE,echo=FALSE}
-drugs<-read.delim("~/Dropbox/bild_signatures/Datasets/ICBP_drugs.txt", header=1, sep='\t',row.names=1)
-single<-read.csv("~/Dropbox/bild_signatures/multi_icbp_expr_pc/single_pathway_results.csv", row.names=1,header=1)
+#drugs<-read.delim("~/Dropbox/bild_signatures/Datasets/ICBP_drugs.txt", header=1, sep='\t',row.names=1)
+drugs<-read.delim("~/Documents/ThesisWork/GitRepos/u01project/SignatureValidations/EGFR/ICBP/ICBP_drugs.txt", header=1, sep='\t',row.names=1)
+data<-read.delim("~/Documents/ThesisWork/GitRepos/bild_signatures/multipathway_preds.txt", header=1, sep='\t',row.names=1) 
+data_single=read.csv("~/Documents/ThesisWork/GitRepos/bild_signatures/single_pathway_results.csv") 
+
+cor(data_single$akt_s_a, data_single$igf1r_s_a, use="na.or.complete") #0.01
+cor(data_single$akt_s_a, data_single$bad_s_a, use="na.or.complete") #0.45 #AKT and BAD correlated
+cor(data_single$igf1r_s_a, data_single$bad_s_a, use="na.or.complete") #-0.51 #IGFR and BAD neg correlation
+cor(data_single$igf1r_s_a, data_single$her2_s_a, use="na.or.complete") #0.01 
+cor(data_single$akt_s_a, data_single$her2_s_a, use="na.or.complete") #0.33  AKT and Her2 predictions corelated
+cor(data_single$bad, data_single$her2_s_a, use="na.or.complete") #0.03
+
+#do it for all of them (Shelley will do this)
+
+
+View(data_single)
+row.names(data_single)=data_single[,1]
+View(data_single)
+data_single=data_single[,-1]
+View(data_single)
 # mk2206<-read.table("~/Desktop/Drug reponse analysis/bildlab_drug response/mk2206.txt",sep='\t',row.names=1,header=1)
 # mk2206
-data_all<-cbind(data,single)
-pred_drug<-merge_drop(data_all,drugs,by=0)
-drug_srt<-subset(drugs,select = c("Lapatinib","Sigma.AKT1.2.inhibitor"))
-pred_drug<-merge_drop(data_all,drug_srt,by=0)
+View(data)
+View(drugs)
+pred_drug<-merge_drop(data,drugs,by=0)
+View(pred_drug)
 # mk2206<-subset(mk2206,select="Sensitivity..logEC50")
 # pred_drug<-merge_drop(pred_drug,mk2206,by=0)
 #dim(pred_drug)
+View(pred_drug)
+dim(pred_drug)
 
-colnames(pred_drug)<-gsub(pattern = "pathway_activity_testset.csv",replacement = "",x = colnames(pred_drug))
-head(pred_drug)
-cors = matrix(0,54,2)
-rownames(cors)=colnames(pred_drug)[1:54]
-colnames(cors)=c("Lapatinib","Sigma.akt.1.2.inhibitor")
-pathways<-pred_drug[,1:54]
-drugs<-pred_drug[,55:56]
+pred_drug<-merge_drop(data,drugs,by=0)
+pred_drug_single<-merge_drop(data_single,drugs,by=0)
 
-for (i in 1:54){
-  for (j in 1:2){
-    cors[i,j]=cor(pathways[,i],drugs[,j],use="pairwise.complete.obs")
-  }
+drug_prediction_correlations_multi= cor(pred_drug[1:25],pred_drug[36:125],use="na.or.complete")
+View(pred_drug_single)
+
+ncol(pred_drug_single)
+pred_drug_single[15]
+drug_prediction_correlations_single= cor(pred_drug_single[1:4],pred_drug_single[15:104],use="na.or.complete")
+
+View(drug_pre_diction_correlations_multi)
+View(drug_prediction_correlations_single)
+
+single_and_multi= rbind(drug_prediction_correlations_multi,drug_prediction_correlations_single)
+view(single_and_multi)
+write.table(single_and_multi,"~/Documents/ThesisWork/GitRepos/bild_signatures/Correlations_ICBP_Single_Multi.txt",sep='\t', col.names = NA,quote=F)
+
+# do with non_adpative
+# run assign single nonadaptive
+
+
+#for(i in 1:length(colnames(data)))
+  {
+  #print(colnames(data)[i])
+  #write.table(colnames(data)[i], file = "output.csv", row.names = FALSE, 
+              #append = TRUE, col.names = FALSE, sep = ", ")
+#   print("correlation with MK2206..an AKT  inhibitor")
+#   print(cor(pred_drug[i],as.numeric(pred_drug$Sensitivity..logEC50),use="na.or.complete"))
+  #print("correlation with Sigma AKT1/2..an AKT  inhibitor")
+  
+# cor(pred_drug[i],pred_drug$Sigma.AKT1.2.inhibitor,use="na.or.complete")
+  #print("correlation with GSK2126458..an AKT  inhibitor")
+  #print(cor(pred_drug[i],pred_drug$GSK2126458,use="na.or.complete"))
+  #print("correlation with TRIciribine..an AKT  inhibitor")
+  #print(cor(pred_drug[i],pred_drug$Triciribine,use="na.or.complete"))
+#   print("correlation with Tykerb.IGF1R..1.1...EGFR/HER2/IGF1R inhibitor")
+#   print(cor(pred_drug[i],pred_drug$Tykerb.IGF1R..1.1.,use="na.or.complete"))
+#   print("correlation with GSK1838705...an IGF1R inhibitor")
+#   print(cor(pred_drug[i],pred_drug$GSK1838705, use = "na.or.complete"))
+# #  
+  
 }
 
-write.table(cors,"~/Dropbox/bild_signatures/bild_signatures/Results/cor_mat_lapatinib_sigma_akt.txt",sep = '\t',col.names = NA,quote=F)
 
-for(i in 1:length(colnames(data)))
-  {
-  print(colnames(data)[i])
-  print("correlation with MK2206..an AKT  inhibitor")
-  print(cor(pred_drug[i],as.numeric(pred_drug$Sensitivity..logEC50),use="na.or.complete"))
-  print("correlation with Sigma AKT1/2..an AKT  inhibitor")
-  print(cor(pred_drug[i],pred_drug$Sigma.AKT1.2.inhibitor,use="na.or.complete"))
-  print("correlation with GSK2126458..an AKT  inhibitor")
-  print(cor(pred_drug[i],pred_drug$GSK2126458,use="na.or.complete"))
-  print("correlation with TRIciribine..an AKT  inhibitor")
-  print(cor(pred_drug[i],pred_drug$Triciribine,use="na.or.complete"))
-  print("correlation with Lapatinib...EGFR/HER2 inhibitor")
-  print(cor(pred_drug[i],pred_drug$Lapatinib,use="na.or.complete"))
-  print("correlation with Tykerb.IGF1R..1.1...EGFR/HER2/IGF1R inhibitor")
-  print(cor(pred_drug[i],pred_drug$Tykerb.IGF1R..1.1.,use="na.or.complete"))
-  print("correlation with GSK1838705...an IGF1R inhibitor")
-  print(cor(pred_drug[i],pred_drug$GSK1838705, use = "na.or.complete"))
-# #   
-  }
+
+
+
+# what we have done so far in term of cors is the AKT drugs to all combos on multi-path/single predictions.
+# THE IGF1R predictions where good with AKT inhibitors 
+# Shelley should correlate other drugs with all predictions. 
+  -# Don't have bad drugs
+  # HER2 with labpatinib, BIBW2206
+  
+  # we hav
+  
+
 ```
 
 
@@ -290,41 +332,26 @@ heatmap.2(as.matrix(comb),col=my_palette,margins=c(12,9),dendrogram="none", trac
 heatmap.2(as.matrix(comb[,22:29]),col=my_palette,trace="none",main="Multipathway activity",margins=c(12,9), ylab="ICBP Cell lines")
 heatmap.2(as.matrix(comb[,26:29]),margins=c(12,9),col=my_palette,lmat=rbind( c(0, 3, 4), c(2,1,0 ) ), lwid=c(1.5, 4, 2 ), trace="none",main="Single pathway activity", ylab="ICBP Cell lines",scale="row")
 
-comb_drug<-merge_drop(pred_drug[,1:54],drugs,by=0)
+comb_drug<-merge_drop(comb,drugs,by=0)
 #plot(hclust(dist(comb_drug[,1:48]), method = "complete", members = NULL))
-write(file="~/Dropbox/bild_signatures/bild_signatures/pathway prediction drug response results.xls","Correlations for pathway predictions with Lapatinib and Sigma.AKT.inhibitor in BASAL subtype")
-write('',file="~/Dropbox/bild_signatures/bild_signatures/pathway prediction drug response results.xls", append=T)
-basal<-subset(comb_drug,comb_drug$Transcriptional.subtype...ERBB2.status=="Basal")
-write("For Lapatinib",file="~/Dropbox/bild_signatures/bild_signatures/pathway prediction drug response results.xls", append =T)
-write(paste(colnames(basal)[1:54],cor(basal[,1:54],basal$Lapatinib,use="pairwise.complete.obs"),sep='\t'), file="~/Dropbox/bild_signatures/bild_signatures/pathway prediction drug response results.xls", append = T)
-write("For Sigma AKT inhibitor",file="~/Dropbox/bild_signatures/bild_signatures/pathway prediction drug response results.xls", append =T)
-write(paste(colnames(basal)[1:54],cor(basal[,1:54],basal$Sigma.AKT1.2.inhibitor,use="pairwise.complete.obs"),sep='\t'),file="~/Dropbox/bild_signatures/bild_signatures/pathway prediction drug response results.xls",append = T)
 
+basal<-subset(comb_drug,comb_drug$Transcriptional.subtype...ERBB2.status=="Basal")
 heatmap.2(as.matrix(basal[,22:25]),col=my_palette,margins=c(12,9),dendrogram="none", trace="none",main="Basal Multi")
 heatmap.2(as.matrix(basal[,26:29]),col=my_palette,margins=c(12,9),dendrogram="none",lmat=rbind( c(0, 3, 4), c(2,1,0 ) ), lwid=c(1.5, 4, 2 ), trace="none",main="Basal single")
+cor(basal[,22],basal$Sigma.AKT1.2.inhibitor,use="pairwise")
 
-
-her<-subset(comb_drug,comb_drug$Transcriptional.subtype...ERBB2.status=="ERBB2-amp"|comb_drug$Transcriptional.subtype...ERBB2.status=="ERBB2Amp")
-cor(her[,1:54],her$Lapatinib,use="pairwise.complete.obs")
-cor(her[,1:54],her$Sigma.AKT1.2.inhibitor,use="pairwise.complete.obs")
-
-
+her<-subset(comb_drug[,1:44],comb_drug$Transcriptional.subtype...ERBB2.status=="ERBB2-amp"|comb_drug$Transcriptional.subtype...ERBB2.status=="ERBB2Amp")
 heatmap.2(as.matrix(her[,22:25]),col=my_palette,dendrogram="none",lmat=rbind( c(0, 3, 4), c(2,1,0 ) ), lwid=c(1.5, 4, 2 ), trace="none",margins=c(12,9),main="HER2 Multi")
 heatmap.2(as.matrix(her[,26:29]),col=my_palette,dendrogram="none",lmat=rbind( c(0, 3, 4), c(2,1,0 ) ), lwid=c(1.5, 4, 2 ), trace="none",margins=c(12,9),main="HER2 Single",scale="column")
-
+cor(her[,22],her$Sigma.AKT1.2.inhibitor,use="pairwise")
 
 claudin<-subset(comb_drug,comb_drug$Transcriptional.subtype...ERBB2.status=="Claudin-low")
-cor(claudin[,1:54],claudin$Lapatinib,use="pairwise.complete.obs")# variance zero in this group
-cor(claudin[,1:54],claudin$Sigma.AKT1.2.inhibitor,use="pairwise.complete.obs")
-
-heatmap.2(as.matrix(claudin[,1:54]),col=my_palette,dendrogram="none",lmat=rbind( c(0, 3, 4), c(2,1,0 ) ), lwid=c(1.5, 4, 2 ), trace="none",margins=c(12,9),main="Claudin Multi")
+heatmap.2(as.matrix(claudin[,22:25]),col=my_palette,dendrogram="none",lmat=rbind( c(0, 3, 4), c(2,1,0 ) ), lwid=c(1.5, 4, 2 ), trace="none",margins=c(12,9),main="Claudin Multi")
 heatmap.2(as.matrix(claudin[,26:29]),col=my_palette,dendrogram="none",lmat=rbind( c(0, 3, 4), c(2,1,0 ) ), lwid=c(1.5, 4, 2 ), trace="none",margins=c(12,9),main="Claudin Single",scale="column")
 cor(claudin[,22],claudin$Sigma.AKT1.2.inhibitor,use="na.or.complete")
 
 luminal<-subset(comb_drug,comb_drug$Transcriptional.subtype...ERBB2.status=="Luminal")
-cor(luminal[,1:54],luminal$Lapatinib,use="pairwise.complete.obs")
-cor(luminal[,1:54],luminal$Sigma.AKT1.2.inhibitor,use="pairwise.complete.obs")
-heatmap.2(as.matrix(luminal[,1:54]),col=my_palette,dendrogram="none",lmat=rbind( c(0, 3, 4), c(2,1,0 ) ), lwid=c(1.5, 4, 2 ), trace="none",margins=c(12,9),main="Luminal Multi")
+heatmap.2(as.matrix(luminal[,22:25]),col=my_palette,dendrogram="none",lmat=rbind( c(0, 3, 4), c(2,1,0 ) ), lwid=c(1.5, 4, 2 ), trace="none",margins=c(12,9),main="Luminal Multi")
 heatmap.2(as.matrix(luminal[,26:29]),col=my_palette,dendrogram="none",lmat=rbind( c(0, 3, 4), c(2,1,0 ) ), lwid=c(1.5, 4, 2 ), trace="none",margins=c(12,9),main="Luminal Single",scale="row")
 cor(luminal[,22],luminal$Sigma.AKT1.2.inhibitor,use="na.or.complete")
 
