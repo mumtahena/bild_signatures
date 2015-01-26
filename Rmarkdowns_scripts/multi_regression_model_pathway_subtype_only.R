@@ -1,6 +1,6 @@
 setwd("~/Desktop/drug reponse analysis/")
 #dat = read.table("icbp_preds_drug_combat_adap.txt",header=T,row.names=1,sep='\t')
-multi<-read.csv("~/Desktop/tmp/multi_pathway_results.csv", row.names=1, header=T)
+multi<-read.table("~/Desktop/multipathway_preds", sep='\t',row.names=1, header=T)
 single<-read.csv("~/Desktop/tmp/single_pathway_results.csv", row.names=1, header=T)
 dat<-cbind(multi,single)
 rownames(dat)[1:7]<-c("184A1","184B5","21MT1","21MT2","21NT","21PT","600MPE")
@@ -14,6 +14,8 @@ merge_drop<-function(x,y,by=0)
 
 
 dat<-merge_drop(drugs,dat,by=0)
+subtype = dat[,1]
+
 colnames(dat)
 snp <- t(read.table("snp_all_v2.txt", row.names=1, header=T)) #71 250
 indel <- read.table("indel_all.txt", row.names=1,header=T) #36 38
@@ -43,7 +45,7 @@ prot=proteomics[match(cell,rownames(proteomics)),]
 
 #pathway = dat[,93:99]
 #colnames(pathway)=c('her2','raf','bad','akt','akt5','igf1r','erk')
-pathway = dat[,101:104]
+pathway = dat[,101:148]
 #colnames(pathway)=c('akt_multi','bad_multi','her2_multi','erk_multi','igf1r_multi','raf_multi')
 
 #### Pathway by subtype ####
@@ -77,11 +79,12 @@ for (i in 1:ncol(pathway)){
 }
 
 cors
-
+write.table(cors,"~/Desktop/all_cors.txt", sep='\t',col.names=NA,quote=F)
 
 ### Regression analysis ###
-multipathway = dat[,101:104]
-singlepathway= dat[,105:108]
+multipathway = dat[,137:140]
+singlepathway= dat[,145:148]
+preds<-dat[,101:148]
 ##colnames(pathway)=c('akt_multi','bad_multi','her2_multi','erk_multi','igf1r_multi','raf_multi','akt_single','bad_single','her2_single','erk_single','igf1r_single','raf_single')
 #pathway = pathway[,1:6]
 #pathway = pathway[,7:12]
@@ -89,12 +92,12 @@ singlepathway= dat[,105:108]
 library(MASS)
 drugs=dat[,11:100]
 #shortlist= c('Everolimus', "Erlotinib")
-#shortlist= c('Sigma.AKT1.2.inhibitor','BEZ235','BIBW2992','Everolimus','GSK2119563','GSK2126458','GSK2141795','GSK1059615','GSK650394','Lapatinib')
-shortlist= c('Sigma.AKT1.2.inhibitor','GSK2141795','Triciribine')
-
+shortlist= c('Sigma.AKT1.2.inhibitor','BEZ235','BIBW2992','Everolimus','GSK2119563','GSK2126458','GSK2141795','GSK1059615','GSK650394','Lapatinib')
+shortlist= c('Sigma.AKT1.2.inhibitor','GSK2141795','Triciribine','Everolimus','Temsirolimus','Lapatinib','BEZ235','BIBW2992')
+shortlist=c("Sigma.AKT1.2.inhibitor",'GSK2141795','Triciribine','Everolimus','Temsirolimus','Lapatinib')
 #shortlist = colnames(drugs)
 drugs_short=drugs[,match(shortlist,colnames(drugs))]
-rownames(drugs_short)=cell
+#rownames(drugs_short)=cell
 
 #### results ####
 library(MASS)
@@ -112,6 +115,7 @@ for (i in 1:ncol(drugs_short)){
   multiresults[[shortlist[i]]]=list(R2=summary(step1)$r.squared,model=round(summary(step1)$coeff,4),R2_sub=summary(step2)$r.squared,model_sub=round(summary(step2)$coeff,4),R2_sub_only=summary(fit3)$r.squared,model_sub_only=round(summary(fit3)$coeff,4))
   multimodels[[shortlist[i]]]=list(mod=step1,mod_sub=step2,mod_sub_only=fit3)
 }
+setwd("~/Dropbox/bild_signatures/bild_signatures/Results/")
 write(file="multipathway_results.xls","Results for MultiPathway predictions/Drug Models")
 for (i in 1:length(multiresults)){
   write('',file="multipathway_results.xls", append=T)
@@ -123,6 +127,10 @@ for (i in 1:length(multiresults)){
   write(paste("Model R2 (+subtype):",round(multiresults[[i]]$R2_sub,4), sep=' '),file="multipathway_results.xls", append=T)
   cat('\t',file="multipathway_results.xls", append=T)
   write.table(multiresults[[i]]$model_sub,file="multipathway_results.xls", quote=F, col.names=T, row.names=T, append=T,sep='\t')
+  write('',file="multipathway_results.xls", append=T)
+  write(paste("Model subtype only:",round(multiresults[[i]]$R2_sub_only,4), sep=' '),file="multipathway_results.xls", append=T)
+  cat('\t',file="multipathway_results.xls", append=T)
+  write.table(multiresults[[i]]$model_sub_only,file="multipathway_results.xls", quote=F, col.names=T, row.names=T, append=T,sep='\t')
   
 }
 ###########for single pathway predictions#############
