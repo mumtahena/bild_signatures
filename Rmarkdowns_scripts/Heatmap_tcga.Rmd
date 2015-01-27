@@ -1,6 +1,6 @@
 ---
-title: "heatmaps using icbp breast cancer cell line dataset"
-output: pdf_document
+title: "heatmaps using TCGA BRCA datasets"
+output: html_document
 ---
 
 ```{r include=FALSE}
@@ -91,12 +91,12 @@ Now, trying to see patterns across all the subtypes in ICBP breast cancer cell l
 
 ```{r}
 multi_4<- rbind(basal[,1:4],her[,1:4],luminal[,1:4],normal[,1:4])
-heatmap.2(as.matrix(multi_4), RowSideColors = c(rep("gray", length(rownames(basal))),rep("blue", length(rownames(her))),rep("black", length(rownames(luminal))),rep("green",length(rownames(normal)))),col=my_palette,dendrogram="none", trace="none",margins=c(12,9),main="Multi Preds within Subtypes",scale='row',Rowv=F,Colv=NULL)
+heatmap.2(as.matrix(multi_4), RowSideColors = c(rep("gray", length(rownames(basal))),rep("blue", length(rownames(her))),rep("black", length(rownames(luminal))),rep("green",length(rownames(normal)))),col=my_palette,dendrogram="none", trace="none",margins=c(12,9),main="Multi Preds within Subtypes",scale='row',Rowv=F,Colv=F)
 par(lend = 1)           # square line ends for the color legend
 legend("topright",legend = c("Basal", "HER2", "Luminal","Normal-like"), col = c("gray", "blue", "black","green"),  lty= 1,lwd = 10)
 
 single_4<-rbind(basal[,c(9,11,13,15)],her[,c(9,11,13,15)],luminal[,c(9,11,13,15)],normal[,c(9,11,13,15)])
-heatmap.2(as.matrix(single_4), RowSideColors = c(rep("gray", length(rownames(basal))),rep("blue", length(rownames(her))),rep("black", length(rownames(luminal))),rep("green",length(rownames(normal)))),col=my_palette,dendrogram="none", trace="none",margins=c(12,9),main="Single Preds within Subtypes",scale="row",Rowv=F,Colv=NULL)
+heatmap.2(as.matrix(single_4), RowSideColors = c(rep("gray", length(rownames(basal))),rep("blue", length(rownames(her))),rep("black", length(rownames(luminal))),rep("green",length(rownames(normal)))),col=my_palette,dendrogram="none", trace="none",margins=c(12,9),main="Single Preds within Subtypes",scale="row",Rowv=F,Colv=F)
 par(lend = 1)           # square line ends for the color legend
 legend("topright",legend = c("Basal", "HER2", "Luminal","Normal-like"), col = c("gray", "blue", "black","green"),  lty= 1,lwd = 10)
 

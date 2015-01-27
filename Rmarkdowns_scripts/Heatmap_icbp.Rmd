@@ -1,4 +1,4 @@
-``dxx---
+---
 title: "heatmaps using icbp breast cancer cell line dataset"
 output: html_document
 ---
@@ -78,9 +78,9 @@ if (!require("RColorBrewer")) {
    }
 prediction_heatmap<-function(x,type=NULL)
 {
-  heatmap.2(as.matrix(x[,43:46]),col=my_palette,margins=c(12,9),dendrogram="none", trace="none",main=paste(type,"Multi Adap Pathway Activation Status",sep = " "),Rowv = NULL, Colv = NULL,cellnote = round(x[,43:46],digits = 2),notecol = 'black',density.info = "none",scale = 'row')
+  heatmap.2(as.matrix(x[,43:46]),col=my_palette,margins=c(12,9),dendrogram="none", trace="none",main=paste(type,"Multi Adap Pathway","Activation Status",sep = "\n"),Rowv = NULL, Colv = NULL,cellnote = round(x[,43:46],digits = 2),notecol = 'black',density.info = "none",scale = 'row')
 
-  heatmap.2(as.matrix(x[,51:54]),col=my_palette,margins=c(12,9),dendrogram="none",Rowv = NULL, Colv = NULL, trace="none",main=paste(type,"Single Adap Pathway Activation Status",sep = " "),cellnote = round(x[,51:54],digits = 2),notecol = 'black',density.info = 'none',scale = 'row')
+  heatmap.2(as.matrix(x[,51:54]),col=my_palette,margins=c(12,9),dendrogram="none",Rowv = NULL, Colv = NULL, trace="none",main=paste(type,"Single Adap Pathway"," Activation Status",sep = "\n"),cellnote = round(x[,51:54],digits = 2),notecol = 'black',density.info = 'none',scale = 'row')
 }
 correlation_heatmap<-function(x,drugs_names=NULL,type=NULL)
 {
@@ -95,7 +95,7 @@ correlation_heatmap<-function(x,drugs_names=NULL,type=NULL)
     }
   }
 
-heatmap.2(as.matrix(cors),col=redgreen,margins=c(12,9),dendrogram="none",Rowv = NULL, Colv = NULL, trace="none",main=paste("Correlations of predicted ","pathway activation with drug response in",type,sep='\n '),cellnote = round(cors,digits = 2),notecol = 'black',density.info = 'none')
+heatmap.2(as.matrix(cors),col=redgreen,margins=c(12,9),dendrogram="none",Rowv = NULL, Colv = NULL, trace="none",main=paste("Correlations of predicted ","pathway activation with"," drug response in",type,sep='\n '),cellnote = round(cors,digits = 2),notecol = 'black',density.info = 'none')
 }
 
 multi<-data#read.table("~/Desktop/multipathway_preds.txt", sep='\t',row.names=1,header=1)
@@ -115,7 +115,7 @@ colnames(comb_drug)<-gsub(pattern = "adap_multi.pathway_activity_testset.csv",re
 #colnames(comb)<-gsub(pattern = "non",replacement = "NA",x = colnames(comb))
 rownames(comb)[1:7]<-c("184A1","184B5","21MT1","21MT2","21NT","21PT","600MPE")
 
-pdf(file='~/Dropbox/bild_signatures//bild_signatures/activity_subtype.pdf')
+#pdf(file='~/Dropbox/bild_signatures//bild_signatures/activity_subtype.pdf')
 
 
 heatmap.2(as.matrix(comb[,43:46]),col=my_palette,trace="none",main="Predicted Multipathway Adaptive Activity",margins=c(12,9),Rowv =F,Colv=F,dendrogram="none",ylab="ICBP Cell lines",breaks = col_breaks)
@@ -148,12 +148,12 @@ Now, trying to see patterns across all the subtypes in ICBP breast cancer cell l
 ```{r}
 multi_4<- rbind(basal[,43:46],her[,43:46],claudin[,43:46],luminal[,43:46])
 #png("heatmaps_multi_adap.png",width = 5*300,height = 5*300,res = 800, pointsize = 8)  
-heatmap.2(as.matrix(multi_4), RowSideColors = c(rep("gray", length(rownames(basal))),rep("blue", length(rownames(her))),rep("black", length(rownames(claudin))),rep("green",length(rownames(luminal)))),col=my_palette,dendrogram="none", trace="none",margins=c(12,9),main="Multi Preds within Subtypes",scale='row',Rowv=F)
+heatmap.2(as.matrix(multi_4), RowSideColors = c(rep("gray", length(rownames(basal))),rep("blue", length(rownames(her))),rep("black", length(rownames(claudin))),rep("green",length(rownames(luminal)))),col=my_palette,dendrogram="none", trace="none",margins=c(12,9),main="Multi Preds within Subtypes",scale='row',Rowv=F,Colv=F)
 par(lend = 1)           # square line ends for the color legend
 legend("topright",legend = c("Basal", "HER2", "Claudin","Luminal"), col = c("gray", "blue", "black","green"),  lty= 1,lwd = 10)
 
 single_4<-rbind(basal[,51:54],her[,51:54],claudin[,51:54],luminal[,51:54])
-heatmap.2(as.matrix(single_4), RowSideColors = c(rep("gray", length(rownames(basal))),rep("blue", length(rownames(her))),rep("black", length(rownames(claudin))),rep("green",length(rownames(luminal)))),col=my_palette,dendrogram="none", trace="none",margins=c(12,9),main="Single Preds within Subtypes",scale="row",Rowv=F)
+heatmap.2(as.matrix(single_4), RowSideColors = c(rep("gray", length(rownames(basal))),rep("blue", length(rownames(her))),rep("black", length(rownames(claudin))),rep("green",length(rownames(luminal)))),col=my_palette,dendrogram="none", trace="none",margins=c(12,9),main="Single Preds within Subtypes",scale="row",Rowv=F,Colv=F)
 par(lend = 1)           # square line ends for the color legend
 legend("topright",legend = c("Basal", "HER2", "Claudin","Luminal"), col = c("gray", "blue", "black","green"),  lty =  1,lwd = 10)
 
