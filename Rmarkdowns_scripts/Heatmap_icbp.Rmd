@@ -30,16 +30,77 @@ for(i in 1:length(filenames))
 #write.table(data,"~/Desktop/multipathway_preds.txt",sep='\t', col.names = NA,quote=F)
 ```
 
+Shelley Making Her Subtype File
+```{r}
+
+drugs<-read.delim("~/Documents/ThesisWork/GitRepos/u01project/SignatureValidations/EGFR/ICBP/ICBP_drugs.txt", header=1, sep='\t',row.names=1)
+data<-read.delim("~/Documents/ThesisWork/GitRepos/bild_signatures/multipathway_preds.txt", header=1, sep='\t',row.names=1) 
+single=read.csv("~/Documents/ThesisWork/GitRepos/bild_signatures/single_pathway_results.csv") 
+
+data_all<-cbind(data,single)
+row.names(data_all)
+rownames(data_all)[1:7]<-c("184A1","184B5","21MT1","21MT2","21NT","21PT","600MPE")
+pred_drug<-merge_drop(data_all,drugs,by=0)
+pred_drug=pred_drug[,-26]
+dim(pred_drug)
+View(pred_drug)
+row.names(pred_drug)
+
+
+basal<-subset(pred_drug,pred_drug$Transcriptional.subtype...ERBB2.status=="Basal")
+View(basal) #10
+
+her<-subset(pred_drug,pred_drug$Transcriptional.subtype...ERBB2.status=="ERBB2-amp"|pred_drug$Transcriptional.subtype...ERBB2.status=="ERBB2Amp")
+dim(her) #21
+View(her)
+claudin<-subset(pred_drug,pred_drug$Transcriptional.subtype...ERBB2.status=="Claudin-low")
+View(claudin) #5
+luminal<-subset(pred_drug,pred_drug$Transcriptional.subtype...ERBB2.status=="Luminal")
+View(luminal) #11
+
+colnames(pred_drug)
+head(pred_drug[4])
+ncol(pred_drug)
+
+ncol(pred_drug)
+basal[40]
+View(basal[41:129])
+
+drug_prediction_correlations_multi= cor(pred_drug[1:25],pred_drug[36:125],use="na.or.complete")
+
+basal[1:29]
+basal[40:129]
+
+basal_cor=cor(basal[1:29],basal[40:129],use="na.or.complete")
+head(basal_cor)
+her_cor=cor(her[1:29],her[40:129], use="na.or.complete")
+head(her_cor)
+claudin_cor=cor(claudin[1:29],claudin[40:129], use="na.or.complete")
+head(claudin_cor)
+lum_cor=cor(luminal[1:29],luminal[40:129], use="na.or.complete")
+head(lum_cor)
+View(claudin)
+
+```
+
+
+
+
+
+
+
 Now correlating multi pathway predictions with ICBP drugs..
 ```{r, cache=TRUE,include=FALSE,echo=FALSE}
 drugs<-read.delim("~/Dropbox/bild_signatures/Datasets/ICBP_drugs.txt", header=1, sep='\t',row.names=1)
 single<-read.csv("~/Dropbox/bild_signatures/multi_icbp_expr_pc/single_pathway_results.csv", row.names=1,header=1)
+
 # mk2206<-read.table("~/Desktop/Drug reponse analysis/bildlab_drug response/mk2206.txt",sep='\t',row.names=1,header=1)
 # mk2206
 data_all<-cbind(data,single)
 pred_drug<-merge_drop(data_all,drugs,by=0)
-drug_srt<-subset(drugs,select = c("Lapatinib","Sigma.AKT1.2.inhibitor","Temsirolimus","Everolimus"))
-pred_drug<-merge_drop(data_all,drug_srt,by=0)
+View(pred_drug)
+#drug_srt<-subset(drugs,select = c("Lapatinib","Sigma.AKT1.2.inhibitor","Temsirolimus","Everolimus"))
+#pred_drug<-merge_drop(data_all,drug_srt,by=0)
 # mk2206<-subset(mk2206,select="Sensitivity..logEC50")
 # pred_drug<-merge_drop(pred_drug,mk2206,by=0)
 #dim(pred_drug)
