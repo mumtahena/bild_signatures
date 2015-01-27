@@ -5,6 +5,7 @@ Darasets/*
 bild_signature_validation
 bild_signature_validation/*
 .DS_Store
+.DS_Store
 .gitignore
 */.DS_Store
 Rmarkdowns_scripts/*/*_cache/
