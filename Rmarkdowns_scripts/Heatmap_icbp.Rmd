@@ -33,9 +33,9 @@ for(i in 1:length(filenames))
 Shelley Making Her Subtype File
 ```{r}
 
-drugs<-read.delim("~/Documents/ThesisWork/GitRepos/u01project/SignatureValidations/EGFR/ICBP/ICBP_drugs.txt", header=1, sep='\t',row.names=1)
-data<-read.delim("~/Documents/ThesisWork/GitRepos/bild_signatures/multipathway_preds.txt", header=1, sep='\t',row.names=1) 
-single=read.csv("~/Documents/ThesisWork/GitRepos/bild_signatures/single_pathway_results.csv") 
+# drugs<-read.delim("~/Documents/ThesisWork/GitRepos/u01project/SignatureValidations/EGFR/ICBP/ICBP_drugs.txt", header=1, sep='\t',row.names=1)
+# data<-read.delim("~/Documents/ThesisWork/GitRepos/bild_signatures/multipathway_preds.txt", header=1, sep='\t',row.names=1) 
+# single=read.csv("~/Documents/ThesisWork/GitRepos/bild_signatures/single_pathway_results.csv") 
 
 data_all<-cbind(data,single)
 row.names(data_all)
