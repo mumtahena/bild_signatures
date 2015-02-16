@@ -32,13 +32,13 @@ for(i in 1:length(filenames))
 
 Shelley Making Her Subtype File
 ```{r}
-
+drugs<-read.delim("~/Dropbox/bild_signatures/Datasets/ICBP_drugs.txt", header=1, sep='\t',row.names=1)
 # drugs<-read.delim("~/Documents/ThesisWork/GitRepos/u01project/SignatureValidations/EGFR/ICBP/ICBP_drugs.txt", header=1, sep='\t',row.names=1)
 # data<-read.delim("~/Documents/ThesisWork/GitRepos/bild_signatures/multipathway_preds.txt", header=1, sep='\t',row.names=1) 
 # single=read.csv("~/Documents/ThesisWork/GitRepos/bild_signatures/single_pathway_results.csv") 
-
 data_all<-cbind(data,single)
 row.names(data_all)
+#data_all<-data
 rownames(data_all)[1:7]<-c("184A1","184B5","21MT1","21MT2","21NT","21PT","600MPE")
 pred_drug<-merge_drop(data_all,drugs,by=0)
 pred_drug=pred_drug[,-26]
@@ -171,10 +171,12 @@ col_breaks = c(seq(0,0.2,length=100), seq(0.2,0.4,length=100), seq(0.4,1,length=
 #   pointsize = 8)  
 comb<-cbind(multi,single)
 dim(comb)
+
+rownames(comb)[1:7]<-c("184A1","184B5","21MT1","21MT2","21NT","21PT","600MPE")
 comb_drug<-merge_drop(pred_drug[,1:54],drugs,by=0)
 colnames(comb_drug)<-gsub(pattern = "adap_multi.pathway_activity_testset.csv",replacement = "A",x = colnames(comb_drug))
 #colnames(comb)<-gsub(pattern = "non",replacement = "NA",x = colnames(comb))
-rownames(comb)[1:7]<-c("184A1","184B5","21MT1","21MT2","21NT","21PT","600MPE")
+
 
 #pdf(file='~/Dropbox/bild_signatures//bild_signatures/activity_subtype.pdf')
 
@@ -183,7 +185,7 @@ heatmap.2(as.matrix(comb[,43:46]),col=my_palette,trace="none",main="Predicted Mu
 heatmap.2(as.matrix(comb[,51:54]),margins=c(12,9),col=my_palette, Rowv=F,Colv=F,dendrogram="none",trace="none",main="Predicted Single Pathway Activity",ylab="ICBP Cell lines",scale = "row")
 
 colnames(pred_drug)<-gsub(pattern = "pathway_activity_testset.csv",replacement = "",x = colnames(pred_drug))
-drugs_names=c("Lapatinib","Sigma.AKT1.2.inhibitor","Temsirolimus","Everolimus")
+drugs_names=c("Baicalein","Lapatinib","Sigma.AKT1.2.inhibitor","Temsirolimus","Everolimus")
 
 ```
 Creating  heatmaps for predictions and drug response correlatins with pathway activity within subtypes
