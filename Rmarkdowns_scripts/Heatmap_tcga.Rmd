@@ -68,8 +68,8 @@ write.table(single_and_multi,"Correlations_ICBP_Single_Multi2.txt",sep='\t', col
 ####brca patient clinical data
 brca_clin<-read.table("~/Dropbox/bild_signatures/Datasets/nationwidechildrens.org_clinical_drug_brca.txt", header=1,sep='\t')
 brca_clin_f<-brca_clin[3:1601,1:12]
-brca_chem<-subset(brca_clin_f, brca_clin_f$pharmaceutical_therapy_type=="Chemotherapy"&brca_clin_f$bcr_patient_barcode%in%unique(brca_clin_f$bcr_patient_barcode))
-dim(brca_chem)
+#brca_chem<-subset(brca_clin_f, brca_clin_f$pharmaceutical_therapy_type=="Chemotherapy"&brca_clin_f$bcr_patient_barcode%in%unique(brca_clin_f$bcr_patient_barcode))
+brca_chem<-brca_clin_f
 brca_clincal<-read.csv("~/Dropbox/TCGA_PANCAN20_manuscript/Datasets/nationwidechildrens.org_clinical_patient_brca.txt",row.names=1, header=1,sep='\t')
 brca_pat<-brca_clincal[3:1019,]
 brca_pat$newID<-gsub(pattern='-', replacement='.', x=rownames(brca_pat))
@@ -86,24 +86,48 @@ for (j in 1:length(brca_chem$newID)){
 }
 counter
 bad_exp<-merge(data,brca_chem,by.x = 0,by.y='newID')
-all_bad<-subset(bad_exp,(bad_exp$tumor_status=="TUMOR FREE"|bad_exp$tumor_status=="WITH TUMOR")&(bad_exp$treatment_best_response=="Complete Response"|bad_exp$treatment_best_response=="Clinical Progressive Disease")&bad_exp$pharmaceutical_therapy_type=="Chemotherapy"&bad_exp$pr_status_by_ihc!="Positive"&bad_exp$er_status_by_ihc!="Positive"&bad_exp$her2_status_by_ihc!="Positive")
-
+#filtering out the hormone positive samples
+all_bad<-subset(bad_exp,(bad_exp$pr_status_by_ihc!=c("[Not Evaluated]","Indeterminate")&bad_exp$er_status_by_ihc!="[Not Evaluated]"&bad_exp$her2_status_by_ihc!=c("[Not Evaluated]","Indeterminate","Equivocal")))
+#all_bad<-subset(bad_exp,(bad_exp$tumor_status=="TUMOR FREE"|bad_exp$tumor_status=="WITH TUMOR")&(bad_exp$treatment_best_response=="Complete Response"|bad_exp$treatment_best_response=="Clinical Progressive Disease")&bad_exp$pr_status_by_ihc!="Positive"&bad_exp$er_status_by_ihc!="Positive"&bad_exp$her2_status_by_ihc!="Positive")
+all_bad<-subset(all_bad,all_bad$vital_status=="Alive"|all_bad$vital_status=="Dead")
+#all_bad<-subset(bad_exp,bad_exp$tumor_status=="TUMOR FREE"|bad_exp$tumor_status=="WITH TUMOR")
 dim(all_bad)
 summary(all_bad$treatment_best_response)
-all_bad<-subset(bad_exp,bad_exp$treatment_best_response=="Complete Response"|bad_exp$treatment_best_response=="Clinical Progressive Disease")
+summary(all_bad$tumor_status)
+alive=subset(all_bad,all_bad$vital_status=='Alive')
+dead=subset(all_bad,all_bad$vital_status=="Dead")
+boxplot(alive[,3]~alive$er_status_by_ihc)#,dead[,3]~dead$er_status_by_ihc)
+boxplot(all_bad[,3]&all_bad$tumor_status=="Alive")
+boxplot(all_bad[,3]~all_bad$vital_status)
+#all_bad<-subset(bad_exp,bad_exp$treatment_best_response=="Complete Response"|bad_exp$treatment_best_response=="Clinical Progressive Disease")#|all_bad[,3]>0.45|all_bad[,3]<0.25)
 #all_bad[,11]<-rank(all_bad[,11])
+summary(all_bad$treatment_best_response)
+summary(all_bad$tumor_status)
 
+#com_bad<-subset(all_bad,all_bad$treatment_best_response=="Complete Response"|all_bad$tumor_status=="TUMOR FREE")
+com_bad<-subset(all_bad,all_bad$tumor_status=="TUMOR FREE")
+dim(com_bad)
+herceptin_samples<-c('TCGA.AC.A2FB.01A.11R.A17B.07','TCGA.AQ.A04H.01B.11R.A10J.07','TCGA.BH.A0HY.01A.11R.A056.07','TCGA.E2.A3DX.01A.21R.A213.07')
 
-com_bad<-subset(all_bad,all_bad$treatment_best_response=="Complete Response"&all_bad$tumor_status=="TUMOR FREE")
+com_bad_f<-com_bad[!com_bad[,1]%in%herceptin_samples,]    
+dim(com_bad_f)
 not_bad<-subset(all_bad,all_bad$treatment_best_response=="Clinical Progressive Disease"|all_bad$tumor_status=="WITH TUMOR")
-##4th element sample "TCGA-A2-A3XU" received hormanal therapy. so excluding this TCGA-A2-A3XU
+not_bad<-subset(all_bad,all_bad$tumor_status=="WITH TUMOR")
+dim(not_bad)
+
+#write.table(not_bad,"~/Desktop/low_bad.txt",sep='\t')
+##4th element sample "TCGA-A2-A3XU" received hormanal therapy(arimidex). so excluding this TCGA-A2-A3XU
 not_bad<-not_bad[-7,]
 par(mfrow = c(1, 1))
 par(mar=c(5.6, 4.1, 1.5, 0.5)) 
 boxplot(com_bad[,3],not_bad[,3],main="BAD pathway prediction in TCGA patients receiving chemotherapy",names=c("Complete Response\n or TUMOR FREE","Clinical Progressive Disease\n or WITH TUMOR"))
-text(0,0,"p-val= 2.223e-05")
+#text(0,0,"p-val= 2.223e-05")
+
+t.test(com_bad_f[,3],not_bad[,3])
+wilcox.test(com_bad_f[,3],not_bad[,3])
 
 t.test(com_bad[,3],not_bad[,3])
+wilcox.test(com_bad[,3],not_bad[,3])
 
 
 boxplot(com_bad[,11],not_bad[,11],names=c("Complete Response\n or TUMOR FREE","Clinical Progressive Disease\n or WITH TUMOR"))
@@ -111,6 +135,7 @@ t.test(com_bad[,11],not_bad[,11])
 
 
 dim(com_bad)
+dim(not_bad)
 ```
 
 Creating heatmaps
