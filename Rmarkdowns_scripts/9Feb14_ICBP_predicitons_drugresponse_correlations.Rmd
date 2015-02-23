@@ -1,0 +1,48 @@
+---
+title: "Pathway Predictions/Drug Response Correlations"
+author: "Shelley"
+date: "February 9, 2015"
+output: html_document
+---
+
+Read in the single and multi-pathway ASSIGN predictions
+```{r}
+drug_response_data<-read.delim("~/Documents/ThesisWork/GitRepos/u01project/SignatureValidations/EGFR/ICBP/ICBP_drugs.txt", header=1, sep='\t',row.names=1)
+
+multipathway_data<-read.delim("~/Documents/ThesisWork/GitRepos/bild_signatures/Results/predictions/multipathway_preds.txt", header=1, sep='\t',row.names=1) 
+
+singlepathway_data=read.csv("~/Documents/ThesisWork/GitRepos/bild_signatures/Results/predictions/single_pathway_results.csv") 
+
+row.names(singlepathway_data)=singlepathway_data[,1]
+singlepathway_data=singlepathway_data[,-1]
+```
+
+Merge the pathway predictions and the ICBP drugs
+```{r}
+
+merge_drop<-function(x,y,by=0)
+{
+  new_m<-merge(x,y,by=by)
+  rownames(new_m)<-new_m$Row.names
+  return(new_m[,2:length(colnames(new_m))])
+}
+
+pred_drug_multi<-merge_drop(multipathway_data,drugs,by=0)
+pred_drug_single<-merge_drop(singlepathway_data,drugs,by=0)
+
+
+```
+
+Perform correlations, rbind, and write to a file
+```{r}
+drug_prediction_correlations_multi= cor(pred_drug_multi[1:25],pred_drug_multi[36:125],use="na.or.complete")
+
+drug_prediction_correlations_single= cor(pred_drug_single[1:4],pred_drug_single[15:104],use="na.or.complete")
+
+single_and_multi= rbind(drug_prediction_correlations_multi,drug_prediction_correlations_single)
+
+write.table(single_and_multi,"~/Documents/ThesisWork/GitRepos/bild_signatures/Correlations_ICBP_Single_Multi2.txt",sep='\t', col.names = NA,quote=F)
+
+```
+
+

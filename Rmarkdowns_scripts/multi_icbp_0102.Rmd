@@ -213,8 +213,52 @@ Now correlating multi pathway predictions with ICBP drugs..
 ```{r, cache=TRUE,include=FALSE,echo=FALSE}
 #drugs<-read.delim("~/Dropbox/bild_signatures/Datasets/ICBP_drugs.txt", header=1, sep='\t',row.names=1)
 drugs<-read.delim("~/Documents/ThesisWork/GitRepos/u01project/SignatureValidations/EGFR/ICBP/ICBP_drugs.txt", header=1, sep='\t',row.names=1)
-data<-read.delim("~/Documents/ThesisWork/GitRepos/bild_signatures/multipathway_preds.txt", header=1, sep='\t',row.names=1) 
-data_single=read.csv("~/Documents/ThesisWork/GitRepos/bild_signatures/single_pathway_results.csv") 
+data<-read.delim("~/Documents/ThesisWork/GitRepos/bild_signatures/Results/predictions//multipathway_preds.txt", header=1, sep='\t',row.names=1) 
+data_trans=t(data)
+write.table(data_trans,"~/Desktop/multipathway_preds_trans.txt",sep='\t', col.names = NA,quote=F)
+data_single=read.csv("~/Documents/ThesisWork/GitRepos/bild_signatures/Results/predictions/single_pathway_results.csv") 
+
+
+#AKT
+cor(data$AKT_BAD.adap_multi.pathway_activity_testset.csv.akt, data$AKT_IGF1R.adap_multi.pathway_activity_testset.csv.akt, use="na.or.complete" )
+cor(data$AKT_BAD.adap_multi.pathway_activity_testset.csv.akt, data$Her2_AKT.adap_multi.pathway_activity_testset.csv.akt, ,use="na.or.complete" )
+cor(data$AKT_BAD.adap_multi.pathway_activity_testset.csv.akt, data$AKT_BAD_HER2.adap_multi.pathway_activity_testset.csv.akt, use="na.or.complete" )
+cor(data$AKT_BAD.adap_multi.pathway_activity_testset.csv.akt, data$AKT_BAD_IGF1R.adap_multi.pathway_activity_testset.csv.akt, use="na.or.complete" )
+cor(data$AKT_BAD.adap_multi.pathway_activity_testset.csv.akt, data$all_4.adap_multi.pathway_activity_testset.csv.akt, use="na.or.complete" )
+cor(data$Her2_AKT.adap_multi.pathway_activity_testset.csv.akt, data$AKT_BAD_IGF1R.adap_multi.pathway_activity_testset.csv.akt,use="na.or.complete" )
+cor(data$Her2_AKT.adap_multi.pathway_activity_testset.csv.akt,data$AKT_BAD_HER2.adap_multi.pathway_activity_testset.csv.akt,use="na.or.complete")
+cor(data$Her2_AKT.adap_multi.pathway_activity_testset.csv.akt, data$AKT_BAD_IGF1R.adap_multi.pathway_activity_testset.csv.akt, use="na.or.complete" )
+cor(data$Her2_AKT.adap_multi.pathway_activity_testset.csv.akt, data$all_4.adap_multi.pathway_activity_testset.csv.akt, use="na.or.complete" )
+cor(data$AKT_IGF1R.adap_multi.pathway_activity_testset.csv.akt, data$AKT_BAD_HER2.adap_multi.pathway_activity_testset.csv.akt, use="na.or.complete" )
+cor(data$AKT_IGF1R.adap_multi.pathway_activity_testset.csv.akt, data$AKT_BAD_IGF1R.adap_multi.pathway_activity_testset.csv.akt, use="na.or.complete" )
+cor(data$AKT_IGF1R.adap_multi.pathway_activity_testset.csv.akt, data$all_4.adap_multi.pathway_activity_testset.csv.akt, use="na.or.complete" )
+cor(data$AKT_BAD_HER2.adap_multi.pathway_activity_testset.csv.akt, data$AKT_BAD_IGF1R.adap_multi.pathway_activity_testset.csv.akt, use="na.or.complete" )
+cor(data$AKT_BAD_HER2.adap_multi.pathway_activity_testset.csv.akt, data$all_4.adap_multi.pathway_activity_testset.csv.akt, use="na.or.complete" )
+cor(data$AKT_BAD_IGF1R.adap_multi.pathway_activity_testset.csv.akt, data$all_4.adap_multi.pathway_activity_testset.csv.akt, use="na.or.complete" )
+
+#BAD
+
+#HER2
+cor(data$AKT_BAD_HER2.adap_multi.pathway_activity_testset.csv.her2, data$Her2_AKT.adap_multi.pathway_activity_testset.csv.her2, use="na.or.complete" )
+cor(data$AKT_BAD_HER2.adap_multi.pathway_activity_testset.csv.her2, data$Her2_BAD.adap_multi.pathway_activity_testset.csv.her2, use="na.or.complete" )
+cor(data$Her2_AKT.adap_multi.pathway_activity_testset.csv.her2, data$Her2_BAD.adap_multi.pathway_activity_testset.csv.her2, use="na.or.complete" )
+
+
+#IGFR
+cor(data$AKT_BAD_IGF1R.adap_multi.pathway_activity_testset.csv.igf1r, data$AKT_IGF1R.adap_multi.pathway_activity_testset.csv.igf1r, use="na.or.complete" )
+cor(data$AKT_BAD_IGF1R.adap_multi.pathway_activity_testset.csv.igf1r, data$BAD_IGF1R.adap_multi.pathway_activity_testset.csv.igf1r, use="na.or.complete" )
+cor(data$BAD_IGF1R.adap_multi.pathway_activity_testset.csv.igf1r, data$AKT_IGF1R.adap_multi.pathway_activity_testset.csv.igf1r, use="na.or.complete" )
+
+
+
+# multi all four
+cor(data$all_4.adap_multi.pathway_activity_testset.csv.akt, data$all_4.adap_multi.pathway_activity_testset.csv.igf1r,use="na.or.complete") # 0.1874326
+cor(data$all_4.adap_multi.pathway_activity_testset.csv.akt, data$all_4.adap_multi.pathway_activity_testset.csv.bad,use="na.or.complete") # -0.4327576
+cor(data$all_4.adap_multi.pathway_activity_testset.csv.akt, data$all_4.adap_multi.pathway_activity_testset.csv.her2,use="na.or.complete") # 0.26
+cor(data$all_4.adap_multi.pathway_activity_testset.csv.her2, data$all_4.adap_multi.pathway_activity_testset.csv.igf1r,use="na.or.complete") #-0.41
+cor(data$all_4.adap_multi.pathway_activity_testset.csv.her2, data$all_4.adap_multi.pathway_activity_testset.csv.bad,use="na.or.complete") #-0.34
+cor(data$all_4.adap_multi.pathway_activity_testset.csv.bad, data$all_4.adap_multi.pathway_activity_testset.csv.igf1r,use="na.or.complete") #-0.46
+
 
 cor(data_single$akt_s_a, data_single$igf1r_s_a, use="na.or.complete") #0.01
 cor(data_single$akt_s_a, data_single$bad_s_a, use="na.or.complete") #0.45 #AKT and BAD correlated
@@ -233,7 +277,7 @@ data_single=data_single[,-1]
 View(data_single)
 # mk2206<-read.table("~/Desktop/Drug reponse analysis/bildlab_drug response/mk2206.txt",sep='\t',row.names=1,header=1)
 # mk2206
-<<<<<<< HEAD
+
 View(data)
 View(drugs)
 pred_drug<-merge_drop(data,drugs,by=0)
@@ -243,26 +287,27 @@ data_all<-cbind(data,single)
 pred_drug<-merge_drop(data_all,drugs,by=0)
 drug_srt<-subset(drugs,select = c("Lapatinib","Sigma.AKT1.2.inhibitor","Temsirolimus","Everolimus"))
 pred_drug<-merge_drop(data_all,drug_srt,by=0)
->>>>>>> 2fac797b6fb95768996bf82bab2763ae0f043efa
+
 # mk2206<-subset(mk2206,select="Sensitivity..logEC50")
 # pred_drug<-merge_drop(pred_drug,mk2206,by=0)
 #dim(pred_drug)
 View(pred_drug)
 dim(pred_drug)
 
-<<<<<<< HEAD
-pred_drug<-merge_drop(data,drugs,by=0)
+
+pred_drug_multi<-merge_drop(data,drugs,by=0)
 pred_drug_single<-merge_drop(data_single,drugs,by=0)
 
-drug_prediction_correlations_multi= cor(pred_drug[1:25],pred_drug[36:125],use="na.or.complete")
+drug_prediction_correlations_multi= cor(pred_drug_multi[1:25],pred_drug_multi[36:125],use="na.or.complete")
+View(pred_drug_multi)
 View(pred_drug_single)
-
 ncol(pred_drug_single)
 pred_drug_single[15]
 drug_prediction_correlations_single= cor(pred_drug_single[1:4],pred_drug_single[15:104],use="na.or.complete")
-=======
 colnames(pred_drug)<-gsub(pattern = "pathway_activity_testset.csv",replacement = "",x = colnames(pred_drug))
 head(pred_drug)
+
+
 cors = matrix(0,54,4)
 rownames(cors)=colnames(pred_drug)[1:54]
 colnames(cors)=c("Lapatinib","Sigma.akt.1.2.inhibitor","Temsirolimus","Everolimus")
@@ -274,14 +319,37 @@ for (i in 1:length(colnames(data))){
     cors[i,j]=cor(pathways[,i],drugs[,j],use="pairwise.complete.obs")
   }
 }
->>>>>>> 2fac797b6fb95768996bf82bab2763ae0f043efa
+
 
 View(drug_pre_diction_correlations_multi)
 View(drug_prediction_correlations_single)
 
-<<<<<<< HEAD
+
+
 single_and_multi= rbind(drug_prediction_correlations_multi,drug_prediction_correlations_single)
-view(single_and_multi)
+plot(single_and_multi[2])
+View(single_and_multi)
+
+row.names(single_and_multi)
+
+# for sinlge
+cor(single_and_multi[26,], single_and_multi[27,] ) # 0.5269367
+cor(single_and_multi[26,], single_and_multi[28,] ) #0.7882588
+cor(single_and_multi[26,], single_and_multi[29,] ) # 0.6173746
+cor(single_and_multi[27,], single_and_multi[28,] ) # 0.2896494
+cor(single_and_multi[27,], single_and_multi[29,] ) # -0.02523773
+cor(single_and_multi[28,], single_and_multi[29,] ) # 0.7182353
+
+#mutli
+
+cor(single_and_multi[22,], single_and_multi[23,] )  #-0.6161527
+cor(single_and_multi[22,], single_and_multi[24,] ) # -0.2015345
+cor(single_and_multi[22,], single_and_multi[25,] ) # 0.4247083
+cor(single_and_multi[23,], single_and_multi[24,] ) # -0.04692151
+cor(single_and_multi[23,], single_and_multi[25,] ) # -0.4218923
+cor(single_and_multi[24,], single_and_multi[25,] ) # -0.7734885
+
+
 write.table(single_and_multi,"~/Documents/ThesisWork/GitRepos/bild_signatures/Correlations_ICBP_Single_Multi.txt",sep='\t', col.names = NA,quote=F)
 
 # do with non_adpative
@@ -342,7 +410,7 @@ write.table(single_and_multi,"~/Documents/ThesisWork/GitRepos/bild_signatures/Co
 =======
 # # #   
 #   }
->>>>>>> 2fac797b6fb95768996bf82bab2763ae0f043efa
+
 ```
 
 
