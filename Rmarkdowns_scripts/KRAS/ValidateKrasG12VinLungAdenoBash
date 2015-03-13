@@ -1,5 +1,0 @@
-#!/bin/bash
-
-Rscript ValidateKrasG12VinLungAdeno.R ../2014.11.17_KRAS-G12V_BinReg_toLungAdeno/OutputFiles/ InputFiles/pancan_cleaned_filtered_annotated_KRAS_LungOnly.txt OutputFiles/KrasG12validation.pdf
-
-

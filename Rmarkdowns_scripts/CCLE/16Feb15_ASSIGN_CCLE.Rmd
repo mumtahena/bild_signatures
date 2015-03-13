@@ -1,0 +1,420 @@
+ ---
+title: "multipathway_ASSIGN"
+author: "Shelley MacNeil"
+date: "Feb 16, 2016"
+---
+This script will 1) filter CCLE breast cancer cell lines, 2) make single and multi-pathway based predictions using ASSIGN, and 3) Correlate pathway predictions with drug response. 
+
+
+Import ASSIGN 
+```{r,echo=FALSE,cache=TRUE,include=FALSE}
+library(sva)
+library(ASSIGN)
+source("~/Documents/ThesisWork/GitRepos/bild_signatures/Rmarkdowns_scripts/ICBP/23Feb15_multi_icbp.Rmd")
+```
+
+
+Reading in the HMEC signatures
+```{r include=FALSE,echo=FALSE}
+signatures<-as.matrix(read.table("~/Documents/ThesisWork/GitRepos/bild_signature_validation_old_repo/Datasets/GFP18_AKT_BAD_HER2_IGF1R_RAF_ERK.tpmlog",sep='\t',row.names=1,header=1))
+control<-subset(signatures, select=GFP.1:GFP.12)
+her2<-subset(signatures, select=HER2.1:HER2.6)
+akt<-subset(signatures,select=AKT.1:AKT.6)
+bad<-subset(signatures,select=BAD.1:BAD.6)
+igf1r<-subset(signatures,select=IGF1R.1:IGF1R.6)
+validated_signatures<-cbind(control,akt,bad,her2,igf1r)
+dim(validated_signatures)
+```
+
+Preparing CCLE data: read in CCLE Meta data and filter out the breast cancer cell lines to merge with expression data later
+```{r}
+#Metadata
+CCLE_Meta_data= as.matrix(read.table("~/Documents/ThesisWork/CCLE_Data/CCLE_RNASeq_Metadata.txt", sep='\t', stringsAsFactors=FALSE, header=1, row.names=1))
+head(CCLE_Meta_data)
+
+#determine how many cells lines for each cancer type
+CCLE_MetaData_Summary = summary(CCLE_Meta_data, maxsum=31)
+CCLE_MetaData_Summary= CCLE_MetaData_Summary[1:22,1]
+split_summary=do.call(rbind.data.frame, strsplit(CCLE_MetaData_Summary, ":"))
+View(split_summary)
+rownames(split_summary)= split_summary[,1]
+colnames(split_summary)=c("Cell Line", "Freq")
+#split_summary=split_summary[-1]
+barplot(as.numeric(split_summary[,2]),names.arg = split_summary[,1],main = "Frequency of type of cell lines in CCLE database",cex.names = 0.5)
+
+#write cell line cancer type frequencies to a file and plot in excel, can't figure out how to plot that dataframe
+CCLE_cellline_frequency_file="~/Documents/ThesisWork/GitRepos/bild_signatures/CCLE_cancertype_freqs.txt"
+write.table(split_summary,CCLE_cellline_frequency_file,sep='\t', col.names = NA,quote=F)
+system("cat ~/Documents/ThesisWork/GitRepos/bild_signatures/CCLE_cancertype_freqs.txt ")
+
+# subset the CCLE breast cancer cell lines
+CCLE_Breast=subset(CCLE_Meta_data, grepl("BRCA", CCLE_Meta_data[,1]))
+head(CCLE_Breast)
+```
+
+Filter out the CCLE Breast Cancer Cell RNA-seq expression data
+```{r}
+# Read in RNA-seq CCLE data (935 cell lines)
+CCLE_expression_data<-read.table("~/Documents/ThesisWork/CCLE_Data/CCLE_RNASeq_TPMlog.txt", sep='\t', check.names = FALSE, stringsAsFactors=FALSE, header=1, row.names=1)
+CCLE_expression_data_transposed= t(CCLE_expression_data) #tranpose so we can merge with metadata
+
+#Keep only the breast cell lines and save to a file 1) with meta data 2) with out meta data
+CCLE_Expression_Breast=merge(CCLE_Breast, CCLE_expression_data_transposed, by=0) # 56 breast cell lines left 
+rownames(CCLE_Expression_Breast)=CCLE_Expression_Breast[,3]
+rownames(CCLE_Expression_Breast)
+
+#remove the metadata so it won't mess up the transpose
+CCLE_Breast_Metadata_Removed=CCLE_Expression_Breast[,11:ncol(CCLE_Expression_Breast)]
+View(head(CCLE_Breast_Metadata_Removed))
+rownames(CCLE_Breast_Metadata_Removed)
+# Transpose again so the genes are row names, becomes a matrix
+CCLE_Breast_Metadata_Removed=t(CCLE_Breast_Metadata_Removed)
+
+#save the Breast only RNA-seq CCLE data
+CCLE_Breast_RNASeqFile_no_metadata="~/Documents/ThesisWork/GitRepos/bild_signatures/CCLE_Breast_RNAseq_TPMlog.txt"
+CCLE_Breast_RNASeq_no_meta=write.table(CCLE_Breast_Metadata_Removed,CCLE_Breast_RNASeqFile_no_metadata, sep='\t', col.names = NA,quote=F)
+system("cat ~/Documents/ThesisWork/GitRepos/bild_signatures/CCLE_Breast_RNAseq_TPMlog.txt | head")
+CCLE_Breast_Metadata_Removed=read.table("~/Documents/ThesisWork/GitRepos/bild_signatures/CCLE/CCLE_Breast_RNAseq_TPMlog.txt", sep='\t', check.names = FALSE, stringsAsFactors=FALSE, header=1, row.names=1)
+View(CCLE_Breast_Metadata_Removed)
+```
+
+Filter low varying genes from the signatures and batch adjust CCLE and HMEC signatures 
+```{r}
+# filtering low variance genes in the HMECS, started with 23367 genes
+validated_signatures_filtered <-validated_signatures[apply(validated_signatures[,1:35]==0,1,mean) < 0.85,]
+dim(validated_signatures_filtered) #18116
+
+signatures_CCLE_filtered = merge_drop(validated_signatures_filtered,CCLE_Breast_Metadata_Removed,by=0)
+dim(signatures_CCLE_filtered) #91
+View(head(signatures_CCLE_filtered))
+head(signatures_CCLE_filtered[36 ])
+#tell pcaplot how many of each thing you have?
+sub<-c(12,6,6,5,6,56)
+sub
+pcaplot(signatures_CCLE_filtered,sub)
+
+# match the batch matrix
+batch1_CCLE<-as.matrix(cbind(c(colnames(validated_signatures_filtered),colnames(CCLE_Breast_Metadata_Removed)),c(rep(1,length(colnames(validated_signatures_filtered))),rep(2,length(colnames(CCLE_Breast_Metadata_Removed))))))
+                                                                                                                                                                     # Add the HMECSs as a covariate
+batches_w_HMECS_as_covar<-as.matrix(cbind(c(colnames(validated_signatures_filtered),colnames(CCLE_Breast_Metadata_Removed)),c(rep(1,length(colnames(validated_signatures_filtered))),rep(2,length(colnames(CCLE_Breast_Metadata_Removed)))),c(rep(1,12),rep(2,23),rep(1,56))))
+
+#GTP as covar
+batches_w_GFP_as_covar<-as.matrix(cbind(c(colnames(validated_signatures_filtered),colnames(CCLE_Breast_Metadata_Removed)),c(rep(1,length(colnames(validated_signatures_filtered))),rep(2,length(colnames(CCLE_Breast_Metadata_Removed)))),c(rep(1,12),rep(2,23),rep(2,56))))
+batches_w_GFP_as_covar
+
+batches_w_CCLE_as_covar<-as.matrix(cbind(c(colnames(validated_signatures_filtered),colnames(CCLE_Breast_Metadata_Removed)),c(rep(1,length(colnames(validated_signatures_filtered))),rep(2,length(colnames(CCLE_Breast_Metadata_Removed)))),c(rep(1,12),rep(1,23),rep(2,56))))
+
+mod <- model.matrix(~as.factor(batches_w_HMECS_as_covar[,3]))
+mod2 <- model.matrix(~as.factor(batches_w_GFP_as_covar[,3]))
+mod3 = model.matrix(~as.factor(batches_w_CCLE_as_covar[,3]))
+mod3
+
+combat_expr1_CCLE<-ComBat(dat=signatures_CCLE_filtered, batch=batch1_CCLE[,2], mod=NULL, numCovs=NULL)
+combat_expr2_with_covars<-ComBat(dat=signatures_CCLE_filtered, batch=batches_w_HMECS_as_covar[,2], mod=mod, numCovs=NULL)
+combat_expr3_with_covars_GFP<-ComBat(dat=signatures_CCLE_filtered, batch=batches_w_GFP_as_covar[,2], mod=mod2, numCovs=NULL)
+# does not work to put the CCLE as the covar 
+#combat_expr4_with_covars_CCLE<-ComBat(dat=signatures_CCLE_filtered, batch=batches_w_CCLE_as_covar[,2], mod=mod3, numCovs=NULL)
+
+pcaplot(combat_expr1_CCLE,sub)
+pcaplot(combat_expr2_with_covars,sub) # still have those outliers
+pcaplot(combat_expr3_with_covars_GFP,sub) # still has outliers
+
+#subset Combat adjusted values
+c_gfp<-subset(combat_expr1, select=GFP.1:GFP.12)
+c_akt<-subset(combat_expr1, select=AKT.1:AKT.6)
+c_bad<-subset(combat_expr1, select=BAD.1:BAD.6)
+c_her2<-subset(combat_expr1, select=HER2.1:HER2.6)
+c_igf1r<-subset(combat_expr1, select=IGF1R.1:IGF1R.6)
+CCLE_testing_data=combat_expr1_CCLE[,36:ncol(combat_expr1_CCLE)]
+
+```
+
+
+
+Run ASSIGN for single pathways
+```{r}
+#1. HER2
+train_her<-cbind(c_gfp,c_her2)
+trainingLabelha<-list(control=list(her2=1:12),her2=13:17)
+dir.create("~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/CCLE_ASSIGN_Results/Single/Her2")
+assign_easy_multi(trainingData = train_her,test=CCLE_testing_data,trainingLabel1 = trainingLabelha, g=15,out_dir_base = "~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/CCLE_ASSIGN_Results/Single/Her2")
+
+#2. AKT
+train_akt<-cbind(c_gfp,c_akt)
+head(train_akt)
+trainingLabel_akt<-list(control=list(akt=1:12),akt=13:18)
+trainingLabel_akt
+dir.create("~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/CCLE_ASSIGN_Results/Single/AKT")
+assign_easy_multi(trainingData = train_akt,test=CCLE_testing_data,trainingLabel1 = trainingLabel_akt,g=150,out_dir_base = "~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/CCLE_ASSIGN_Results/Single/AKT")
+
+#3. BAD
+train_bad<-cbind(c_gfp,c_bad)
+trainingLabel_bad<-list(control=list(bad=1:12),bad=13:18)
+dir.create( "~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/CCLE_ASSIGN_Results/BAD")
+assign_easy_multi(trainingData =train_bad,test=CCLE_testing_data,trainingLabel1 = trainingLabel_bad,g=150,out_dir_base = "~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/CCLE_ASSIGN_Results/Single/BAD")
+
+#4. IGF1R
+train_igfr<-cbind(c_gfp,c_igf1r)
+trainingLabel_igfr<-list(control=list(igf1r=1:12),igf1r=13:18)
+dir.create( "~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/CCLE_ASSIGN_Results/IGF1R")
+assign_easy_multi(trainingData =train_igfr,test=CCLE_testing_data,trainingLabel1 = trainingLabel_igfr,g=100,out_dir_base = "~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/CCLE_ASSIGN_Results/IGF1R")
+```
+
+
+run ASSIGN for multi-pathway combinations
+```{r}
+#############trying two pathways at a time in multipathway#############
+#1. HER2 & AKT
+trainha<-cbind(c_gfp,c_akt,c_her2)
+testha<-combat_expr1[,36:ncol(combat_expr1)]
+trainingLabelha<-list(control=list(akt=1:12,her2=1:12),akt=13:18,her2=19:23)
+dir.create("~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/CCLE_ASSIGN_Results/Her2_AKT")
+assign_easy_multi(trainingData = trainha,test=testha,trainingLabel1 = trainingLabelha,g=c(150,15),out_dir_base = "~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/CCLE_ASSIGN_Results/Multipathway/Her2_AKT")
+
+#2. HER2 & BAD
+trainhb<-cbind(c_gfp,c_bad,c_her2)
+trainingLabelhb<-list(control=list(bad=1:12,her2=1:12),bad=13:18,her2=19:23)
+dir.create( "~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/CCLE_ASSIGN_Results/Her2_BAD")
+assign_easy_multi(trainingData = trainhb,test=CCLE_testing_data,trainingLabel1 = trainingLabelhb,g=c(150,15),out_dir_base = "~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/CCLE_ASSIGN_Results/Multipathway/Her2_BAD")
+
+#3. HER2 & IGF1R
+trainhi<-cbind(c_gfp,c_igf1r,c_her2)
+trainingLabelhi<-list(control=list(igf1r=1:12,her2=1:12),igf1r=13:18,her2=19:23)
+dir.create( "~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/Her2_IGF1R")
+assign_easy_multi(trainingData =trainhi,test=CCLE_testing_data,trainingLabel1 = trainingLabelhi,g=c(100,15),out_dir_base = "~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/Multipathway/Her2_IGF1R")
+
+#4. AKT & BAD
+trainab<-cbind(c_gfp,c_akt,c_bad)
+trainingLabelab<-list(control=list(akt=1:12,bad=1:12),akt=13:18,bad=19:24)
+dir.create( "~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/AKT_BAD")
+assign_easy_multi(trainingData = trainab,test=CCLE_testing_data,trainingLabel1 = trainingLabelab,g=c(150,150),out_dir_base = "~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/Multipathway/AKT_BAD")
+
+#5. AKT & IGF1R
+trainai<-cbind(c_gfp,c_akt,c_igf1r)
+trainingLabelai<-list(control=list(akt=1:12,igf1r=1:12),akt=13:18,igf1r=19:24)
+dir.create( "~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/AKT_IGF1R")
+assign_easy_multi(trainingData = trainai,test=CCLE_testing_data,trainingLabel1 = trainingLabelai,g=c(150,100),out_dir_base = "~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/Multipathway/AKT_IGF1R")
+
+#6. BAD & IGF1R
+trainbi<-cbind(c_gfp,c_bad,c_igf1r)
+trainingLabelbi<-list(control=list(bad=1:12,igf1r=1:12),bad=13:18,igf1r=19:24)
+dir.create( "~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/BAD_IGF1R")
+assign_easy_multi(trainingData = trainbi,test=CCLE_testing_data,trainingLabel1 = trainingLabelbi,g=c(150,100),out_dir_base = "~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/Multipathway/BAD_IGF1R")
+
+#############trying three pathways at a time in multipathway#############
+#1. HER2, AKT & BAD
+trainhab<-cbind(c_gfp,c_akt,c_bad,c_her2)
+testhab<-combat_expr1[,36:90]
+trainingLabelhab<-list(control=list(akt=1:12,bad=1:12,her2=1:12),akt=13:18,bad=19:24,her2=25:29)
+dir.create( "~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/AKT_BAD_HER2")
+assign_easy_multi(trainingData = trainhab,test=CCLE_testing_data,trainingLabel1 = trainingLabelhab,g=c(150,150,15),out_dir_base = "~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/Multipathway/AKT_BAD_HER2")
+
+#2. HER2, BAD & IGF1R
+trainhbi<-cbind(c_gfp,c_igf1r,c_bad,c_her2)
+testhbi<-combat_expr1[,36:90]
+trainingLabelhbi<-list(control=list(igf1r=1:12,bad=1:12,her2=1:12),igf1r=13:18,bad=19:24,her2=25:29)
+dir.create( "~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/IGF1R_BAD_HER2")
+assign_easy_multi(trainingData = trainhbi,test=CCLE_testing_data,trainingLabel1 = trainingLabelhbi,g=c(100,150,15),out_dir_base = "~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/Multipathway/IGF1R_BAD_HER2")
+
+#3. AKT, BAD & IGF1R
+trainabi<-cbind(c_gfp,c_akt,c_bad,c_igf1r)
+dim(trainabi)
+head(trainabi)
+trainingLabelabi<-list(control=list(akt=1:12,bad=1:12,igf1r=1:12),akt=13:18,bad=19:24,igf1r=25:30)
+dir.create( "~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/CCLE_ASSIGN_Results/AKT_BAD_IGF1R") 
+assign_easy_multi(trainingData = trainabi,test=CCLE_testing_data, trainingLabel1 = trainingLabelabi,g=c(150,150,100), out_dir_base = "~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/CCLE_ASSIGN_Results/Multipathway/AKT_BAD_IGF1R")
+
+########################trying all four at once#####################
+trainhall<-cbind(c_gfp,c_akt,c_bad,c_her2,c_igf1r)
+testall<-combat_expr1[,36:90]
+trainingLabel<-list(control=list(akt=1:12,bad=1:12,her2=1:12,igf1r=1:12),akt=13:18, bad=19:24,her2=25:29,igf1r=30:35)
+dir.create( "~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/all_4")
+assign_easy_multi(trainingData = trainhall,test=CCLE_testing_data,trainingLabel1 = trainingLabel,g=c(150,150,15,100),out_dir_base = "~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/Multipathway/all_4")
+
+```
+
+Read back in all the predictions into one matrix for correlations
+```{r include=FALSE}
+setwd("~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/CCLE_ASSIGN_Results/Multipathway/")
+filenames_adaptive<-system("ls */adap*/pathway_activity_testset*", intern=TRUE)
+filenames_nonadaptive<-system("ls */non*/pathway_activity_testset*", intern=TRUE)
+filenames_adaptive
+filenames_nonadaptive
+length(filenames_adaptive)
+
+for(i in 1:length(filenames_adaptive))
+  {
+   f<-read.csv(filenames_adaptive[i], header=1,row.names=1) ###reading in the filess one at a time
+   print(f)
+   colnames(f)<-paste(filenames_adaptive[i],colnames(f),sep='/')
+  if(i==1){
+    data_adaptive<-f
+    }
+  else{
+    data_adaptive<-cbind(data_adaptive,f)
+    }
+  }
+
+View(data_adaptive)
+write.table(data_adaptive,"~/Desktop/CCLE_multipathway_predictions_adaptive.txt",sep='\t', col.names = NA,quote=F)
+
+for(i in 1:length(filenames_nonadaptive))
+  {
+   f<-read.csv(filenames_nonadaptive[i], header=1,row.names=1) ###reading in the filess one at a time
+  colnames(f)<-paste(filenames_nonadaptive[i],colnames(f),sep='/')
+  if(i==1){
+    data_nonadaptive<-f
+    }
+  else{
+    data_nonadaptive<-cbind(data_nonadaptive,f)
+    }
+  }
+
+View(data_nonadaptive)
+write.table(data_nonadaptive,"~/Desktop/CCLE_multipathway_predictions_nonadpative.txt",sep='\t', col.names = NA,quote=F)
+```
+
+File single pathway files
+```{r include=FALSE}
+setwd("~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/CCLE_ASSIGN_Results/Single")
+filenames_adaptive_single<-system("ls */adap*/pathway_activity_testset*", intern=TRUE)
+filenames_nonadaptive_single<-system("ls */non*/pathway_activity_testset*", intern=TRUE)
+filenames_adaptive_single
+
+
+for(i in 1:length(filenames_adaptive_single))
+  {
+   f<-read.csv(filenames_adaptive_single[i], header=1,row.names=1) ###reading in the filess one at a time
+   print(f)
+   colnames(f)<-paste(filenames_adaptive_single[i],colnames(f),sep='/')
+  if(i==1){
+    data_adaptive_single<-f
+    }
+  else{
+    data_adaptive_single<-cbind(data_adaptive_single,f)
+    }
+  }
+
+View(data_adaptive_single)
+
+write.table(data_adaptive_single,"~/Desktop/CCLE_sinlgepathway_predictions_adaptive.txt",sep='\t', col.names = NA,quote=F)
+
+for(i in 1:length(filenames_nonadaptive_single))
+  {
+   f<-read.csv(filenames_nonadaptive_single[i], header=1,row.names=1) ###reading in the filess one at a time
+  colnames(f)<-paste(filenames_nonadaptive_single[i],colnames(f),sep='/')
+  if(i==1){
+    data_nonadaptive_single<-f
+    }
+  else{
+    data_nonadaptive_single<-cbind(data_nonadaptive_single,f)
+    }
+  }
+
+View(data_nonadaptive_single)
+write.table(data_nonadaptive_single,"~/Desktop/CCLE_singlepathway_predictions_nonadapative.txt",sep='\t', col.names = NA,quote=F)
+```
+
+
+Read in files single and multi apaptive_apaptive
+```{r}
+setwd("~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/CCLE_ASSIGN_Results/Single")
+filenames_single_adaptive_adaptive<-system("ls */adap_adap*/pathway_activity_testset*", intern=TRUE)
+filenames_single_adaptive_adaptive
+
+for(i in 1:length(filenames_single_adaptive_adaptive))
+  {
+   f<-read.csv(filenames_single_adaptive_adaptive[i], header=1,row.names=1) ###reading in the filess one at a time
+   print(f)
+   colnames(f)<-paste(filenames_single_adaptive_adaptive[i],colnames(f),sep='/')
+  if(i==1){
+    data_adaptive_adap_single<-f
+    }
+  else{
+    data_adaptive_adap_single<-cbind(data_adaptive_adap_single,f)
+    }
+  }
+
+View(data_adaptive_adap_single)
+
+write.table(data_adaptive_single,"~/Desktop/CCLE_single_predictions_adaptiveB_adaptiveS.txt",sep='\t', col.names = NA,quote=F)
+
+setwd("~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/CCLE_ASSIGN_Results/Multipathway")
+filenames_multi_adaptive_adaptive<-system("ls */adap_adap*/pathway_activity_testset*", intern=TRUE)
+filenames_multi_adaptive_adaptive
+
+for(i in 1:length(filenames_multi_adaptive_adaptive))
+  {
+   f<-read.csv(filenames_multi_adaptive_adaptive[i], header=1,row.names=1) ###reading in the filess one at a time
+  colnames(f)<-paste(filenames_multi_adaptive_adaptive[i],colnames(f),sep='/')
+  if(i==1){
+    data_multi_adaptive_adaptive<-f
+    }
+  else{
+    data_multi_adaptive_adaptivee<-cbind(data_multi_adaptive_adaptive,f)
+    }
+  }
+
+View(data_multi_adaptive_adaptive)
+write.table(data_multi_adaptive_adaptive,"~/Desktop/CCLE_multi_predictions_adapativeB_adaptiveS.txt",sep='\t', col.names = NA,quote=F)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+gjhCorrelate Adaptive results with Non-apative results
+```{r}
+Cors_adap_nonadap= cor(data_nonadaptive,data_adaptive, method= "spearman")
+write.table(Cors_adap_nonadap,"~/Desktop/Corelations_adap_nonadap_CCLE_predictions.txt",sep='\t', col.names = NA,quote=F)
+View(Cors_adap_nonadap)
+```
+
+
+Read back in the files
+```{r}
+
+CCLE_multi_adap<-read.delim("~/Desktop/CCLE_multipathway_predictions_adaptive.txt", header=1, sep='\t',row.names=1)
+CCLE_multi_adap_cors=cor(CCLE_multi_adap, CCLE_multi_adap, use="na.or.complete", method="spearman")
+View(CCLE_multi_adap_cors[22:25,22:25])
+
+CCLE_multi_nonadap<-read.delim("~/Desktop/CCLE_multipathway_predictions_nonadpative.txt", header=1, sep='\t',row.names=1)
+CCLE_multi_nonadap_cors=cor(CCLE_multi_nonadap, CCLE_multi_nonadap, use="na.or.complete", method="spearman")
+View(CCLE_multi_nonadap_cors[22:25,22:25])
+
+CCLE_single_nonadap<-read.delim("~/Desktop/CCLE_singlepathway_predictions_nonadapative.txt", header=1, sep='\t',row.names=1)
+CCLE_single_nonadap_cors=cor(CCLE_single_nonadap, CCLE_single_nonadap, use="na.or.complete", method="spearman")
+View(CCLE_single_nonadap_cors)
+
+CCLE_single_adap<-read.delim("~/Desktop/CCLE_sinlgepathway_predictions_adaptive.txt", header=1, sep='\t',row.names=1)
+CCLE_single_adap_cors=cor(CCLE_single_adap, CCLE_single_adap, use="na.or.complete", method="spearman")
+View(CCLE_single_adap_cors)
+```
+
+Correlate with the IC50s
+```{r}
+CCLE_drug_data=
+  
+```
+
+
+
+
+
+
+```{r echo=FALSE}
+time<-format(Sys.time(),"%a %b %d %X %Y")
+```
+This analysis was run on `r time` 
+

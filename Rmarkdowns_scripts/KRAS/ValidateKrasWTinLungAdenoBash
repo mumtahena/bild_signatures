@@ -1,5 +1,0 @@
-#!/bin/bash
-
-Rscript ValidateKrasWtinLungAdeno.R ../2014.11.19_KRAS-WT_BinReg_toLungAdeno/OutputFiles/ InputFiles/pancan_cleaned_filtered_annotated_KRAS_LungOnly.txt OutputFiles/KrasWTvalidation.pdf
-
-

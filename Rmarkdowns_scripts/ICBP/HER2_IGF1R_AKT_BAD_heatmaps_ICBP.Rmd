@@ -1,0 +1,109 @@
+---
+title: "heatmaps of HER2, AKT, BAD and IGF1R activation status in ICBP cell lines"
+output: pdf_document
+---
+
+```{r ,include=FALSE}
+if (!require("gplots")) {
+   install.packages("gplots", dependencies = TRUE)
+   library(gplots)
+   }
+if (!require("RColorBrewer")) {
+   install.packages("RColorBrewer", dependencies = TRUE)
+   library(RColorBrewer)
+   }
+######simple merging function with rownames assigned##
+merge_drop<-function(x,y,by=0)
+{
+  new_m<-merge(x,y,by=by)
+  rownames(new_m)<-new_m$Row.names
+  return(new_m[,2:length(colnames(new_m))])
+}
+
+
+#######get the predictions accumulated in one matrix#######
+setwd("~/Dropbox/bild_signatures/multi_icbp_expr_pc/")
+filenames<-system("ls */adap*/pathway_activity_testset*", intern=TRUE)
+filenames
+
+for(i in 1:length(filenames))
+  {
+   f<-read.csv(filenames[i], header=1,row.names=1) ###reading in the filess one at a time
+  colnames(f)<-paste(filenames[i],colnames(f),sep='/')
+  if(i==1){
+    data<-f
+    }
+  else{
+    data<-cbind(data,f)
+    }
+  }
+drugs<-read.delim("~/Dropbox/bild_signatures/Datasets/ICBP_drugs.txt", header=1, sep='\t',row.names=1)
+multi<-data#read.table("~/Desktop/multipathway_preds.txt", sep='\t',row.names=1,header=1)
+single<-read.csv("~/Dropbox/bild_signatures/multi_icbp_expr_pc/single_pathway_results.csv", row.names=1,header=1)
+my_palette <- colorRampPalette(c("darkblue","aliceblue","brown4"))(n = 299)
+# creates a 5 x 5 inch image
+# png("heatmaps_in_r.png",    # create PNG for the heat map        
+#   width = 5*300,        # 5 x 300 pixels
+#   height = 5*300,
+#   res = 300,            # 300 pixels per inch
+#   pointsize = 8)  
+comb<-cbind(multi,single)
+dim(comb)
+colnames(comb)<-gsub(pattern = "adap_multi.pathway_activity_testset.csv",replacement = "A",x = colnames(comb))
+colnames(comb)<-gsub(pattern = "nonA",replacement = "NA",x = colnames(comb))
+#pdf(file='~/Dropbox/bild_signatures//bild_signatures/activity_subtype.pdf')
+```
+Creating the heatmaps..
+```{r}
+heatmap.2(as.matrix(comb),col=my_palette,margins=c(12,9),dendrogram="none", density.info = "none",trace="none",main="All possibilities")
+```
+This doesn't tell us much other than same pathway predictions are similar irrespective of where they were ran alone or other pathways in multipathway model. HER2 is exeption though. Note how they have two clusters...Not sure what it means though.
+
+Now let's see if there is any pattern in single vs multipathways with all four pathways..
+```{r}
+heatmap.2(as.matrix(comb[,22:25]),col=my_palette,trace="none",dendrogram="none",density.info="none", main="Multipathway activity",margins=c(12,9), ylab="ICBP Cell lines")
+heatmap.2(as.matrix(comb[,26:29]),margins=c(12,5),col=my_palette,dendrogram="none", density.info="none", trace="none",main="Single pathway activity", ylab="ICBP Cell lines")
+```
+These kinda show some pattern...let's look into each subtypes..
+```{r}
+###Now want to create heatmaps for each subtypes#####
+comb_drug<-merge_drop(comb,drugs,by=0)
+basal<-subset(comb_drug,comb_drug$Transcriptional.subtype...ERBB2.status=="Basal")
+heatmap.2(as.matrix(basal[,22:25]),col=my_palette,margins=c(12,9),dendrogram="none", density.info = "none",trace="none",main="Basal Multi")
+heatmap.2(as.matrix(basal[,26:29]),col=my_palette,margins=c(12,9),dendrogram="none",density.info = "none",trace="none",main="Basal single")
+print(paste("Multipathway AKT correlation with Sigma AKT inhibitor",cor(basal[,22],basal$Sigma.AKT1.2.inhibitor,use="pairwise")))
+print(paste("Single pathway AKT correlation with Sigma AKT inhibitor",cor(basal[,26],basal$Sigma.AKT1.2.inhibitor,use="pairwise")))
+
+
+
+her<-subset(comb_drug[,1:44],comb_drug$Transcriptional.subtype...ERBB2.status=="ERBB2-amp"|comb_drug$Transcriptional.subtype...ERBB2.status=="ERBB2Amp")
+heatmap.2(as.matrix(her[,22:25]),col=my_palette,dendrogram="none",density.info="none",  trace="none",margins=c(12,9),main="HER2 Multi")
+heatmap.2(as.matrix(her[,26:29]),col=my_palette,dendrogram="none",density.info="none",  trace="none",margins=c(12,9),main="HER2 Single")
+print(paste("Multipathway AKT correlation with Sigma AKT inhibitor",cor(her[,22],her$Sigma.AKT1.2.inhibitor,use="pairwise")))
+print(paste("Singlepathway AKT correlation with Sigma AKT inhibitor",cor(her[,26],her$Sigma.AKT1.2.inhibitor,use="pairwise")))
+
+
+claudin<-subset(comb_drug,comb_drug$Transcriptional.subtype...ERBB2.status=="Claudin-low")
+heatmap.2(as.matrix(claudin[,22:25]),col=my_palette,dendrogram="none", density.info="none", trace="none",margins=c(12,9),main="Claudin Multi")
+heatmap.2(as.matrix(claudin[,26:29]),col=my_palette,dendrogram="none", density.info="none", trace="none",margins=c(12,9),main="Claudin Single",scale="column")
+print(paste("Multipathway AKT correlation with Sigma AKT inhibitor",cor(claudin[,22],claudin$Sigma.AKT1.2.inhibitor,use="pairwise")))
+print(paste("Singlepathway AKT correlation with Sigma AKT inhibitor",cor(claudin[,26],claudin$Sigma.AKT1.2.inhibitor,use="pairwise")))
+
+
+
+luminal<-subset(comb_drug,comb_drug$Transcriptional.subtype...ERBB2.status=="Luminal")
+heatmap.2(as.matrix(luminal[,22:25]),col=my_palette,dendrogram="none",density.info="none", trace="none",margins=c(12,9),main="Luminal Multi")
+heatmap.2(as.matrix(luminal[,26:29]),col=my_palette,dendrogram="none",density.info="none", trace="none",margins=c(12,9),main="Luminal Single",scale="row")
+print(paste("Multipathway AKT correlation with Sigma AKT inhibitor",cor(luminal[,22],luminal$Sigma.AKT1.2.inhibitor,use="pairwise")))
+print(paste("Singlepathway AKT correlation with Sigma AKT inhibitor",cor(luminal[,26],luminal$Sigma.AKT1.2.inhibitor,use="pairwise")))
+
+
+
+#dev.off()
+```
+
+```{r echo=FALSE}
+time<-format(Sys.time(),"%a %b %d %X %Y")
+```
+This analysis was run on `r time` 
+

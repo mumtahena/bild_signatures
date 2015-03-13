@@ -1,0 +1,477 @@
+---
+title: "ERK Signature Validation with ICBP drug response data"
+author: "Shelley"
+date: "December 17, 2014"
+output: pdf_document
+---
+
+```{r include=FALSE}
+library(sva)
+library(ASSIGN)
+setwd("~/Documents/ThesisWork/GitRepos/bild_signatures/Rmarkdowns_scripts")
+source("Key_ASSIGN_functions.Rmd")
+```
+
+Reading datasets and batch adjusting
+```{r, cache=TRUE, include=FALSE}
+feature<-as.matrix(read.table("~/Documents/ThesisWork/GitRepos/bild_signature_validation_old_repo/Datasets/GFP18_AKT_BAD_HER2_IGF1R_RAF_ERK.tpmlog", sep='\t', stringsAsFactors=FALSE, header=1, row.names=1))
+head(feature)
+icbp<-as.matrix(read.table("~/Documents/ThesisWork/GitRepos/bild_signature_validation_old_repo/Datasets/ICBP/icbp_Rsubread_tpmlog.txt", sep='\t', stringsAsFactors=FALSE, header=1, row.names=1))
+head(icbp)
+
+gfp_erk<-subset(feature,select=c(GFP.1:GFP.12,ERK.1:ERK.6))
+head(gfp_erk)
+dim(gfp_erk)
+gfp_erk_1 <- gfp_erk[apply(gfp_erk[,1:18]==0,1,mean) < 0.8,]###if not removed over 83%; error occurs in batch adjustment
+dim(gfp_erk) #didnt remove any
+
+gfp_erk_1_icbp<-merge_drop(gfp_erk_1,icbp,by=0)
+head(gfp_erk_1_icbp)
+
+sub<-c(12,6,55)
+
+pcaplot(mat = gfp_erk_1_icbp,sub=sub)
+##############Batch adjustment is needed############
+#with covariates
+
+bat1_erk<-as.matrix(cbind(c(colnames(gfp_erk_1),colnames(icbp)),c(rep(1,length(colnames(gfp_erk_1))),rep(2,length(colnames(icbp)))),c(rep(1,12),rep(2,6),rep(1,length(colnames(icbp))))))
+bat1_erk
+bat1[,2]
+
+#mod <- model.matrix(~as.factor(bat1[,3]))
+#combat_expr1_erk<-ComBat(dat=gfp_erk_1_icbp, batch=bat1_erk[,2], mod=mod, numCovs=NULL)
+#pcaplot(mat = combat_expr1,sub=sub)
+
+#Combat without covariates
+combat_expr2_erk<-ComBat(dat=gfp_erk_1_icbp, batch=bat1_erk[,2], mod=NULL, numCovs=NULL)
+pcaplot(mat = combat_expr2_erk,sub=sub) #looks good
+
+```
+
+##########calling ASSIGN########
+```{r}
+train_erk<-combat_expr2_erk[,1:18] ; head(train_erk)
+test_erk<-combat_expr2_erk[,19:73]
+head(test_erk)
+trainingLabel1=list(control = list(erk=1:12), erk = 13:18)
+dir.create("~/Documents/ThesisWork/GitRepos/bild_signatures/Results/Validating_Signatures/ERK")
+outdir150="~/Documents/ThesisWork/GitRepos/bild_signatures/Results/Validating_Signatures/ERK"
+assign_easy_multi(trainingData=train_erk, testData = test_erk,trainingLabel1=trainingLabel1,g=150,out_dir_base=outdir150)
+
+dir.create("~/Documents/ThesisWork/GitRepos/bild_signatures/Results/Validating_Signatures/ERK250")
+outdir250="~/Documents/ThesisWork/GitRepos/bild_signatures/Results/Validating_Signatures/ERK250"
+assign_easy_multi(trainingData=train_erk, testData = test_erk,trainingLabel1=trainingLabel1,g=250,out_dir_base=outdir250)
+
+outdir200="~/Documents/ThesisWork/GitRepos/bild_signatures/Results/Validating_Signatures/ERK200"
+dir.create(outdir200)
+assign_easy_multi(trainingData=train_erk, testData = test_erk,trainingLabel1=trainingLabel1,g=200,out_dir_base=outdir200)
+
+outdir100="~/Documents/ThesisWork/GitRepos/bild_signatures/Results/Validating_Signatures/ERK100"
+dir.create(outdir100)
+assign_easy_multi(trainingData=train_erk, testData = test_erk,trainingLabel1=trainingLabel1,g=100,out_dir_base=outdir100)
+
+outdir50="~/Documents/ThesisWork/GitRepos/bild_signatures/Results/Validating_Signatures/ERK50"
+dir.create(outdir50)
+assign_easy_multi(trainingData=train_erk, testData = test_erk,trainingLabel1=trainingLabel1,g=50,out_dir_base=outdir50)
+
+outdir75="~/Documents/ThesisWork/GitRepos/bild_signatures/Results/Validating_Signatures/ERK75"
+dir.create(outdir75)
+assign_easy_multi(trainingData=train_erk, testData = test_erk,trainingLabel1=trainingLabel1,g=75,out_dir_base=outdir75)
+
+outdir25="~/Documents/ThesisWork/GitRepos/bild_signatures/Results/Validating_Signatures/ERK25"
+dir.create(outdir25)
+assign_easy_multi(trainingData=train_erk, testData = test_erk,trainingLabel1=trainingLabel1,g=25,out_dir_base=outdir25)
+```
+
+Attemping to get the gene lists into sperate files. GET Moom's help here!
+```{r}
+
+setwd("~/Documents/ThesisWork/GitRepos/bild_signatures/Results/Validating_Signatures/ERK/")
+Routput_erk_files<-system("ls */*/output.rda* ", intern=TRUE)
+Routput_erk_files
+
+Routput_erk_files[1]
+
+ERK = tmp=NULL
+for(i in 1:length(Routput_erk_files)) {
+  #filename=Routput_erk_files[i]
+  i=3
+  temp=getGeneList(Routput_erk_files[i])
+  colnames(temp)=Routput_erk_files[i]
+  temp1=temp
+  print(temp)
+  write.table(temp, "text_loop.txt" ,sep='\t', col.names = NA,quote=F, append= TRUE)
+  #GeneLists=rbind(GeneLists,temp)  
+  temp=NULL
+  }
+  
+GeneLists
+
+load("ERK100/adap_adap_multi/output.rda")
+adap_adap=output.data$processed.data$S_matrix
+
+load("ERK100/adap_multi/output.rda")
+adap= output.data$processed.data$S_matrix
+
+cor(adap_adap,adap) #same
+
+
+# I think the gene lists are the same, but I can't tell if it is loading the same R data over and over again. 
+ERK200_adap_adap= getGeneList("~/Documents/ThesisWork/GitRepos/bild_signatures/Results/Validating_Signatures/ERK/ERK200/adap_adap_multi/output.rda")
+View(ERK200_adap_adap)
+ERK200_adap= getGeneList("~/Documents/ThesisWork/GitRepos/bild_signatures/Results/Validating_Signatures/ERK/ERK200/adap_multi/output.rda")
+View(ERK200_adap)
+ERK200_nonadap= getGeneList("~/Documents/ThesisWork/GitRepos/bild_signatures/Results/Validating_Signatures/ERK/ERK200/nonadap_multi/output.rda")
+View(ERK200_nonadap)
+
+cor(ERK200_adap, ERK200_adap_adap)
+cor(ERK200_nonadap, ERK200_adap_adap)
+
+ERK75_adap_adap= getGeneList("~/Documents/ThesisWork/GitRepos/bild_signatures/Results/Validating_Signatures/ERK/ERK75/adap_adap_multi/output.rda")
+View(ERK75_adap_adap)
+ERK75_adap= getGeneList("~/Documents/ThesisWork/GitRepos/bild_signatures/Results/Validating_Signatures/ERK/ERK75/adap_multi/output.rda")
+View(ERK75_adap)
+ERK57_nonadap= getGeneList("~/Documents/ThesisWork/GitRepos/bild_signatures/Results/Validating_Signatures/ERK/ERK75/nonadap_multi/output.rda")
+View(ERK57_nonadap)
+
+```
+
+
+Read in the predictions and correlate with eachother.
+```{r}
+setwd("~/Documents/ThesisWork/GitRepos/bild_signatures/Results/Validating_Signatures/ERK/")
+filenames_erk<-system("ls */*/pathway_activity_testset* ", intern=TRUE)
+length(filenames_erk)
+filenames_erk
+
+for(i in 1:length(filenames_erk))
+  {
+   f<-read.csv(filenames_erk[i], header=1,row.names=1) ###reading in the filess one at a time
+  colnames(f)<-filenames_erk[i]
+  if(i==1){
+    data_erk<-f
+    }
+  else{
+    data_erk<-cbind(data_erk,f)
+    }
+  }
+
+data_erk ; dim(data_erk)
+View(data_erk)
+rownames(data_erk)
+plot(1:55,data_erk[,1])
+
+data_erk[1]
+
+rownames(data_erk)[1:7]=(c("184A1",  "184B5", "21MT1","21MT2","21NT","21PT","600MPE"))
+rownames(data_erk)[50]=(c("T47D_KBluc"))
+rownames(data_erk)
+
+# This just correlelates the predictions with eachother
+correlate_predictions=cor(data_erk, method="spearman")
+View(correlate_predictions)
+#writeFile(correlate_predictions, "ERK_ICBP_PathwayPrediction_Correlations.txt")
+#View(correlate_predictions)
+plot(correlate)
+View(correlate)
+
+```
+```
+
+Not Really Working Right
+```{r}
+library( package = ISwR )
+
+
+image(
+    z    = cor( x = data_erk, method = "spearman" ),
+    axes = FALSE,
+    zlim = c( -1.0, 1.0 ) )
+
+
+axis(
+    side     = 1,
+    labels   = names( data_erk ),
+    at       = seq( 0, 1, length = length( names( data_erk ) ) ),
+    cex.axis = 0.8,
+    las = 2)
+
+axis(
+    side     = 2,
+    labels   = names( data_erk ),
+    at       = seq( 0, 1, length = length( names(data_erk ) ) ),
+    cex.axis = 0.8,
+    las =1 )
+
+box()
+
+
+```
+
+
+Load in ICBP data, merge with pathway predictions
+```{r, cache=TRUE}
+ICBP_drugs<-read.delim("~/Documents/ThesisWork/GitRepos/bild_signature_validation_old_repo/Datasets/ICBP_drugs_1.txt", header=1, sep='\t',row.names=1)
+
+drugs=ICBP_drugs[,11:100] 
+View(drugs)
+
+# Merge drug respose and predictions
+pred_drug_erk<-merge_drop(data_erk,drugs,by=0) ; dim(pred_drug_erk) # 53 x 111
+
+pred_drug_erk_complete_only = pred_drug_erk[complete.cases(pred_drug_erk),]
+View(pred_drug_erk_complete_only)
+View(pred_drug_erk_complete_only)
+View(pred_drug_erk)
+
+predicictionCols= (pred_drug_erk[,1:21]) ; dim(predicictionCols)
+
+dim(pred_drug_erk)
+
+colnames(pred_drug_erk)
+drugs_55_cell_lines=(pred_drug_erk[,22:111]) ; dim(drugs_55_cell_lines)
+plot(drugs_55_cell_lines) 
+
+View(drugs_55_cell_lines)
+summary(drugs_55_cell_lines)
+```
+
+
+Correlation Parameters
+------------------------
+*Pairwise Correlations: parwise is computed using all complete pairs of observations on those variables. This can result in correlation matrices which are not positive semi-definite, as well as NA entries if there are no complete pairs for that pair of variables.
+
+*Na.or.complete: Missing values are handled by casewise deletion (and if there are no complete cases, that gives an error).
+
+Now we will correlate all the pathway predictions with all the drugs...
+Here we see that we get better predictions and I think is is because we are removing the cell lines with NAs...?
+```{r} 
+
+
+
+cors_erk_preds_alldrugs_complete= cor(predicictionCols,drugs_55_cell_lines, use="na.or.complete",method= "spearman")
+View(cors_erk_preds_alldrugs_complete)
+
+cors_erk_preds_alldrugs_complete_df=data.frame(cors_erk_preds_alldrugs_complete)
+
+writeFile(cors_erk_preds_alldrugs_complete, "~/Documents/ThesisWork/GitRepos/bild_signatures/Results/Validating_Signatures/ERK/ERK_pathwaypredictions_ICBPdrugresponse_correlations_complete.txt")
+
+# Not as good 
+#erk_preds_all_cors_pair= cor(predicictionCols, drugs_55_cell_lines,use="pairwise.complete.obs",method= "spearman" )
+#erk_preds_erki_cors_pair
+```
+
+We can use this package if we want to get the p-values from the correlations gives the same results at just using cor
+```{r}
+#this library will provide p-values for correlations 
+library(psych)
+erk_preds_alldrugs_pych_pairwise= corr.test(predicictionCols,drugs_55_cell_lines, use="pairwise",method= "spearman", adjust="none" )
+
+dim(drugs_55_cell_lines)
+
+View(erk_preds_alldrugs_pych_pairwise[1])
+
+class(erk_preds_alldrugs_pych_pairwise)
+
+View(erk_preds_alldrugs_pych_pairwise$r)
+
+writeFile(erk_preds_alldrugs_pych_pairwise$r, "ICBP_erk_preds_alldrugs_pych_pairwise.txt")
+
+erk_preds_alldrugs_pych_complete[3]
+
+
+
+```
+
+
+Plotting the ERK pathway predictions/drug respose correlations
+
+Results: Adap_adap is almost always better, but are we overfitting???
+- Adapative Background and NonAdaptive Background (both nonadap signature) look similar 
+```{r}
+
+names=gsub("*_multi/pathway_activity_testset.csv", "", rownames(cors_erk_preds_alldrugs_complete))
+names
+par(mar=c(11.1, 6.1, 4.1, 6.1))
+plot(cors_erk_preds_alldrugs_complete$ERKi.II..FR180304., ylab= "Spearmean Correlation", main= "Correlation: ERK Inhibitor Response & Pathway Predictions", xlab=NA, xaxt="n" , col=1:3, cex.main=0.8)
+points(1:5, col="red")
+axis(1, at=1:21, labels=names, las=2)
+
+# Looks like with 200 and 50 genes gives the higest predictions
+# Adap_adp gives higest, and just adaptive alone or adapative/non adaptive are similar
+# Could adap_adap be over fitting????
+
+#now find a way to correlate with alll the drugs
+
+#fist do a test
+```
+
+
+These are some tests with using different correlations settings
+```{r}
+
+#  1) Correlating with ERK inhibitor only not all the drugs
+#       - Spearman Complete and Pairwise are the SAME(no additonal cell lines are being removed because we are long looking at 1 drug)
+#       - Pearson looks better, but still is low
+#       - 
+#
+
+# LOW predictions for NA or Complete with Spearman
+erk_preds_erki_cors_naorcomp= cor(predicictionCols[,1], drugs_55_cell_lines$ERKi.II..FR180304.,use="na.or.complete",method= "spearman" )
+View(erk_preds_erki_cors_naorcomp)
+dim(erk_preds_erki_cors_naorcomp)
+
+
+# Same as above
+erk_preds_erki_cors_pair= cor(predicictionCols, drugs_55_cell_lines$ERKi.II..FR180304.,use="pairwise.complete.obs",method= "spearman" )
+erk_preds_erki_cors_pair
+
+# Pearson gives better prediction but are still really low
+erk_preds_erki_cors_naorcomp= cor(predicictionCols, drugs_55_cell_lines$ERKi.II..FR180304.,use="na.or.complete",method= "pearson" )
+erk_preds_erki_cors_naorcomp
+# Same as above
+erk_preds_erki_cors_pair_pearson= cor(predicictionCols, drugs_55_cell_lines$ERKi.II..FR180304.,use="pairwise.complete.obs",method= "pearson" )
+erk_preds_erki_cors_pair_pearson
+
+#Try with AGG drug just to make sure
+erk_preds_AAG_cors_pair= cor(predicictionCols, drugs_55_cell_lines[1],use="pairwise.complete.obs",method= "spearman" )
+erk_preds_AAG_cors_pair
+# same
+erk_preds_AAG_cors_pair= cor(predicictionCols, drugs_55_cell_lines[1],use="na.or.complete",method= "spearman" )
+erk_preds_AAG_cors_pair
+```
+
+
+Looks like resistant cell lines have higer pathway predictions than sensitive.
+But we would expect cell line with high pathway activity to be more sensitive
+```{r}
+# We expect to see cells lines that are sensitivt 
+#subet the erk inhibitor response to retain row names
+cellines = rownames(pred_drug_erk)
+erk_sensitivity= pred_drug_erk$ERKi.II..FR180304
+erk_sensitivty = cbind(cellines,erk_sensitivity)
+class(erk_sensitivty)
+erk_sensitivty[,1]
+
+mode(pred_drug_erk$ERKi.II..FR180304)
+
+
+# plot the drug sensitivity
+plot(pred_drug_erk$ERKi.II..FR180304, main="Drug Sensitivity to ERKiII across ICBP Cell Lines", xlab= "Cell Line", ylab= "Sensitivity")
+plot(pred_drug_erk$Erlotinib, main="Drug Sensitivity to Eroltinib across ICBP Cell Lines", xlab= "Cell Line", ylab= "Sensitivity")
+plot(pred_drug_erk$BIBW2992, main="Drug Sensitivity to BIBW2992 across ICBP Cell Lines", xlab= "Cell Line", ylab= "Sensitivity")
+
+#find the mean of response to all drugs
+means_GI50 = colMeans(pred_drug_erk[,32:111], na.rm=TRUE)
+means_GI50
+
+median(ERKdrugpredictions, na.rm = TRUE)
+
+#find the mean of response to ERKi 
+erk_mean = means_GI50["ERKi.II..FR180304."] 
+erk_mean
+
+#seperate the cell lines into sensitive and resistant to erk inhibitor 
+erk_sensitive= subset(erk_sensitivty, erk_sensitivty[,2] > 4.5, )
+erk_sensitive
+rownames(erk_sensitive)
+erk_resistent= subset(erk_sensitivty, erk_sensitivty[,2] < 4.5)
+erk_resistent
+
+####################################################################
+#just do one first to keep it simple 
+ERK100_adap_adap_sensitive = merge(data_erk[1],erk_sensitive,by.x=0, by.y=1)
+ERK100_adap_adap_sensitive
+ERK100_adap_adap_resistant = merge(data_erk[1], erk_resistent, by.x=0, by.y=1)
+ERK100_adap_adap_resistant
+
+cor(ERK100_adap_adap_sensitive[,2],as.numeric(ERK100_adap_adap_sensitive[,3]), use="na.or.complete",method= "spearman") # -0.41
+cor(ERK100_adap_adap_resistant[,2],as.numeric(ERK100_adap_adap_resistant[,3]), use="na.or.complete",method= "spearman") # 0.28 
+
+ERK100_adap_adap = t.test(ERK100_adap_adap_resistant[,2],ERK100_adap_adap_sensitive[,2])
+pval = ERK100_adap_adap[3]
+
+boxplot(ERK100_adap_adap_resistant[,2],ERK100_adap_adap_sensitive[,2], names=c("Resistant","Sensitive"), ylab= "pathway activity", main= gsub("_multi/pathway_activity_testset.csv", "", colnames(data_erk[1])))
+
+#####################################################################
+
+# now do it for all the predictions 
+boxplot_erk =function(colnumber ) {
+sensitive = merge(data_erk[colnumber],erk_sensitive,by.x=0, by.y=1) 
+resistant = merge(data_erk[colnumber], erk_resistent, by.x=0, by.y=1)  
+
+sensitive_cor = cor(sensitive[,2], as.numeric(sensitive[,3]), use="na.or.complete",method= "spearman") 
+print("Correlation between sensitive cells line predictions and drug sensitivity") ; print(sensitive_cor)
+resistant_cor = cor(resistant[,2],  as.numeric(resistant[,3]), use="na.or.complete",method= "spearman") 
+print("Correlation between 'resistant' cells line predictions and drug sensitivity") ;print(resistant_cor)
+
+ttest= t.test(resistant[,2],sensitive[,2]) ; pval = ttest[3] ; print("pval for resistant vs. sensitive pathway predictions") ; print(pval)
+
+boxplot(resistant[,2],sensitive[,2], names=c("Resistant","Sensitive"), ylab= "pathway activity", main= gsub("_multi/pathway_activity_testset.csv", "", colnames(data_erk[colnumber])))
+text(1,1, pval)
+}
+
+
+pdf("~/Desktop/boxplot_erk_validation.pdf")
+# now plot them all
+for (i in 1:ncol(data_erk)){
+  
+  boxplot_erk(i)
+}
+dev.off()
+
+```
+
+
+Try with only complete observations (11 cell lines only)
+```{r}
+#try with only the complete cases (looks worse)
+cellines_complete = rownames(pred_drug_erk_complete_only)
+erk_sensitivity_complete= pred_drug_erk_complete_only$ERKi.II..FR180304
+erk_sensitivity_complete
+dim
+erk_sensitivty_complete = cbind(cellines_complete,erk_sensitivity_complete)
+class(erk_sensitivty_complete)
+erk_sensitivty_complete[,2]
+
+means_GI50_complete = colMeans(pred_drug_erk_complete_only[,22:111], na.rm=TRUE)
+means_GI50
+
+#find the mean of response to ERKi 
+erk_mean_complete = means_GI50_complete["ERKi.II..FR180304."] 
+erk_mean
+
+#seperate the cell lines into sensitive and resistant to erk inhibitor 
+erk_sensitive_complete= subset(erk_sensitivity_complete, erk_sensitivty_complete[,2] > 4.5, )
+erk_sensitive_complete
+
+erk_resistent_complete= subset(erk_sensitivity_complete, erk_sensitivty_complete[,2] < 4.5)
+erk_resistent_complete
+
+```
+
+Looking at the predictions and drugs
+```{r}
+
+# 150 adaptive adaptive and ERK
+pred_drug_erk[c(1,42)]
+colnames(pred_drug_erk)
+
+# 150 adaptive adaptive and Mek i
+pred_drug_erk[c(1,2,3, 29)]
+colnames(pred_drug_erk)
+
+# 150 adaptive background only 
+pred_drug_erk[c(2,42)]
+colnames(pred_drug_erk)
+
+
+pred_drug_erk[c(1,2, 107)] # had a high positive correlation
+# for apap_apap100 and adap100, have really different predictions
+```
+
+
+```{r echo=FALSE}
+time<-format(Sys.time(),"%a %b %d %X %Y")
+```
+This analysis was run on `r time` 

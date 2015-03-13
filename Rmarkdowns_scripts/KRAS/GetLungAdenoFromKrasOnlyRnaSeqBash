@@ -1,3 +1,0 @@
-#!/bin/bash
-
-python GetSpecificCancerTypeFromPancanRnaSeq.py ../2014.11.17_FindWhichPatientsAreMutatedInPancanForGenesOfInterest/OutputFiles/pancan_cleaned_filtered_annotated_KRAS.txt "Lung adenocarcinoma" InputFiles/TCGAcodes.txt ../2014.11.17_FindWhichPatientsAreMutatedInPancanForGenesOfInterest/OutputFiles/pancan_cleaned_filtered_annotated_KRAS_LungOnly.t
