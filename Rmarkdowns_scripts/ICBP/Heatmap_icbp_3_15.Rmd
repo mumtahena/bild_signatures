@@ -1,0 +1,162 @@
+---
+title: "Heatmaps of pathway predictions in icbp breast cancer cell line based on subtypes"
+output: html_document
+---
+
+```{r include=FALSE}
+
+source('~/Dropbox/bild_signatures/bild_signatures/Rmarkdowns_scripts//Key_ASSIGN_functions.Rmd', echo=TRUE)
+setwd("~/Dropbox/bild_signatures/icbp_15_mar_all/")
+filenames_icbp_multi<-system("ls */*/pathway_activity_testset*", intern=TRUE)
+filenames_icbp_multi
+
+for(i in 1:length(filenames_icbp_multi))
+  {
+   f<-read.csv(filenames_icbp_multi[i], header=1,row.names=1) ###reading in the filess one at a time
+   colnames(f)<-paste(filenames_icbp_multi[i],colnames(f),sep='/')
+   if(i==1){
+     data_icbp<-f
+     }
+   else{
+     data_icbp<-cbind(data_icbp,f)
+    }
+  }
+
+head(data_icbp)
+dim(data_icbp)
+colnames(data_icbp)<-gsub(pattern = "/pathway_activity_testset.csv",replacement = "",x = colnames(data_icbp))
+head(data_icbp)
+rownames(data_icbp)[1:7]<-c("184A1","184B5","21MT1","21MT2","21NT","21PT","600MPE")
+setwd("~/Dropbox/bild_signatures//Datasets")
+drugs<-read.delim("ICBP_drugs.txt", header=1, sep='\t',row.names=1)
+head(drugs);dim(drugs)
+pred_drug<-merge_drop(data_icbp,drugs,by=0)
+dim(pred_drug)
+```
+
+Creating heatmaps
+```{r include=FALSE}
+
+if (!require("gplots")) {
+   install.packages("gplots", dependencies = TRUE)
+   library(gplots)
+   }
+if (!require("RColorBrewer")) {
+   install.packages("RColorBrewer", dependencies = TRUE)
+   library(RColorBrewer)
+   }
+prediction_heatmap<-function(x,type=NULL)
+{
+  
+  adapB_single=subset(x,select=grep("adapB_single",colnames(x)))
+  adap_adap_single=subset(x,select=grep("adap_adap_single",colnames(x)))
+  adapB_multi=subset(x,select=grep("akt_bad_her2_igf1r_erk/adapB",colnames(x)))
+  adap_adap_multi=subset(x,select=grep("akt_bad_her2_igf1r_erk/adap_adap",colnames(x)))
+  adapB_multi4=subset(x,select=grep("akt_bad_her2_igf1r/adapB",colnames(x)))
+  adap_adap_multi4=subset(x,select=grep("akt_bad_her2_igf1r/adap_adap",colnames(x)))
+  colnames(adapB_single)=colnames(adap_adap_single)=c("AKT","BAD","ERK","HER2","IGF1R")
+  adapB_single= adapB_single[,c("AKT","BAD","HER2","IGF1R","ERK")]
+  adap_adap_single=adap_adap_single[,c("AKT","BAD","HER2","IGF1R","ERK")]
+  colnames(adapB_multi)=colnames(adap_adap_multi)=c("AKT","BAD","HER2","IGF1R","ERK")
+  colnames(adapB_multi4)=colnames(adap_adap_multi4)=c("AKT","BAD","HER2","IGF1R")
+  heatmap.2(as.matrix(adapB_single),col=my_palette,margins=c(15,9),dendrogram="none", trace="none",main=paste(type,"Single Adap BG",sep = "\n"),Rowv = NULL, Colv = NULL,density.info = "none",scale = 'row')#cellnote = round(x[,43:46],digits = 2),notecol = 'black'
+ heatmap.2(as.matrix(adap_adap_single),col=my_palette,margins=c(15,9),dendrogram="none", trace="none",main=paste(type,"Single Adap BGSG",sep = "\n"),Rowv = NULL, Colv = NULL,density.info = "none",scale = 'row')#cellnote = round(x[,43:46],digits = 2),notecol = 'black
+  heatmap.2(as.matrix(adapB_multi),col=my_palette,margins=c(15,9),dendrogram="none",Rowv = NULL, Colv = NULL, trace="none",main=paste(type,"Multi Adap BG",sep = "\n"),density.info = 'none',scale = 'row')#,cellnote = round(x[,51:54],digits = 2),notecol = 'black',
+ heatmap.2(as.matrix(adap_adap_multi),col=my_palette,margins=c(15,9),dendrogram="none",Rowv = NULL, Colv = NULL, trace="none",main=paste(type,"Multi Adap BGSG",sep = "\n"),density.info = 'none',scale = 'row')#,cellnote = round(x[,51:54],digits = 2),notecol = 'black',
+ heatmap.2(as.matrix(adapB_multi4),col=my_palette,margins=c(15,9),dendrogram="none",Rowv = NULL, Colv = NULL, trace="none",main=paste(type,"Multi 4 Adap BG",sep = "\n"),density.info = 'none',scale = 'row')#,cellnote = round(x[,51:54],digits = 2),notecol = 'black',
+ heatmap.2(as.matrix(adap_adap_multi4),col=my_palette,margins=c(15,9),dendrogram="none",Rowv = NULL, Colv = NULL, trace="none",main=paste(type,"Multi 4 Adap BGSG",sep = "\n"),density.info = 'none',scale = 'row')#,cellnote = round(x[,51:54],digits = 2),notecol = 'black',
+}
+correlation_heatmap<-function(x,drugs_names=NULL,type=NULL)
+{
+  adapB_single=subset(x,select=grep("adapB_single",colnames(x)))
+  adap_adap_single=subset(x,select=grep("adap_adap_single",colnames(x)))
+  adapB_multi=subset(x,select=grep("akt_bad_her2_igf1r_erk/adapB",colnames(x)))
+  adap_adap_multi=subset(x,select=grep("akt_bad_her2_igf1r_erk/adap_adap",colnames(x)))
+  cors = pval=matrix(-2,20,7)
+  #rownames(cors)=c(colnames(x)[43:46],colnames(x)[51:54])#selecting the adaptive multipathway and single pathway prediction columns
+  pathways<-cbind(adapB_single,adap_adap_single,adapB_multi,adap_adap_multi)
+  drugs<-subset(x,select=drugs_names)
+  colnames(cors)=drugs_names
+  rownames(cors)=colnames(pathways)
+  rownames(cors)=gsub(pattern = "akt_bad_her2_igf1r_erk/",replacement = "",x = rownames(cors))
+  #rownames(cors)=gsub(pattern = "*/*/adapB",replacement = "B",x = rownames(cors))
+  
+  for (i in 1:20){
+    for (j in 1:length(colnames(drugs))){
+      ci=cor.ci(cbind(pathways[,i],drugs[,j]),method="spearman",plot=F)
+      cors[i,j]=ci$rho[2,1]
+      #print(cors[i,j]);print(ci$ci[[5]])
+      pval[i,j]=ci$ci[[5]]
+    }
+  }
+  par(mar=c(1, 0.5, 3, 10),lwd=4)
+
+heatmap.2(as.matrix(cors),col=redgreen,margins =c(13,18),dendrogram="none",Rowv = NULL, Colv = NULL, trace="none",main=paste("Correlations of pathway"," drug response in",type,sep='\n '),cellnote = round(cors,digits = 2),notecol = 'black',density.info = 'none')
+}
+
+my_palette <- colorRampPalette(c("darkblue","aliceblue","brown4"))(n = 299)
+col_breaks = c(seq(0,0.2,length=100), seq(0.2,0.4,length=100), seq(0.4,1,length=100)) 
+```
+
+
+```{r echo=FALSE}
+library(psych)
+comb_drug<-pred_drug
+drugs_names=c("Sigma.AKT1.2.inhibitor","GSK2141795","GSK2119563","GSK1838705","Lapatinib","BEZ235", "GSK1059868")
+#pdf("~/Desktop/subtypes_ICBP.pdf")
+basal<-subset(comb_drug,comb_drug$Transcriptional.subtype...ERBB2.status=="Basal")
+prediction_heatmap(x=basal,type = "BASAL")
+correlation_heatmap(x=basal,drugs_names =drugs_names,type = "BASAL" )
+
+her<-subset(comb_drug,comb_drug$Transcriptional.subtype...ERBB2.status=="ERBB2-amp"|comb_drug$Transcriptional.subtype...ERBB2.status=="ERBB2Amp")
+prediction_heatmap(x=her,type = "ERBB2 Amplified")
+correlation_heatmap(x=her,drugs_names =drugs_names,type = "ERBB2 amplified" )
+
+claudin<-subset(comb_drug,comb_drug$Transcriptional.subtype...ERBB2.status=="Claudin-low")
+prediction_heatmap(x=claudin,type = "Claudin Low")
+correlation_heatmap(x=claudin,drugs_names =drugs_names,type = "Claudin Low" )###no variance in lapatinib drug response correlation cannot be determined
+
+luminal<-subset(comb_drug,comb_drug$Transcriptional.subtype...ERBB2.status=="Luminal")
+prediction_heatmap(x=luminal,type = "Luminal")
+correlation_heatmap(x=luminal,drugs_names =drugs_names,type = "Luminal" )###no variance in lapatinib drug response correlation cannot be determined
+#dev.off()
+```
+Now, trying to see patterns across all the subtypes in ICBP breast cancer cell lines
+```{r,echo=FALSE}
+  adapB_single=rbind(subset(basal,select=grep("adapB_single",colnames(basal))),subset(her,select=grep("adapB_single",colnames(her))),subset(claudin,select=grep("adapB_single",colnames(claudin))),subset(luminal,select=grep("adapB_single",colnames(luminal))))
+  
+  adap_adap_single=rbind(subset(basal,select=grep("adap_adap_single",colnames(basal))),subset(her,select=grep("adap_adap_single",colnames(her))),subset(claudin,select=grep("adap_adap_single",colnames(claudin))),subset(luminal,select=grep("adap_adap_single",colnames(luminal))))
+
+  adapB_multi=rbind(subset(basal,select=grep("akt_bad_her2_igf1r_erk/adapB",colnames(basal))),subset(her,select=grep("akt_bad_her2_igf1r_erk/adapB",colnames(her))),subset(claudin,select=grep("akt_bad_her2_igf1r_erk/adapB",colnames(claudin))),subset(luminal,select=grep("akt_bad_her2_igf1r_erk/adapB",colnames(luminal))))
+
+  adap_adap_multi=rbind(subset(basal,select=grep("akt_bad_her2_igf1r_erk/adap_adap",colnames(basal))),subset(her,select=grep("akt_bad_her2_igf1r_erk/adap_adap",colnames(her))),subset(claudin,select=grep("akt_bad_her2_igf1r_erk/adap_adap",colnames(claudin))),subset(luminal,select=grep("akt_bad_her2_igf1r_erk/adap_adap",colnames(luminal))))
+
+  colnames(adapB_single)=colnames(adap_adap_single)=c("AKT","BAD","ERK","HER2","IGF1R")
+  adapB_single= adapB_single[,c("AKT","BAD","HER2","IGF1R","ERK")]
+  adap_adap_single=adap_adap_single[,c("AKT","BAD","HER2","IGF1R","ERK")]
+  colnames(adapB_multi)=colnames(adap_adap_multi)=c("AKT","BAD","HER2","IGF1R","ERK")
+
+
+#png("heatmaps_multi_adap.png",width = 5*300,height = 5*300,res = 800, pointsize = 8)  
+heatmap.2(as.matrix(adapB_single), RowSideColors = c(rep("gray", length(rownames(basal))),rep("blue", length(rownames(her))),rep("black", length(rownames(claudin))),rep("green",length(rownames(luminal)))),col=my_palette,dendrogram="none", trace="none",margins=c(12,9),main="Adaptive BG Single",scale='row',Rowv=F,Colv=F)
+par(lend = 1)           # square line ends for the color legend
+legend("bottomleft",legend = c("Basal", "HER2", "Claudin","Luminal"), col = c("gray", "blue", "black","green"),  lty= 1,lwd = 10)
+#png("heatmaps_multi_adap.png",width = 5*300,height = 5*300,res = 800, pointsize = 8)  
+heatmap.2(as.matrix(adap_adap_single), RowSideColors = c(rep("gray", length(rownames(basal))),rep("blue", length(rownames(her))),rep("black", length(rownames(claudin))),rep("green",length(rownames(luminal)))),col=my_palette,dendrogram="none", trace="none",margins=c(12,9),main="Adaptive BG SG Single",scale='row',Rowv=F,Colv=F)
+par(lend = 1)           # square line ends for the color legend
+legend("bottomleft",legend = c("Basal", "HER2", "Claudin","Luminal"), col = c("gray", "blue", "black","green"),  lty= 1,lwd = 10)
+
+heatmap.2(as.matrix(adapB_multi), RowSideColors = c(rep("gray", length(rownames(basal))),rep("blue", length(rownames(her))),rep("black", length(rownames(claudin))),rep("green",length(rownames(luminal)))),col=my_palette,dendrogram="none", trace="none",margins=c(12,9),main="Multi Adaptive BG",scale="row",Rowv=F,Colv=F)
+par(lend = 1)           # square line ends for the color legend
+legend("bottomleft",legend = c("Basal", "HER2", "Claudin","Luminal"), col = c("gray", "blue", "black","green"),  lty =  1,lwd = 10)
+
+heatmap.2(as.matrix(adap_adap_multi), RowSideColors = c(rep("gray", length(rownames(basal))),rep("blue", length(rownames(her))),rep("black", length(rownames(claudin))),rep("green",length(rownames(luminal)))),col=my_palette,dendrogram="none", trace="none",margins=c(12,9),main="Multi Adaptive BG SG",scale="row",Rowv=F,Colv=F)
+par(lend = 1)           # square line ends for the color legend
+legend("bottomleft",legend = c("Basal", "HER2", "Claudin","Luminal"), col = c("gray", "blue", "black","green"),  lty =  1,lwd = 10)
+```
+
+```{r echo=FALSE}
+time<-format(Sys.time(),"%a %b %d %X %Y")
+```
+This analysis was run on `r time` 
+
