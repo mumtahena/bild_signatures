@@ -79,10 +79,10 @@ else if (cov==0 & single==1){
 
 
 set.seed(1234)
-assign.wrapper(trainingData=trainingData, testData=testData, trainingLabel=trainingLabel1, testLabel=NULL, geneList=NULL, n_sigGene=g, adaptive_B=T, adaptive_S=F, mixture_beta=F, outputDir=adapB_folder, theta0=0.05, theta1=0.9, iter=10000, burn_in=1000)  
+assign.wrapper(trainingData=trainingData, testData=testData, trainingLabel=trainingLabel1, geneList=NULL, n_sigGene=g, adaptive_B=T, adaptive_S=F, mixture_beta=F, outputDir=adapB_folder, theta0=0.05, theta1=0.9, iter=100000, burn_in=5000)  
 
 set.seed(1234)
-assign.wrapper(trainingData=trainingData, testData=testData, trainingLabel=trainingLabel1, testLabel=NULL, geneList=NULL, n_sigGene=g, adaptive_B=T, adaptive_S=T, mixture_beta=F, outputDir=adap_adap_folder, theta0=0.05, theta1=0.9, iter=10000, burn_in=1000) 
+assign.wrapper(trainingData=trainingData, testData=testData, trainingLabel=trainingLabel1, geneList=NULL, n_sigGene=g, adaptive_B=T, adaptive_S=T, mixture_beta=F, outputDir=adap_adap_folder, theta0=0.05, theta1=0.9, iter=100000, burn_in=5000) 
 
 }
 
