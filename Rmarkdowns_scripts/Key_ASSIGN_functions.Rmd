@@ -35,7 +35,7 @@ pcaplot<-function(mat,sub,scale=T){
 }
 
 
-assign_easy<-function(trainingData=train, testData=test, trainingLabel1=NULL,g=100,out_dir_base="~/Desktop/tmp/akt",cov=0){
+assign_easy<-function(trainingData=train, testData=test, trainingLabel1=NULL,g=100,out_dir_base="~/Dropbox/bild_signatures/",cov=0){
 if(cov==0){
   adap_folder<-paste(out_dir,paste( "adap",g,sep=''),sep='/')
   dir.create(file.path(out_dir,paste( "adap",g,sep='')))
@@ -67,7 +67,7 @@ if(cov==0 & single==0){
   dir.create(file.path(out_dir_base,paste( "adap_adap_multi",sep='')))
   }
 
-elseif (cov==0 & single==1){
+else if (cov==0 & single==1){
   adapB_folder<-paste(out_dir_base,paste( "adapB_single",sep=''),sep='/')
   dir.create(file.path(out_dir_base,paste( "adapB_single",sep='')))
   adap_adap_folder<-paste(out_dir_base,paste( "adap_adap_single",sep=''),sep='/')
@@ -76,10 +76,10 @@ elseif (cov==0 & single==1){
 
 
 set.seed(1234)
-assign.wrapper(trainingData=trainingData, testData=testData, trainingLabel=trainingLabel1, testLabel=NULL, geneList=NULL, n_sigGene=g, adaptive_B=T, adaptive_S=F, mixture_beta=F, outputDir=adapB_folder, theta0=0.05, theta1=0.9, iter=10000, burn_in=1000)  
+assign.wrapper(trainingData=trainingData, testData=testData, trainingLabel=trainingLabel1, geneList=NULL, n_sigGene=g, adaptive_B=T, adaptive_S=F, mixture_beta=F, outputDir=adapB_folder, theta0=0.05, theta1=0.9, iter=100000, burn_in=5000)  
 
 set.seed(1234)
-assign.wrapper(trainingData=trainingData, testData=testData, trainingLabel=trainingLabel1, testLabel=NULL, geneList=NULL, n_sigGene=g, adaptive_B=T, adaptive_S=T, mixture_beta=F, outputDir=adap_adap_folder, theta0=0.05, theta1=0.9, iter=10000, burn_in=1000) 
+assign.wrapper(trainingData=trainingData, testData=testData, trainingLabel=trainingLabel1, geneList=NULL, n_sigGene=g, adaptive_B=T, adaptive_S=T, mixture_beta=F, outputDir=adap_adap_folder, theta0=0.05, theta1=0.9, iter=100000, burn_in=5000) 
 
 }
 
@@ -109,4 +109,4 @@ for(i in 1:length(fileNames))
   write.table(data,outFileName ,sep='\t', col.names = NA,quote=F)
   }
 
-sum(!rownames(temp)%in%rownames(temp1))
+#sum(!rownames(temp)%in%rownames(temp1))
