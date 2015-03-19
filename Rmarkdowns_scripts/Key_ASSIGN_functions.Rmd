@@ -1,5 +1,4 @@
 
-s=1
 
 merge_drop<-function(x,y,by=0)
 {
@@ -7,8 +6,6 @@ merge_drop<-function(x,y,by=0)
   rownames(new_m)<-new_m$Row.names
   return(new_m[,2:length(colnames(new_m))])
 }
-
-
 
 
 pcaplot<-function(mat,sub,scale=T){

@@ -39,13 +39,14 @@ expr_all_icbp_f<-merge_drop(expr_all_f,icbp,by=0)
 sub<-c(12,6,6,5,6,55)
 pcaplot(expr_all_icbp_f,sub)
 bat1<-as.matrix(cbind(c(colnames(expr_all_f),colnames(icbp)),c(rep(1,length(colnames(expr_all_f))),rep(2,length(colnames(icbp))))))
-#bat1
+#bat1he
 combat_expr1<-ComBat(dat=expr_all_icbp_f, batch=bat1[,2], mod=NULL, numCovs=NULL)
 pcaplot(combat_expr1,sub)
 c_gfp<-subset(combat_expr1, select=GFP.1:GFP.12)
 c_akt<-subset(combat_expr1, select=AKT.1:AKT.6)
 c_bad<-subset(combat_expr1, select=BAD.1:BAD.6)
 c_her2<-subset(combat_expr1, select=HER2.1:HER2.6)
+head(c_her2)
 c_igf1r<-subset(combat_expr1, select=IGF1R.1:IGF1R.6)
 
 #############trying two pathways at a time in multipathway#############
@@ -155,6 +156,36 @@ trainingLabelha<-list(control=list(her2=1:12),her2=13:17)
 dir.create("~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/ICBP_single/Her2")
 assign_easy_multi(trainingData = train_her,test=icbp_test,trainingLabel1 = trainingLabelha, g=15,out_dir_base = "~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/ICBP_single/Her2")
 
+#run assign with 100,000 and burn in 5000
+train_her<-cbind(c_gfp,c_her2)
+head(train_her)
+trainingLabelha<-list(control=list(her2=1:12),her2=13:17)
+trainingLabelha
+dir.create("~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/ICBP_single/Her2")
+train_her
+
+head(icbp_test)
+dir.create("~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/ICBP_single/Her2_try3_adap_adap_setseed")
+
+dir.create("~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/ICBP_single/Her2_try3_adap_b_setseed")
+
+dir.create("~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/ICBP_single/Her2_try3_adap_adap_noseed_50")
+
+dir.create("~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/ICBP_single/Her2_try3_adap_b_noseed_50")
+
+
+assign.wrapper(trainingData=train_her, testData=icbp_test, trainingLabel=trainingLabelha, n_sigGene=50, adaptive_B=TRUE, adaptive_S=TRUE, mixture_beta=F, outputDir= "~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/ICBP_single/Her2_try3_adap_adap_noseed_50", p_beta=0.01, theta0=0.05, theta1=0.9, iter=100000, burn_in=5000)
+
+
+assign.wrapper(trainingData=train_her, testData=icbp_test, trainingLabel=trainingLabelha, n_sigGene=50, adaptive_B=TRUE, adaptive_S=F, mixture_beta=F, outputDir= "~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/ICBP_single/Her2_try3_adap_b_noseed_50", p_beta=0.01, theta0=0.05, theta1=0.9, iter=100000, burn_in=5000)
+
+
+
+
+assign_easy_multi(trainingData = train_her,test=icbp_test,trainingLabel1 = trainingLabelha, g=15,out_dir_base = "~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/ICBP_single/Her2")
+
+
+
 #2. AKT
 train_akt<-cbind(c_gfp,c_akt)
 trainingLabel_akt<-list(control=list(akt=1:12),akt=13:18)
@@ -224,12 +255,30 @@ combineMultiplePredictionFiles(filenames_single_nonadapative, "~/Documents/Thesi
 
 ```
 
+
+Gene list for no seed
+```{r}
+
+setwd("~/Documents/Thesiswork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/ICBP_single/Her2_try3_adap_b/")
+filenames_single_her2_noseed<-system("ls *rda*", intern=TRUE)
+filenames_single_her2_noseed
+
+getGeneList(filenames_single_her2_noseed)
+
+
+
+```
+
+
+
+
 # Prediction Files are done are ready, just need to boot strap them, and get p-v
 
 Read in Moom's non-adaptive single pathway Results
 ```{r}
 
-setwd("~/Documents/Thesiswork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/ICBP_single/single_pathway_results_ICBP/")
+#setwd("~/Documents/Thesiswork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/ICBP_single/single_pathway_results_ICBP/")
+setwd("~/Documents/Thesiswork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/ICBP_single/Her2_try3_adap_b/")
 getwed()
 filenames_single_nonadapative_moom<-system("ls */nonadap*/pathway_activity_testset*", intern=TRUE)
 filenames_single_nonadapative_moom

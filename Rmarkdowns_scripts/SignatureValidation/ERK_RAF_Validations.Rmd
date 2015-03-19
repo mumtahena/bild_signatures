@@ -212,6 +212,8 @@ box()
 Load in ICBP data, merge with pathway predictions
 ```{r, cache=TRUE}
 ICBP_drugs<-read.delim("~/Documents/ThesisWork/GitRepos/bild_signature_validation_old_repo/Datasets/ICBP_drugs_1.txt", header=1, sep='\t',row.names=1)
+# load in CCLE drug data for RAF
+
 
 drugs=ICBP_drugs[,11:100] 
 View(drugs)
@@ -220,15 +222,9 @@ View(drugs)
 pred_drug_erk<-merge_drop(data_erk,drugs,by=0) ; dim(pred_drug_erk) # 53 x 111
 
 pred_drug_erk_complete_only = pred_drug_erk[complete.cases(pred_drug_erk),]
-View(pred_drug_erk_complete_only)
-View(pred_drug_erk_complete_only)
-View(pred_drug_erk)
+=)
 
 predicictionCols= (pred_drug_erk[,1:21]) ; dim(predicictionCols)
-
-dim(pred_drug_erk)
-
-colnames(pred_drug_erk)
 drugs_55_cell_lines=(pred_drug_erk[,22:111]) ; dim(drugs_55_cell_lines)
 plot(drugs_55_cell_lines) 
 
@@ -247,18 +243,35 @@ Now we will correlate all the pathway predictions with all the drugs...
 Here we see that we get better predictions and I think is is because we are removing the cell lines with NAs...?
 ```{r} 
 
-
-
-cors_erk_preds_alldrugs_complete= cor(predicictionCols,drugs_55_cell_lines, use="na.or.complete",method= "spearman")
+cors_erk_preds_alldrugs_complete= cor(predicictionCols,drugs_55_cell_lines, use="pairwise",method= "spearman")
 View(cors_erk_preds_alldrugs_complete)
 
-cors_erk_preds_alldrugs_complete_df=data.frame(cors_erk_preds_alldrugs_complete)
+#corr.test
+
+
+#use this  if you want to get the p-values from the bootstrap
+library(psych)
+
+#rhos=p_val=NULL
+#temp=temp_f=NULL
+#for(i in 1:160){
+#  for(j in 1:7) {
+    #i=1
+    #j=1
+ # pathway_drug=subset(pred_drug_only, select=c(i,160+j))
+#  temp_cors= cor.ci(pathway_drug, method="spearman", plot=FALSE)
+#  temp<-c(temp_cors$rho[2,1],temp_cors$ci[5])  
+#  temp<- cbind(temp[1],temp[2])
+#  temp_f<-rbind(temp_f,temp)
+#  rownames(temp_f)[j+(i-1)*7]=paste(colnames(pathway_drug)[1],colnames(pathway_drug)[2],sep='__')
+#  }
+#}
+colnames(temp_f)<-c("Corr","p_val")
+
 
 writeFile(cors_erk_preds_alldrugs_complete, "~/Documents/ThesisWork/GitRepos/bild_signatures/Results/Validating_Signatures/ERK/ERK_pathwaypredictions_ICBPdrugresponse_correlations_complete.txt")
 
-# Not as good 
-#erk_preds_all_cors_pair= cor(predicictionCols, drugs_55_cell_lines,use="pairwise.complete.obs",method= "spearman" )
-#erk_preds_erki_cors_pair
+
 ```
 
 We can use this package if we want to get the p-values from the correlations gives the same results at just using cor
@@ -372,6 +385,7 @@ erk_mean = means_GI50["ERKi.II..FR180304."]
 erk_mean
 
 #seperate the cell lines into sensitive and resistant to erk inhibitor 
+# Will will find a way to do this better with mclust later
 erk_sensitive= subset(erk_sensitivty, erk_sensitivty[,2] > 4.5, )
 erk_sensitive
 rownames(erk_sensitive)
@@ -420,54 +434,6 @@ for (i in 1:ncol(data_erk)){
 }
 dev.off()
 
-```
-
-
-Try with only complete observations (11 cell lines only)
-```{r}
-#try with only the complete cases (looks worse)
-cellines_complete = rownames(pred_drug_erk_complete_only)
-erk_sensitivity_complete= pred_drug_erk_complete_only$ERKi.II..FR180304
-erk_sensitivity_complete
-dim
-erk_sensitivty_complete = cbind(cellines_complete,erk_sensitivity_complete)
-class(erk_sensitivty_complete)
-erk_sensitivty_complete[,2]
-
-means_GI50_complete = colMeans(pred_drug_erk_complete_only[,22:111], na.rm=TRUE)
-means_GI50
-
-#find the mean of response to ERKi 
-erk_mean_complete = means_GI50_complete["ERKi.II..FR180304."] 
-erk_mean
-
-#seperate the cell lines into sensitive and resistant to erk inhibitor 
-erk_sensitive_complete= subset(erk_sensitivity_complete, erk_sensitivty_complete[,2] > 4.5, )
-erk_sensitive_complete
-
-erk_resistent_complete= subset(erk_sensitivity_complete, erk_sensitivty_complete[,2] < 4.5)
-erk_resistent_complete
-
-```
-
-Looking at the predictions and drugs
-```{r}
-
-# 150 adaptive adaptive and ERK
-pred_drug_erk[c(1,42)]
-colnames(pred_drug_erk)
-
-# 150 adaptive adaptive and Mek i
-pred_drug_erk[c(1,2,3, 29)]
-colnames(pred_drug_erk)
-
-# 150 adaptive background only 
-pred_drug_erk[c(2,42)]
-colnames(pred_drug_erk)
-
-
-pred_drug_erk[c(1,2, 107)] # had a high positive correlation
-# for apap_apap100 and adap100, have really different predictions
 ```
 
 

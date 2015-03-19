@@ -1,3 +1,6 @@
+.RData
+.Rhistory
+Archive/*
 Datasets
 commit_git
 update_git

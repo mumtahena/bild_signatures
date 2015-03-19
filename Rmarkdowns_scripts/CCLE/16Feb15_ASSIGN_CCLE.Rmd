@@ -74,7 +74,7 @@ CCLE_Breast_Metadata_Removed=t(CCLE_Breast_Metadata_Removed)
 CCLE_Breast_RNASeqFile_no_metadata="~/Documents/ThesisWork/GitRepos/bild_signatures/CCLE_Breast_RNAseq_TPMlog.txt"
 CCLE_Breast_RNASeq_no_meta=write.table(CCLE_Breast_Metadata_Removed,CCLE_Breast_RNASeqFile_no_metadata, sep='\t', col.names = NA,quote=F)
 system("cat ~/Documents/ThesisWork/GitRepos/bild_signatures/CCLE_Breast_RNAseq_TPMlog.txt | head")
-CCLE_Breast_Metadata_Removed=read.table("~/Documents/ThesisWork/GitRepos/bild_signatures/CCLE/CCLE_Breast_RNAseq_TPMlog.txt", sep='\t', check.names = FALSE, stringsAsFactors=FALSE, header=1, row.names=1)
+CCLE_Breast_Metadata_Removed=read.table("~/Documents/ThesisWork/GitRepos/bild_signatures/CCLE_data/CCLE_Breast_RNAseq_TPMlog.txt", sep='\t', check.names = FALSE, stringsAsFactors=FALSE, header=1, row.names=1)
 View(CCLE_Breast_Metadata_Removed)
 ```
 
@@ -360,21 +360,7 @@ write.table(data_multi_adaptive_adaptive,"~/Desktop/CCLE_multi_predictions_adapa
 
 ```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-gjhCorrelate Adaptive results with Non-apative results
+Correlate Adaptive results with Non-apative results
 ```{r}
 Cors_adap_nonadap= cor(data_nonadaptive,data_adaptive, method= "spearman")
 write.table(Cors_adap_nonadap,"~/Desktop/Corelations_adap_nonadap_CCLE_predictions.txt",sep='\t', col.names = NA,quote=F)

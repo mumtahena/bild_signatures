@@ -53,7 +53,7 @@ boot_cors = array(0,dim=c(25,90,n.boot)) # make a three dimensional array to sto
 # added spearman here, it did not have it 
 for (i in 1:n.boot){
   boot.sample = sample(1:samplesize,replace=T)
-  boot_cors[,,i]=cor(pred_drug_multi[boot.sample,1:25],pred_drug_multi[boot.sample,36:125],use="na.or.complete", method="spearman")
+  boot_cors[,,i]=cor(pred_drug_multi[boot.sample,1:25],pred_drug_multi[boot.sample,36:125],use="pairwise", method="spearman")
   }
 
 dim(boot_cors) #24 x 90 x 10000
@@ -90,7 +90,7 @@ p_calc = function(x,direction="greater",cor_cut=0){
   }
 
 head(boot_cors)
-# These are not p-values, or are they, they just seem like correlations above or below a certain value
+# These are p-values, or are they, they just seem like correlations above or below a certain value
 # Obtaining the cor means for all 10000 interations that are either above or below a certain value for all rows and columns. 
 # I think above and below equal to 1...
 
@@ -114,15 +114,23 @@ drugs = colnames(pred_drug_multi)[36:125]  ## print to see the drug names
 print(drugs)
 
 #  to test 
+
+dim(boot_cors)
+
 p_calc_compare=function(path1,path2,drug,cor_cut=0,cors=boot_cors,pathlist=pathway,druglist=drugs){
   ind_p1 = which(pathlist==path1)
   ind_p2 = which(pathlist==path2)
   ind_drug = which(druglist==drug)
-  mean((cors[ind_p1,ind_drug,]-cors[ind_p2,ind_drug,])>cor_cut,na.rm=T)
+  mean1 = mean((cors[ind_p1,ind_drug,]-cors[ind_p2,ind_drug,])>cor_cut,na.rm=T)
+  pval=1-mean1
 }
 
 
+
+
 pval_comp = p_calc_compare("AKT_BAD.adap_multi.pathway_activity_testset.csv.akt","AKT_BAD_HER2.adap_multi.pathway_activity_testset.csv.akt","Sigma.AKT1.2.inhibitor")
+pval_comp
+
 head(pval_comp)
 
  ## pval_comp = 0.91 in this case means that AKT+BAD > AKT+BAD+HER2 in 91% of the bootstrap correlations. Thus the p-value for testing Ha: AKT+BAD > AKT+BAD+HER2 is 0.09
