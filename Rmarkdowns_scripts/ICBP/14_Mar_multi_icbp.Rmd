@@ -13,7 +13,7 @@ library(utils)
 
 Reading in the signature datasets...
 ```{r include=FALSE,echo=FALSE}
-#setwd("~/Documents/ThesisWork/GitRepos/bild_signature_validation_old_repo/Datasets")
+setwd("~/Documents/ThesisWork/GitRepos/bild_signature_validation_old_repo/Datasets")
 setwd("~/Dropbox/bild_signature/Datasets")
 expr<-as.matrix(read.table("GFP18_AKT_BAD_HER2_IGF1R_RAF_ERK.tpmlog",sep='\t',row.names=1,header=1))
 control<-subset(expr, select=GFP.1:GFP.12)
@@ -24,8 +24,8 @@ igf1r<-subset(expr,select=IGF1R.1:IGF1R.6)
 erk<-subset(expr,select=ERK.1:ERK.6)
 expr_all<-cbind(control,akt,bad,her2,igf1r,erk)
 dim(expr_all)
-#icbp<-as.matrix(read.table("~/Documents/ThesisWork/GitRepos/bild_signature_validation_old_repo/Datasets/ICBP/icbp_Rsubread_tpmlog.txt", sep='\t', stringsAsFactors=FALSE, header=1, row.names=1))
-icbp<-as.matrix(read.table("icbp_Rsubread_tpmlog.txt", sep='\t', stringsAsFactors=FALSE, header=1, row.names=1))
+icbp<-as.matrix(read.table("~/Documents/ThesisWork/GitRepos/bild_signature_validation_old_repo/Datasets/ICBP/icbp_Rsubread_tpmlog.txt", sep='\t', stringsAsFactors=FALSE, header=1, row.names=1))
+#icbp<-as.matrix(read.table("icbp_Rsubread_tpmlog.txt", sep='\t', stringsAsFactors=FALSE, header=1, row.names=1))
 expr_all_f <-expr_all[apply(expr_all[,1:41]==0,1,mean) < 0.85,]
 dim(expr_all_f)
 expr_all_icbp_f<-merge_drop(expr_all_f,icbp,by=0)
@@ -44,7 +44,8 @@ c_her2<-subset(combat_expr1, select=HER2.1:HER2.6)
 c_igf1r<-subset(combat_expr1, select=IGF1R.1:IGF1R.6)
 c_erk<-subset(combat_expr1, select=ERK.1:ERK.6)
 c_test<-combat_expr1[,42:96]
-basedir="~/Dropbox/bild_signatures/icbp_15_mar_all"
+basedir="~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/icbp_15_mar_all"
+basedir=""
 dir.create( basedir)
 
 #############trying one pathways at a time in multipathway#############
@@ -62,7 +63,7 @@ assign_easy_multi(trainingData = cbind(c_gfp,c_bad),test=c_test,trainingLabel1 =
 
 #3. HER2
 trainingLabelh<-list(control=list(her2=1:12),her2=13:17)
-sub_dir<-paste(basedir,"her2",sep='/')
+sub_dir<-paste(basedir,"her2_witherk",sep='/')
 dir.create( sub_dir)
 assign_easy_multi(trainingData = cbind(c_gfp,c_her2),test=c_test,trainingLabel1 = trainingLabelh,g=15,out_dir_base = sub_dir,single = 1)
 

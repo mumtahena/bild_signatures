@@ -15,9 +15,10 @@ system("ls")
 
 ICBP_preds_drugs<-(read.table("ICBP_pathwaypredictions_drug_all_combos.txt", sep='\t', stringsAsFactors=FALSE, header=1, row.names=1))
 View(ICBP_preds_drugs)
-colnames(ICBP_preds_drugs)
+dim(ICBP_preds_drugs)
+dim(colnames(ICBP_preds_drugs)
 dimnames(ICBP_preds_drugs)
-
+# 52 cell lines (160 predictions, 90 drugs)
 ```
 
 
