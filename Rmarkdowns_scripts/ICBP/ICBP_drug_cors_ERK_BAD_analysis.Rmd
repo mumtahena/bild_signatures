@@ -1,0 +1,112 @@
+---
+title: "Multi_pathway Correlations with ICBP"
+author: "Shelley"
+date: "March 18, 2015"
+output: html_document
+---
+
+
+```{r, echo=FALSE}
+# setwd("~//Documents/Thesiswork/GitRepos/bild_signatures/ICBP/")
+# 
+# system("ls")
+# 
+# ICBP_preds_drugs<-(read.table("ICBP_pathwaypredictions_drug_all_combos.txt", sep='\t', stringsAsFactors=FALSE, header=1, row.names=1))
+# View(ICBP_preds_drugs)
+# colnames(ICBP_preds_drugs)
+# dimnames(ICBP_preds_drugs)
+
+```
+
+
+```{r echo=FALSE}
+# colnames(ICBP_preds_drugs)
+# rhos=p_val=NULL
+# temp=cors_pvals=NULL
+# for(i in 1:160){
+#   for(j in 1:90) {
+#     #i=1
+#     #j=1
+#   pathway_drug=subset(ICBP_preds_drugs, select=c(i,160+j))
+#   temp_cors= cor.ci(pathway_drug, method="spearman", plot=FALSE, n.iter=1000)
+#   temp<-c(temp_cors$rho[2,1],temp_cors$ci[5])  
+#   temp<- cbind(temp[1],temp[2])
+#   cors_pvals<-rbind(cors_pvals,temp)
+#   rownames(cors_pvals)[j+(i-1)*90]=paste(colnames(pathway_drug)[1],colnames(pathway_drug)[2],sep='__')
+#   }
+# }
+# 
+# 
+# colnames(cors_pvals)<-c("Corr","p_val")
+# temp_f
+# writeFile(cors_pvals, "ICBP_allpathwaycombos_all_drugs_1000.txt")
+cors_pvals<-read.table("~/Desktop/ICBP_allpathwaycombos_all_drugs.txt",header=1, row.names=1,sep='\t')
+#dim(cors_pvals)
+#head(cors_pvals)
+chemolist<-c("5.FU","5.FdUR","CGC.11047","CGC.11144","CPT.11","Carboplatin","Cisplatin","Docetaxel","Doxorubicin","Epirubicin","Etoposide","Gemcitabine","Oxaliplatin","Methotrexate","ICRF.193","Ixabepilone","Paclitaxel","Pemetrexed","Topotecan","Vinorelbine")
+#cellCycleInhibitors<-c("ZM447439","VX.680")
+chemo_preds<-NULL
+for(i in 1:length(chemolist)){
+  chemo_preds<-rbind(chemo_preds,cors_pvals[grepl(chemolist[i], rownames(cors_pvals), ignore.case = T),])
+}
+
+#dim(cors_pvals)
+#dim(chemo_preds)
+bad_s<-chemo_preds[grepl("_multi.bad__",rownames(chemo_preds)),]
+erk_s<-chemo_preds[grepl("_multi.erk__",rownames(chemo_preds)),]
+plot(bad_s$Corr,erk_s$Corr,main="BAD and ERK pathway\nCorrelations with Chemo drugs")
+print(paste("correlations of correlations in BAD and ERK predictions with chemotherapy",cor(bad_s$Corr,erk_s$Corr),sep=':'))
+boxplot(bad_s$Corr,erk_s$Corr,names=c("bad predictions","erk predictions"),main="BAD and ERK pathway\nCorrelations with Chemo drugs")
+
+print(t.test(bad_s$Corr,erk_s$Corr))
+#wilcox.test(bad_s$Corr,erk_s$Corr)
+# cors_sig<-subset(chemo_preds,chemo_preds$p_val<=0.05)
+# bad_sig<-cors_sig[grepl("_multi.bad__",rownames(cors_sig)),]
+# dim(bad_sig)
+# erk_sig<-cors_sig[grepl("_multi.erk__",rownames(cors_sig)),]
+# dim(erk_sig)
+# boxplot(bad_sig$Corr,erk_sig$Corr,names=c("bad predictions","erk predictions"),main="Correlations with Chemo drugs")
+# t.test(bad_sig$Corr,erk_sig$Corr)
+# wilcox.test(bad_sig$Corr,erk_sig$Corr)
+# bad_all<-bad_sig[grepl("akt_bad_her2_igf1r_erk.adap_adap_multi.bad",rownames(bad_sig)),]
+# erk_all<-erk_sig[grepl("erk",rownames(erk_sig)),]
+# erk_all
+#-----------------------
+targeted_list<-c("Sigma.AKT1.2.inhibitor",	"Triciribine",	"AS.252424",	"BEZ235",	"BIBW2992",		"ERKi.II..FR180304.",		"Erlotinib",	"Everolimus",	"GSK1120212",	"GSK1059868",	"GSK1838705",	"GSK2119563",	"GSK2126458",	"GSK2141795",	"GSK1059615",	"Lapatinib",	"Imatinib",	"Gefitinib",	"Rapamycin",	"Temsirolimus")
+#aurora<-c("GSK1070916")
+#targeted_list<-c("AG1478","Sigma.AKT1.2.inhibitor",  "Triciribine",	"AS.252424",	"AZD6244",	"BEZ235",	"BIBW2992",		"ERKi.II..FR180304.",		"Erlotinib",	"Everolimus",	"GSK923295",	"GSK1070916",	"GSK1120212",	"GSK1059868",	"GSK1838705",	"GSK461364",	"GSK2119563",	"GSK2126458",	"GSK2141795",	"GSK1059615",	"GSK650394",	"Lapatinib",	"Imatinib",	"Gefitinib",	"Rapamycin",	"Vorinostat",		"Temsirolimus",	"XRP44X",	"ZM447439")
+target_preds=NULL
+for(i in 1:length(targeted_list)){
+  target_preds<-rbind(target_preds,cors_pvals[grepl(targeted_list[i], rownames(cors_pvals), ignore.case = T),])
+}
+erk_sig_t<-target_preds[grepl("_multi.erk__",rownames(target_preds)),]
+bad_sig_t<-target_preds[grepl("_multi.bad__",rownames(target_preds)),]
+#plot(bad_sig_t$Corr,erk_sig_t$Corr,main="BAD and ERK pathway\nCorrelations with Targeted drugs")
+#print(paste("correlations of correlations in BAD and ERK predictions with targeted therapy",cor(bad_sig_t$Corr,erk_sig_t$Corr),sep=':'))
+boxplot(bad_sig_t$Corr,erk_sig_t$Corr,names=c("bad predictions","erk predictions"),main="Correlations with Targeted drugs")
+print(t.test(bad_sig_t$Corr,erk_sig_t$Corr))
+
+
+
+# cors_sig_t<-subset(target_preds,target_preds$p_val<=0.05)
+# dim(cors_sig_t)
+# bad_sig_t<-cors_sig_t[grepl("_multi.bad__",rownames(cors_sig_t)),]
+# dim(bad_sig_t)
+# erk_sig_t<-cors_sig_t[grepl("_multi.erk__",rownames(cors_sig_t)),]
+# akt_sig_t<-cors_sig_t[grepl("_multi.akt__",rownames(cors_sig_t)),]
+# head(akt_sig_t)
+# dim(erk_sig_t)
+# boxplot(bad_sig_t$Corr,erk_sig_t$Corr,names=c("bad predictions","erk predictions"),main="Correlations with Targeted drugs")
+# 
+# t.test(bad_sig_t$Corr,erk_sig_t$Corr)
+# wilcox.test(bad_sig$Corr,erk_sig$Corr)
+# boxplot(bad_sig_t$Corr,akt_sig_t$Corr,names=c("bad predictions","akt predictions"),main="Correlations with Targeted drugs")
+# t.test(bad_sig_t$Corr,akt_sig_t$Corr)
+# wilcox.test(bad_sig$Corr,akt_sig_t$Corr)
+
+#bad_all<-bad_sig[grepl("akt_bad_her2_igf1r_erk.adap_adap_multi.bad",rownames(bad_sig)),]
+#erk_all<-erk_sig[grepl(".adap_adap_multi.erk",rownames(erk_sig)),]
+#erk_all
+
+```
+
