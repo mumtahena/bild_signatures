@@ -1,0 +1,202 @@
+---
+title: "ICBP_EGFRValidation"
+author: "Shelley"
+date: "November 14, 2014"
+output: html_document
+---
+**Goal**
+Validate EGFR signature with 
+
+Read and clean the ICBP binReg Results
+```{r}
+
+binRegFile200=read.delim("~/Documents/ThesisWork/GitRepos/u01project/binregResults/EGFR/ICBP/EGFR_ICBP_1Metagene_dwd_200/probabilities.txt")
+binRegFile250=read.delim("~/Documents/ThesisWork/GitRepos/u01project/binregResults/EGFR/ICBP/EGFR_ICBP_1Metagene_dwd_250/probabilities.txt")
+head(binRegFile250)
+binRegFile300=read.delim("~/Documents/ThesisWork/GitRepos/u01project/binregResults/EGFR/ICBP/EGFR_ICBP_1Metagene_dwd_300/probabilities.txt")
+head(binRegFile300)
+binRegFile350=read.delim("~/Documents/ThesisWork/GitRepos/u01project/binregResults/EGFR/ICBP/EGFR_ICBP_1Metagene_dwd_350/probabilities.txt")
+binRegFile400=read.delim("~/Documents/ThesisWork/GitRepos/u01project/binregResults/EGFR/ICBP/EGFR_ICBP_1Metagene_dwd_400/probabilities.txt")
+binRegFile450=read.delim("~/Documents/ThesisWork/GitRepos/u01project/binregResults/EGFR/ICBP/EGFR_ICBP_1Metagene_dwd_450/probabilities.txt")
+binRegFile500=read.delim("~/Documents/ThesisWork/GitRepos/u01project/binregResults/EGFR/ICBP/EGFR_ICBP_1Metagene_dwd_500/probabilities.txt")
+
+binRegFile= NULL
+#binRegFile
+binRegFile= binRegFile200
+#binRegFile= binRegFile250
+#binRegFile= binRegFile300
+#binRegFile= binRegFile350
+#binRegFile= binRegFile400
+#binRegFile= binRegFile450
+ 
+#binRegFile= binRegFile500
+
+
+
+summary(binRegFile)
+binRegFile$Sample
+dim(binRegFile) #91
+
+ICBPcells=binRegFile[37:nrow(binRegFile),]
+ICBPsamples = ICBPcells$Sample
+ICBPsamples
+dim(ICBPcells) # 55
+ICBPprobs= subset(ICBPcells, select=c("Probability"))
+ICBPprobs
+ICBPprobTable= data.frame(ICBPsamples,ICBPprobs)
+class(ICBPprobTable)
+row.names(ICBPprobTable)=ICBPsamples
+ICBPprobTable$ICBPsamples <- NULL
+head(ICBPprobTable)
+
+```
+
+
+Read in the drug data
+```{r}
+drugFile=read.delim("~/Documents/ThesisWork/GitRepos/u01project/SignatureValidations/EGFR/ICBP/ICBP_drugs.txt", row.names=1)
+head(drugFile)
+summary(drugFile)
+EGFRdrugs=subset(drugFile, select= c("Transcriptional.subtype...ERBB2.status", "Lapatinib", "AG1478", "Gefitinib", "BIBW2992", "Erlotinib")) 
+summary(EGFRdrugs)
+```
+
+```{r}
+ICBP_Probs_Drugs=merge(ICBPprobTable,EGFRdrugs, by=0)
+ICBP_Probs_Drugs
+ICBP_Probs_Drugs=merge(ICBPprobTable,EGFRdrugs, by=0, all.x=TRUE)
+ICBP_Probs_Drugs
+```
+
+Look at the distrubtion of the drugs IC50s
+```{r}
+hist(ICBP_Probs_Drugs$Lapatinib)
+hist(ICBP_Probs_Drugs$AG1478)
+hist(ICBP_Probs_Drugs$Gefitinib)
+hist(ICBP_Probs_Drugs$BIBW2992)
+hist(ICBP_Probs_Drugs$Erlotinib)
+```
+
+We would expect to see that there is a positive correlation between EGFR inhibitors and the probabilities
+```{r}
+summary(ICBP_Probs_Drugs)
+hist(ICBP_Probs_Drugs$Probability)
+
+#for 200
+c1=cor(ICBP_Probs_Drugs$Probability, ICBP_Probs_Drugs$Lapatinib, use = "na.or.complete") #-0.2658951
+print(c1)
+c2=cor(ICBP_Probs_Drugs$Probability, ICBP_Probs_Drugs$AG1478, use = "na.or.complete") #-0.04543915
+print(c2)
+c3=cor(ICBP_Probs_Drugs$Probability, ICBP_Probs_Drugs$Gefitinib, use = "na.or.complete") #-0.1673386
+print(c3)
+c4=cor(ICBP_Probs_Drugs$Probability, ICBP_Probs_Drugs$BIBW2992, use = "na.or.complete") #-0.2893571
+print(c4)
+c5=cor(ICBP_Probs_Drugs$Probability, ICBP_Probs_Drugs$Erlotinib, use = "na.or.complete")#-0.1118872
+print(c5)
+
+#for 250
+[1] -0.2249219  
+[1] -0.1079417
+[1] -0.2127953
+[1] -0.2754292
+[1] -0.1905705
+
+#for 300
+[1] -0.2024346
+[1] -0.05193612
+print(c3)
+[1] -0.176239
+print(c4)
+
+> print(c5)
+[1] -0.1490065
+#for 350
+
+[1] -0.204828
+[1] -0.02165414
+[1] -0.1563606
+[1] -0.2255205
+[1] -0.142113
+
+#for 400
+> print(c1)
+[1] -0.1880711
+> print(c2)
+[1] -0.03276945
+> print(c3)
+[1] -0.1782952
+> print(c4)
+[1] -0.2158885
+> print(c5)
+[1] -0.207948
+
+#for 450
+> print(c1)
+[1] -0.1902424
+> print(c2)
+[1] -0.03390291
+> print(c3)
+[1] -0.1776362
+> print(c4)
+[1] -0.2251944
+> print(c5)
+[1] -0.2337897
+
+#for 500
+> print(c1)
+[1] -0.1872213
+> print(c2)
+[1] -0.03050068
+> print(c3)
+[1] -0.17791
+> print(c4)
+[1] -0.2204073
+> print(c5)
+[1] -0.2302224
+
+# the correlation barley change with the number of genes added. 
+
+#Lapatinib- Becomes less negatively correlated, around (-0.2249219 - -0.1872213)
+#AG1478- Becomes more positivetly regulated, but still bad. 
+#Gefitinib- -0.2127953 thru -0.17791- 
+#BIBW2992 [1] -0.2754292 theu [1] -0.2204073
+
+#Erlotinib- -0.1905705 thru -0.2302224
+
+
+
+
+Do a t.test/wilxcox test between the ERBB2-amp vs non-ERBB amp. Was not significant. But the Mean on the non-amplifed ERBB2 is higher than amp ERBB2. I would expect the ERBB2 amplified samples to have high prob. than non-ERBB2 because they usually have high EGFR.
+
+```{r}
+summary(ICBP_Probs_Drugs$Transcriptional.subtype...ERBB2.status)
+plot(ICBP_Probs_Drugs$Transcriptional.subtype...ERBB2.status)
+ERRB2amp1=subset(ICBP_Probs_Drugs,ICBP_Probs_Drugs$Transcriptional.subtype...ERBB2.status=="ERBB2-amp")
+ERRB2amp1
+ERRB2amp2=subset(ICBP_Probs_Drugs,ICBP_Probs_Drugs$Transcriptional.subtype...ERBB2.status=="ERBB2Amp")
+class(ERRB2amp2)
+ERRB2amp=rbind(ERRB2amp1, ERRB2amp2)
+ERRB2amp
+summary(ERRB2amp) #alot of high prob and low probs.
+dim(ERRB2amp) #21 ERBB2 Amps
+hist(ERRB2amp$Probability)
+
+NonERRB1=subset(ICBP_Probs_Drugs,ICBP_Probs_Drugs$Transcriptional.subtype...ERBB2.status!="ERBB2-amp" )
+NonERRB1
+NonERBB=subset(NonERRB1,NonERRB1$Transcriptional.subtype...ERBB2.status!="ERBB2Amp")
+NonERBB
+summary(NonERBB)
+hist(NonERBB$Probability)
+
+boxplot(ERRB2amp$Probability,NonERBB$Probability) #higer in nonERBB
+t.test(ERRB2amp$Probability,NonERBB$Probability) #0.42
+wilcox.test(ERRB2amp$Probability,NonERBB$Probability) #0.55
+```
+
+
+It looks like the NonERBB amplifed are more sensitive to the the EGFR inhibiotors than the ERBB AMP
+```{r}
+cor(ERRB2amp$Probability,ICBP_Probs_Drugs$Lapatinib, use = "pairwise.complete.ob" ) #not working
+t.test(ERRB2amp$Probability,NonERBB$Probability)
+```
+

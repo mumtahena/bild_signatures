@@ -1,0 +1,249 @@
+---
+title: "egfr_luise_TCGA_validation"
+author: "Mumtahena Rahman"
+date: "December 22, 2014"
+output: pdf_document
+---
+---
+title: "EGFR_signature_optimization_multi"
+output: pdf_document
+---
+
+
+```{r,echo=FALSE,cache=TRUE,include=FALSE}
+library(sva)
+library(ASSIGN)
+merge_drop<-function(x,y,by=0)
+{
+  new_m<-merge(x,y,by=by)
+  rownames(new_m)<-new_m$Row.names
+  return(new_m[,2:length(colnames(new_m))])
+}
+
+pcaplot<-function(mat,sub){
+  if(sum(sub)!=length(mat))
+    {
+    print("verify the subscripts...exiting now")
+    }
+  else{
+    pca_mat <- prcomp(t(mat), center=T,scale=T)
+    plot(pca_mat)
+    plot(pca_mat$x[,1],pca_mat$x[,2])
+    index= 1
+    for(i in 1:length(sub))
+      {
+      #print(rownames(pca_mat$x)[index:sub[i]+index-1],"has color", )
+      print(i)
+      if(i==1)
+        {
+        points(pca_mat$x[1:sub[i]],pca_mat$x[1:sub[i],2],col=i+1)
+        }
+       else if(i==length(sub))
+         {
+         points(pca_mat$x[index:length(rownames(pca_mat$x))],pca_mat$x[index:length(rownames(pca_mat$x)),2],col=i+1)
+         }
+       else
+        {
+        points(pca_mat$x[index:index+sub[i]],pca_mat$x[index:index+sub[i],2],col=i+1)
+        }
+       index=index+sub[i]
+      }
+  }
+}
+assign_easy<-function(trainingData=train, testData=test, trainingLabel1=NULL,g=100,out_dir_base="~/Desktop/tmp",cov=0){
+if(cov==0){
+  adap_folder<-paste(out_dir_base,paste( "adap",g,sep=''),sep='/')
+  dir.create(file.path(out_dir_base,paste( "adap",g,sep='')))
+  nonadap_folder<-paste(out_dir_base,paste( "nonadap",g,sep=''),sep='/')
+  dir.create(file.path(out_dir_base,paste( "nonadap",g,sep='')))
+  }
+else{
+  adap_folder<-paste(out_dir_base,paste( "adap_cov",g,sep=''),sep='/')
+  dir.create(file.path(out_dir_base,paste( "adap_cov",g,sep='')))
+  nonadap_folder<-paste(out_dir_base,paste( "nonadap_cov",g,sep=''),sep='/')
+  dir.create(file.path(out_dir_base,paste( "nonadap_cov",g,sep='')))
+}
+
+set.seed(1234)
+assign.wrapper(trainingData=trainingData, testData=testData, trainingLabel=trainingLabel1, testLabel=NULL, geneList=NULL, n_sigGene=g, adaptive_B=T, adaptive_S=F, mixture_beta=F, outputDir=adap_folder, theta0=0.05, theta1=0.9, iter=2000, burn_in=1000)  
+
+set.seed(1234)
+assign.wrapper(trainingData=trainingData, testData=testData, trainingLabel=trainingLabel1, testLabel=NULL, geneList=NULL, n_sigGene=g, adaptive_B=F, adaptive_S=F, mixture_beta=F, outputDir=nonadap_folder, theta0=0.05, theta1=0.9, iter=2000, burn_in=1000)  
+
+}
+
+
+setwd("~/Dropbox/bild_signatures//Datasets/")
+# gfp <- read.table("36hr_gfp_TPMlog.txt",header = 1, row.names=1)
+# dim(gfp)
+# egfr<- read.table("36hr_EGFR_train_TPMlog.txt",header = 1, row.names=1)
+# dim(egfr)
+multi<-read.table("hmec_multi_egfr_mek_FeatureCount.tpmlog", sep='\t', header=1, row.names=1)
+# head(multi)
+# dim(multi)
+multi<-multi[,order(colnames(multi))]
+# head(multi)
+# colnames(multi)
+control_l<-multi[,1:6]
+egfr_l<-multi[,7:12]
+# head(egfr_l)
+# head(control_l)
+
+control_egfr_l<-cbind(control_l,egfr_l)
+gfp_egfr_multi_f <- control_egfr_l[apply(control_egfr_l[,1:12]==0,1,mean) < 0.8,]
+#dim(gfp_egfr_multi_f)
+gbm<-read.table("PANCAN20.IlluminaHiSeq_RNASeqV2.tumor_Rsubread_TPMlog_10_9_GBM.txt", sep='\t', header=1, row.names=1)
+gfp_egfr_gbm_f<-merge_drop(gfp_egfr_multi_f,gbm,by=0)
+# length(colnames(gfp_egfr_gbm_f))
+# length(colnames(gbm))
+```
+
+Now checking the PCA plot for batch adjustment
+
+```{r,echo=FALSE, include=FALSE}
+sub<-c(6,6,170)
+pcaplot(mat = gfp_egfr_gbm_f,sub = sub)
+#length(colnames(gfp_egfr_gbm_f))
+
+bat1<-as.matrix(cbind(c(colnames(gfp_egfr_multi_f),colnames(gbm)),c(rep(1,length(colnames(gfp_egfr_multi_f))),rep(2,length(colnames(gbm))))))
+##running combat without covariates
+combat_expr1<-ComBat(dat=gfp_egfr_gbm_f, batch=bat1[,2], mod=NULL, numCovs=NULL)
+pcaplot(combat_expr1,sub)
+
+```
+
+Now running ASSIGN with 500 genes
+```{r cache=TRUE, echo=FALSE}
+trainingLabel1 <- list(control = list(egfr=1:6), egfr=7:12) 
+#trainingLabel1
+train_egfr<-combat_expr1[,1:12]
+test<-combat_expr1[,13:182]
+#head(train_egfr)
+#nrow(train_egfr)
+# dir.create( "~/Desktop/tmp/egfr/tcga")
+# assign_easy(trainingData = train_egfr,test=test,trainingLabel1 = trainingLabel1,g=100,out_dir_base = "~/Desktop/tmp/egfr/tcga/")
+# assign_easy(trainingData = train_egfr,test=test,trainingLabel1 = trainingLabel1,g=75,out_dir_base = "~/Desktop/tmp/egfr/tcga/")
+# assign_easy(trainingData = train_egfr,test=test,trainingLabel1 = trainingLabel1,g=50,out_dir_base = "~/Desktop/tmp/egfr/tcga/")
+# assign_easy(trainingData = train_egfr,test=test,trainingLabel1 = trainingLabel1,g=25,out_dir_base = "~/Desktop/tmp/egfr/tcga/")
+# assign_easy(trainingData = train_egfr,test=test,trainingLabel1 = trainingLabel1,g=20,out_dir_base = "~/Desktop/tmp/egfr/tcga/")
+# assign_easy(trainingData = train_egfr,test=test,trainingLabel1 = trainingLabel1,g=15,out_dir_base = "~/Desktop/tmp/egfr/tcga/")
+# assign_easy(trainingData = train_egfr,test=test,trainingLabel1 = trainingLabel1,g=10,out_dir_base = "~/Desktop/tmp/egfr/tcga/")
+# assign_easy(trainingData = train_egfr,test=test,trainingLabel1 = trainingLabel1,g=5,out_dir_base = "~/Desktop/tmp/egfr/tcga/")
+```
+
+Now let's correlate with drug response
+```{r echo=FALSE}
+
+filenames<-system("ls ~/Desktop/tmp/egfr/tcga/*/pathway_activity_testset*", intern=TRUE)
+for(i in 1:length(filenames)){
+   f<-read.csv(filenames[i], header=1,row.names=1) ###reading in the filess one at a time
+  colnames(f)<-filenames[i]
+  if(i==1){
+    data<-f
+  }else{
+    data<-cbind(data,f)
+  }
+}
+dim(data)
+
+
+```
+
+Staring to validate in TCGA GBM cancer type. Not much luck with the mutation only data. However, mutation and amplification data together was robust enough for EGFR signature validation. I think EGFR signature consisting of 15 genes are better predictor both in ICBP and TCGA GBM datasets.
+```{r cache=TRUE,echo=FALSE}
+EGFRStatus <- read.delim("~/Dropbox/bild_signatures//Datasets/EGFR/PANCAN12_EGFR_MutationStatus.txt",row.names=1,header=FALSE)
+#head(EGFRStatus) 
+sample_names<-rownames(data)
+sample_names_1<-substr(gsub("\\.","-",sample_names),1,12)
+data[,"shortid"]<-sample_names_1
+partial_sample_names<-rownames(EGFRStatus)
+combined_egfr_status = merge(EGFRStatus, data, by.x=0,by.y=11)
+#head(combined_egfr_status)
+
+for(i in 3:12)
+{
+  #boxplot(combined_egfr_status[,i]~V2,data=combined_egfr_status)
+  print(i)
+  print(t.test(combined_egfr_status[,i]~V2,data=combined_egfr_status))
+}
+boxplot(combined_egfr_status[,7]~V2,data=combined_egfr_status)
+t.test(combined_egfr_status[,7]~V2,data=combined_egfr_status)
+boxplot(combined_egfr_status[,12]~V2,data=combined_egfr_status)
+t.test(combined_egfr_status[,12]~V2,data=combined_egfr_status)
+# box plot the mutation status
+
+
+CBioPortal_GBM_CaseMatrix_EGFR_AMP_Muts_RNAseq <- read.delim("~/Dropbox/bild_signatures//Datasets/CBioPortal_GBM_CaseMatrix_EGFR_AMP_Muts_RNAseq.txt", header=FALSE)
+# head(CBioPortal_GBM_CaseMatrix_EGFR_AMP_Muts_RNAseq)
+# dim(CBioPortal_GBM_CaseMatrix_EGFR_AMP_Muts_RNAseq)
+GBM_AMP_Mut_Status=CBioPortal_GBM_CaseMatrix_EGFR_AMP_Muts_RNAseq[3:156,1:2]
+# head(GBM_AMP_Mut_Status)
+# dim(GBM_AMP_Mut_Status)
+colnames(GBM_AMP_Mut_Status)[2] = "EGFR_Amp_or_Mut"
+colnames(GBM_AMP_Mut_Status)[1] = "TCGA_ID"
+#colnames(GBM_AMP_Mut_Status)
+#head(GBM_AMP_Mut_Status)
+GBMmergeMutation_AmpsALL=merge(data, GBM_AMP_Mut_Status, by.x=11, by.y=1)
+#GBMmergeMutation_AmpsALL
+# summary(GBMmergeMutation_AmpsALL)
+# table(GBMmergeMutation_AmpsALL$EGFR_Amp_or_Mut)
+# dim(GBMmergeMutation_AmpsALL) #151
+# colnames(GBMmergeMutation_AmpsALL)
+for(i in 2:11)
+{
+  #boxplot(combined_egfr_status[,i]~V2,data=combined_egfr_status)
+  print(colnames(GBMmergeMutation_AmpsALL)[i])
+  print(t.test(GBMmergeMutation_AmpsALL[,i]~GBMmergeMutation_AmpsALL[,12]))
+}
+
+```
+
+Now finally let's validate EGFR signature with proteomic data. 15 gene signature is still the best...
+
+```{r cache=TRUE,echo=FALSE}
+#########################################################
+# Proteomics2 - now we are using the TCPA(MD Anderson) Data not TCGA
+#########################################################
+
+#Read in the proteomics data and sub set EGFR proteins
+proteinDataTCPA <- read.csv("~/Dropbox/bild_signatures/Datasets/TCGA-GBM-L3-S42.csv", row.names=1)
+#head(proteinDataTCPA) #  215 Samples GBM RPPA
+EGFRsamples=subset(proteinDataTCPA, select= c( "EGFR", "EGFR_pY1068", "EGFR_pY1173"))
+# head(EGFRsamples)
+# summary(GBMmergeMutation_AmpsALL)
+# class(EGFRsamples)
+# dim(EGFRsamples) #Still 215
+
+#merge the data with the RPPA data, only keeps the samples we have protein data for
+
+mergeProteinAll=merge(GBMmergeMutation_AmpsALL, EGFRsamples, by.x="shortid", by.y=0)
+
+for(i in 2:11)
+{
+  print(colnames(mergeProteinAll)[i])
+  print(cor(mergeProteinAll[,i],mergeProteinAll$EGFR))
+  print(cor(mergeProteinAll[,i],mergeProteinAll$EGFR_pY1068))
+  print(cor(mergeProteinAll[,i],mergeProteinAll$EGFR_pY1173))  
+}
+
+boxplot(mergeProteinAll[mergeProteinAll$EGFR<0,4], mergeProteinAll[mergeProteinAll$EGFR>0,4], main= "EGFR GBM", ylab="Probability")
+t.test(mergeProteinAll[mergeProteinAll$EGFR<0,4], mergeProteinAll[mergeProteinAll$EGFR>0,4]) #0.123
+# boxplot(mergeProteinAll[mergeProteinAll$EGFR<0,9], mergeProteinAll[mergeProteinAll$EGFR>0,9], main= "EGFR GBM", ylab="Probability")
+# t.test(mergeProteinAll[mergeProteinAll$EGFR<0,9], mergeProteinAll[mergeProteinAll$EGFR>0,9])
+boxplot(mergeProteinAll[mergeProteinAll$EGFR_pY1068<0,4], mergeProteinAll[mergeProteinAll$EGFR_pY1068>0,4], main= "EGFR GBM", ylab="Probability")
+t.test(mergeProteinAll[mergeProteinAll$EGFR_pY1068<0,4], mergeProteinAll[mergeProteinAll$EGFR_pY1068>0,4]) #0.123
+# boxplot(mergeProteinAll[mergeProteinAll$EGFR_pY1068<0,9], mergeProteinAll[mergeProteinAll$EGFR_pY1068>0,9], main= "EGFR GBM", ylab="Probability")
+# t.test(mergeProteinAll[mergeProteinAll$EGFR_pY1068<0,9], mergeProteinAll[mergeProteinAll$EGFR_pY1068>0,9])
+boxplot(mergeProteinAll[mergeProteinAll$EGFR_pY1173<0,4], mergeProteinAll[mergeProteinAll$EGFR_pY1173>0,4], main= "EGFR GBM", ylab="Probability")
+t.test(mergeProteinAll[mergeProteinAll$EGFR_pY1173<0,4], mergeProteinAll[mergeProteinAll$EGFR_pY1173>0,4]) #0.123
+# boxplot(mergeProteinAll[mergeProteinAll$EGFR_pY1173<0,9], mergeProteinAll[mergeProteinAll$EGFR_pY1173>0,9], main= "EGFR GBM", ylab="Probability")
+# t.test(mergeProteinAll[mergeProteinAll$EGFR_pY1173<0,9], mergeProteinAll[mergeProteinAll$EGFR_pY1173>0,9])
+
+```
+
+
+
+```{r echo=FALSE}
+time<-format(Sys.time(),"%a %b %d %X %Y")
+```
+This analysis was run on `r time` 

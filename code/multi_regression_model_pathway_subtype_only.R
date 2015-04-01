@@ -74,7 +74,7 @@ colnames(cors)=colnames(pathway)
 
 for (i in 1:ncol(pathway)){
   for (j in 1:ncol(drugs)){
-    cors[j,i]=cor(pathway[,i],drugs[,j],use="pairwise.complete.obs")
+    cors[j,i]=cor(pathway[,i],drugs[,j],use="pairwise.complete.obs",method="spearman")
   }
 }
 

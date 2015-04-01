@@ -1,0 +1,234 @@
+---
+title: "EGFR_signature_optimization_multi"
+output: pdf_document
+---
+
+
+```{r}
+merge_drop<-function(x,y,by=0)
+{
+  new_m<-merge(x,y,by=by)
+  rownames(new_m)<-new_m$Row.names
+  return(new_m[,2:length(colnames(new_m))])
+}
+
+pcaplot<-function(mat,sub){
+  if(sum(sub)!=length(mat))
+    {
+    print("verify the subscripts...exiting now")
+    }
+  else{
+    pca_mat <- prcomp(t(mat), center=T,scale=T)
+    plot(pca_mat)
+    plot(pca_mat$x[,1],pca_mat$x[,2])
+    index= 1
+    for(i in 1:length(sub))
+      {
+      #print(rownames(pca_mat$x)[index:sub[i]+index-1],"has color", )
+      print(i)
+      if(i==1)
+        {
+        points(pca_mat$x[1:sub[i]],pca_mat$x[1:sub[i],2],col=i+1)
+        }
+       else if(i==length(sub))
+         {
+         points(pca_mat$x[index:length(rownames(pca_mat$x))],pca_mat$x[index:length(rownames(pca_mat$x)),2],col=i+1)
+         }
+       else
+        {
+        points(pca_mat$x[index:index+sub[i]],pca_mat$x[index:index+sub[i],2],col=i+1)
+        }
+       index=index+sub[i]
+      }
+  }
+}
+assign_easy<-function(trainingData=train, testData=test, trainingLabel1=NULL,g=100,out_dir_base="~/Desktop/tmp",cov=0){
+if(cov==0){
+  adap_folder<-paste(out_dir_base,paste( "adap",g,sep=''),sep='/')
+  dir.create(file.path(out_dir_base,paste( "adap",g,sep='')))
+  nonadap_folder<-paste(out_dir_base,paste( "nonadap",g,sep=''),sep='/')
+  dir.create(file.path(out_dir_base,paste( "nonadap",g,sep='')))
+  }
+else{
+  adap_folder<-paste(out_dir_base,paste( "adap_cov",g,sep=''),sep='/')
+  dir.create(file.path(out_dir_base,paste( "adap_cov",g,sep='')))
+  nonadap_folder<-paste(out_dir_base,paste( "nonadap_cov",g,sep=''),sep='/')
+  dir.create(file.path(out_dir_base,paste( "nonadap_cov",g,sep='')))
+}
+
+set.seed(1234)
+assign.wrapper(trainingData=trainingData, testData=testData, trainingLabel=trainingLabel1, testLabel=NULL, geneList=NULL, n_sigGene=g, adaptive_B=T, adaptive_S=F, mixture_beta=F, outputDir=adap_folder, theta0=0.05, theta1=0.9, iter=2000, burn_in=1000)  
+
+set.seed(1234)
+assign.wrapper(trainingData=trainingData, testData=testData, trainingLabel=trainingLabel1, testLabel=NULL, geneList=NULL, n_sigGene=g, adaptive_B=F, adaptive_S=F, mixture_beta=F, outputDir=nonadap_folder, theta0=0.05, theta1=0.9, iter=2000, burn_in=1000)  
+
+}
+
+
+setwd("~/Dropbox/egfr_opt/")
+# gfp <- read.table("36hr_gfp_TPMlog.txt",header = 1, row.names=1)
+# dim(gfp)
+# egfr<- read.table("36hr_EGFR_train_TPMlog.txt",header = 1, row.names=1)
+# dim(egfr)
+multi<-read.table("hmec_multi_egfr_mek_FeatureCount.tpmlog", sep='\t', header=1, row.names=1)
+head(multi)
+dim(multi)
+multi<-multi[,order(colnames(multi))]
+head(multi)
+colnames(multi)
+control_l<-multi[,1:6]
+egfr_l<-multi[,7:12]
+head(egfr_l)
+head(control_l)
+
+#icbp[!rownames(icbp)%in%rownames(gfp),]
+control_egfr_l<-cbind(control_l,egfr_l)
+gfp_egfr_multi_f <- control_egfr_l[apply(control_egfr_l[,1:12]==0,1,mean) < 0.8,]
+dim(gfp_egfr_multi_f)
+icbp<-read.table("icbp_Rsubread_tpmlog.txt", sep='\t', header=1, row.names=1)
+gfp_egfr_icbp_f<-merge_drop(gfp_egfr_multi_f,icbp,by=0)
+colnames(gfp_egfr_icbp_f)
+
+```
+
+Now checking the PCA plot for batch adjustment
+
+```{r}
+sub<-c(6,6,55)
+pcaplot(mat = gfp_egfr_icbp_f,sub = sub)
+length(colnames(gfp_egfr_icbp_f))
+
+bat1<-as.matrix(cbind(c(colnames(gfp_egfr_multi_f),colnames(icbp)),c(rep(1,length(colnames(gfp_egfr_multi_f))),rep(2,length(colnames(icbp))))))
+##running combat without covariates
+library(sva)
+combat_expr1<-ComBat(dat=gfp_egfr_icbp_f, batch=bat1[,2], mod=NULL, numCovs=NULL)
+pcaplot(combat_expr1,sub)
+
+```
+
+Now running ASSIGN with 500 genes
+```{r cache=TRUE, echo=FALSE}
+trainingLabel1 <- list(control = list(egfr=1:6), egfr=7:12) 
+#trainingLabel1
+train_egfr<-combat_expr1[,1:12]
+test<-combat_expr1[,13:67]
+#head(train_egfr)
+#nrow(train_egfr)
+
+library(ASSIGN)
+dir.create( "~/Desktop/tmp/egfr")
+assign_easy(trainingData = train_egfr,test=test,trainingLabel1 = trainingLabel1,g=100,out_dir_base = "~/Desktop/tmp/egfr")
+assign_easy(trainingData = train_egfr,test=test,trainingLabel1 = trainingLabel1,g=75,out_dir_base = "~/Desktop/tmp/egfr")
+assign_easy(trainingData = train_egfr,test=test,trainingLabel1 = trainingLabel1,g=50,out_dir_base = "~/Desktop/tmp/egfr")
+assign_easy(trainingData = train_egfr,test=test,trainingLabel1 = trainingLabel1,g=25,out_dir_base = "~/Desktop/tmp/egfr")
+assign_easy(trainingData = train_egfr,test=test,trainingLabel1 = trainingLabel1,g=20,out_dir_base = "~/Desktop/tmp/egfr")
+assign_easy(trainingData = train_egfr,test=test,trainingLabel1 = trainingLabel1,g=15,out_dir_base = "~/Desktop/tmp/egfr")
+assign_easy(trainingData = train_egfr,test=test,trainingLabel1 = trainingLabel1,g=10,out_dir_base = "~/Desktop/tmp/egfr")
+assign_easy(trainingData = train_egfr,test=test,trainingLabel1 = trainingLabel1,g=5,out_dir_base = "~/Desktop/tmp/egfr")
+```
+
+Now let's correlate with drug response
+```{r}
+drugs<- read.delim("~/Dropbox/bild_signatures//Datasets//ICBP_drugs.txt", header=1, row.names=1)
+#colnames(drugs)
+filenames<-system("ls ~/Desktop/tmp/egfr/*/pathway_activity_testset*", intern=TRUE)
+filenames
+
+dirname<-getwd()
+dirname
+for(i in 1:length(filenames)){
+   f<-read.csv(filenames[i], header=1,row.names=1) ###reading in the filess one at a time
+  colnames(f)<-filenames[i]
+  if(i==1){
+    data<-f
+  }else{
+    data<-cbind(data,f)
+  }
+}
+dim(data)
+pred_drug<-merge_drop(data,drugs,by=0)
+dim(pred_drug)
+for(i in 1:length(filenames)){
+  print(colnames(pred_drug)[i])
+  print("for Gefitinib")
+  print(cor(pred_drug[,i],pred_drug$Gefitinib,use="na.or.complete"))
+  print("for Erlotinib")
+  print(cor(pred_drug[,i],pred_drug$Erlotinib,use="na.or.complete"))
+  print("for BIBW2992")
+  print(cor(pred_drug[,i],pred_drug$BIBW2992,use="na.or.complete"))
+  print("for AG1478")
+  print(cor(pred_drug[,i],pred_drug$AG1478,use="na.or.complete"))
+  print("for Sigma AKT 1/2 inhibitor")
+  print(cor(pred_drug[,i],pred_drug$Sigma.AKT1.2.inhibitor,use="na.or.complete"))
+  print("for Lapatinib")
+  print(cor(pred_drug[,i],pred_drug$Lapatinib,use="na.or.complete"))
+}
+
+
+```
+
+Check correlation with amplification data
+```{r, cache=TRUE}
+setwd("~/Dropbox/bild_signatures/Datasets/")
+ccle_cnv<-read.table("CCLE_copynumber_byGene_2013-12-03.txt", header=1)
+rownames(ccle_cnv)<-ccle_cnv$SYMBOL
+egfr_cnv<-ccle_cnv["EGFR",]
+egfrinterested_cnv<-egfr_cnv[,grep("_BREAST",colnames(egfr_cnv))]
+#colnames(egfrinterested_cnv)
+colnames(egfrinterested_cnv)<-gsub(pattern = "_BREAST",replacement = "",colnames(egfrinterested_cnv)) 
+#colnames(egfrinterested_cnv)
+results<-data
+final_mat<-merge(results,t(egfrinterested_cnv["EGFR",]),by=0)
+final_mat
+plot(final_mat$EGFR)
+for(i in 2:length(filenames)+1){
+  print(colnames(final_mat)[i])
+  print(cor(final_mat[,i],final_mat$EGFR))
+  
+}
+```
+Now correlating with CNV data...
+```{r echo=FALSE,cache=TRUE}
+ccle_cnv<-read.table("~/Dropbox/EVAN/9_17/CCLE_copynumber_byGene_2013-12-03.txt", header=1)
+rownames(ccle_cnv)<-ccle_cnv$SYMBOL
+egfr_cnv<-ccle_cnv["EGFR",]
+egfrinterested_cnv<-egfr_cnv[,grep("_BREAST",colnames(egfr_cnv))]
+
+colnames(egfrinterested_cnv)<-gsub(pattern = "_BREAST",replacement = "",colnames(egfrinterested_cnv)) 
+#colnames(her2interested_cnv)
+
+cnv = matrix(badinterested_cnv["EGFR",],ncol=1)
+rownames(cnv) = names(badinterested_cnv["EGFR",])
+
+combined = merge_drop(cnv, data, by=0)
+
+for(i in 1:(length(colnames(data))))
+{
+
+  print(paste("pearson's correlation between bad1 CNV and ",colnames(combined)[i]),sep='')
+  print(cor(as.numeric(combined$V1),as.numeric(combined[,i]),use="na.or.complete"))
+
+  }
+
+```
+Staring to validate in TCGA
+```{r}
+EGFRStatus <- read.delim("~/Dropbox/bild_signatures//Datasets/EGFR/PANCAN12_EGFR_MutationStatus.txt", , row.names=1,header=FALSE)
+head(EGFRStatus)
+combined_egfr_status = merge_drop(EGFRStatus, data, by=0)
+head(combined_egfr_status)
+boxplot(combined_egfr_status$EGFR_Status,combined_egfr_status[,1])
+# box plot the mutation status
+
+plot(combined_egfr_status$EGFR_Status, combined_egfr_status[,1], main= "EGFR", ylab = "Probability")
+plot(GBMmergeMutations$GBMprobabilites, main="EGFR Probabilities GBM", ylab="Probabilities", col=as.factor(GBMmergeMutations$EGFR_Status))
+
+```
+
+
+
+
+```{r echo=FALSE}
+time<-format(Sys.time(),"%a %b %d %X %Y")
+```
+This analysis was run on `r time` 

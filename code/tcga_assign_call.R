@@ -213,7 +213,7 @@ sub_dir=paste(basedir,"akt_bad_her2_igf1r",sep='/')
 dir.create(sub_dir)
 assign_easy_multi(trainingData = trainabhi,test=c_test,trainingLabel1 = trainingLabelabhi,g=c(150,150,15,100),out_dir_base = sub_dir)
 
-#2. AKT, BAD, HER2 & ERH
+#2. AKT, BAD, HER2 & ERK
 trainabhe<-cbind(c_gfp,c_akt,c_bad,c_her2,c_erk)
 trainingLabelabhe<-list(control=list(akt=1:12,bad=1:12,her2=1:12,erk=1:12),akt=13:18, bad=19:24,her2=25:29,erk=30:35)
 sub_dir=paste(basedir,"akt_bad_her2_erk",sep='/')
@@ -228,15 +228,17 @@ dir.create(sub_dir)
 assign_easy_multi(trainingData = trainabie,test=c_test,trainingLabel1 = trainingLabelabie,g=c(150,150,100,100),out_dir_base = sub_dir)
 
 #4. AKT, IGF1R, HER2 & ERK
+###
 trainaihe<-cbind(c_gfp,c_akt,c_igf1r,c_her2,c_erk)
-trainingLabelaihe<-list(control=list(akt=1:12,igf1r=1:12,her2=1:12,erk=1:12),akt=13:18, 1gf1r=19:24,her2=25:29,erk=30:35)
+trainingLabelaihe<-list(control=list(akt=1:12,igf1r=1:12,her2=1:12,erk=1:12),akt=13:18, igf1r=19:24,her2=25:29,erk=30:35)
 sub_dir=paste(basedir,"akt_igf1r_her2_erk",sep='/')
 dir.create(sub_dir)
 assign_easy_multi(trainingData = trainaihe,test=c_test,trainingLabel1 = trainingLabelaihe,g=c(150,100,15,100),out_dir_base = sub_dir)
 
 #5. BAD, IGF1R, HER2 & ERK
+###
 trainbihe<-cbind(c_gfp,c_bad,c_igf1r,c_her2,c_erk)
-trainingLabelbihe<-list(control=list(bad=1:12,igf1r=1:12,her2=1:12,erk=1:12),bad=13:18, 1gf1r=19:24,her2=25:29,erk=30:35)
+trainingLabelbihe<-list(control=list(bad=1:12,igf1r=1:12,her2=1:12,erk=1:12),bad=13:18, igf1r=19:24,her2=25:29,erk=30:35)
 sub_dir=paste(basedir,"bad_igf1r_her2_erk",sep='/')
 dir.create(sub_dir)
 assign_easy_multi(trainingData = trainbihe,test=c_test,trainingLabel1 = trainingLabelbihe,g=c(150,100,15,100),out_dir_base = sub_dir)

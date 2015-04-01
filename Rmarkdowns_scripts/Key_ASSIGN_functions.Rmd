@@ -1,4 +1,14 @@
-
+short_to_long_TCGA_id=function(longnames=NULL,shortnames=NULL){
+  counter=0
+  for (j in 1:length(shortnames)){
+    if(!is.na(pmatch(shortnames[j],longnames))){
+      shortnames[j]<-longnames[pmatch(shortnames[j],longnames, duplicates.ok=F)]  
+      counter=counter+1
+    }
+  }
+  print(paste(counter,"names have been changed",sep= " "))
+  return(shortnames)
+}
 
 merge_drop<-function(x,y,by=0)
 {
@@ -21,13 +31,13 @@ pcaplot<-function(mat,sub,scale=T){
       #print(rownames(pca_mat$x)[index:sub[i]+index-1],"has color", )
       print(i)
       if(i==1){
-        points(pca_mat$x[1:sub[i]],pca_mat$x[1:sub[i],2],col=i+1)
+        points(pca_mat$x[1:sub[i]],pca_mat$x[1:sub[i],2],col=i+1,pch=i+1)
         }
       else if(i==length(sub)){
-         points(pca_mat$x[index:length(rownames(pca_mat$x))],pca_mat$x[index:length(rownames(pca_mat$x)),2],col=i+1)
+         points(pca_mat$x[index:length(rownames(pca_mat$x))],pca_mat$x[index:length(rownames(pca_mat$x)),2],col=i+1,pch=i+1)
          }
       else{
-        points(pca_mat$x[index:index+sub[i]],pca_mat$x[index:index+sub[i],2],col=i+1)
+        points(pca_mat$x[index:index+sub[i]],pca_mat$x[index:index+sub[i],2],col=i+1,pch=i+1)
         }
        index=index+sub[i]
       }
