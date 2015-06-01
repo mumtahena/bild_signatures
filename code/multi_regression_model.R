@@ -5,16 +5,11 @@ single<-read.csv("~/Desktop/tmp/single_pathway_results.csv", row.names=1, header
 dat<-cbind(multi,single)
 rownames(dat)[1:7]<-c("184A1","184B5","21MT1","21MT2","21NT","21PT","600MPE")
 drugs<-read.delim("~/Dropbox/bild_signatures/Datasets/ICBP_drugs.txt", header=1, sep='\t',row.names=1)
-merge_drop<-function(x,y,by=0)
-{
-  new_m<-merge(x,y,by=by)
-  rownames(new_m)<-new_m$Row.names
-  return(new_m[,2:length(colnames(new_m))])
-}
-
-
-dat<-merge_drop(drugs,dat,by=0)
+best_pathway_predictions=subset(pred_drug,select=c(133,141,150,155,160))
+#best_pathway_predictions<-data_icbp
+dat<-merge_drop(drugs,best_pathway_predictions)
 colnames(dat)
+setwd("~/Dropbox/bild_signatures/bild_signatures/Datasets/")
 snp <- t(read.table("snp_all_v2.txt", row.names=1, header=T)) #71 250
 indel <- read.table("indel_all.txt", row.names=1,header=T) #36 38
 
@@ -34,8 +29,15 @@ proteomics = read.table("proteomics.txt", row.names=1,header=T)
 
 cell = rownames(dat)
 subtype = dat[,1]
-subtype_ERBB2 = dat[,2]
+subtype=gsub("Basal.*","BASAL",subtype)
+subtype=gsub("Luminal.*","LUMINAL",subtype)
+subtype=gsub(".*ormal.*","NORMAL",subtype)
 
+subtype_ERBB2 = dat[,2]
+subtype_ERBB2=gsub("ERBB2.*","ERBB2",subtype_ERBB2)
+subtype_ERBB2=gsub("Basal.*","BASAL",subtype_ERBB2)
+subtype_ERBB2=gsub("Luminal.*","LUMINAL",subtype_ERBB2)
+subtype_ERBB2=gsub(".*ormal.*","NORMAL",subtype_ERBB2)
 
 snps=snp[match(cell,rownames(snp)),]
 prot=proteomics[match(cell,rownames(proteomics)),]
@@ -43,7 +45,8 @@ prot=proteomics[match(cell,rownames(proteomics)),]
 
 #pathway = dat[,93:99]
 #colnames(pathway)=c('her2','raf','bad','akt','akt5','igf1r','erk')
-pathway = dat[,101:104]
+pathway = dat[,91:95]
+#pathway = dat[,101:260]
 #colnames(pathway)=c('akt_multi','bad_multi','her2_multi','erk_multi','igf1r_multi','raf_multi')
 
 #### Pathway by subtype ####
@@ -65,7 +68,7 @@ pathway = dat[,101:104]
 
 
 #### Corellation analysis ####
-drugs=dat[,11:100]
+drugs=dat[,1:90]
 cors = matrix(0,ncol(drugs),ncol(pathway))
 rownames(cors)=colnames(drugs)
 colnames(cors)=colnames(pathway)
@@ -80,8 +83,9 @@ cors
 
 
 ### Regression analysis ###
-multipathway = dat[,101:104]
-singlepathway= dat[,105:108]
+multipathway = dat[,101:105]
+multipathway = dat[,101:260]
+#singlepathway= dat[,105:108]
 ##colnames(pathway)=c('akt_multi','bad_multi','her2_multi','erk_multi','igf1r_multi','raf_multi','akt_single','bad_single','her2_single','erk_single','igf1r_single','raf_single')
 #pathway = pathway[,1:6]
 #pathway = pathway[,7:12]
@@ -90,14 +94,32 @@ library(MASS)
 drugs=dat[,11:100]
 #shortlist= c('Everolimus', "Erlotinib")
 #shortlist= c('Sigma.AKT1.2.inhibitor','BEZ235','BIBW2992','Everolimus','GSK2119563','GSK2126458','GSK2141795','GSK1059615','GSK650394','Lapatinib')
-shortlist= c('Sigma.AKT1.2.inhibitor','GSK2141795','Triciribine')
+shortlist= c('Cisplatin','Tamoxifen','CGC.11047','Docetaxel','Sigma.AKT1.2.inhibitor','GSK2141795','BIBW2992','Everolimus','Lapatinib','Temsirolimus')
 
 #shortlist = colnames(drugs)
 drugs_short=drugs[,match(shortlist,colnames(drugs))]
 rownames(drugs_short)=cell
-
+multipathway_ord=NULL
+for(i in 1:ncol(multipathway)){multipathway_ord[i]=(strsplit(colnames(multipathway),"/")[[i]][3])}
+multipathway=multipathway[,order(multipathway_ord)]
+model_sub<-(model.matrix(~subtype_ERBB2  ))[,2:5]
 #### results ####
 library(MASS)
+
+############for multipathway predictions########
+multiresults=multimodels=list()
+for (i in 1:3){#ncol(drugs_short)){
+  fit1 <- lm(drugs_short[,i]~.,data=multipathway)
+  step1 <- stepAIC(fit1, direction="both")
+  
+  fit2 <- lm(drugs_short[,i]~.+model_sub,data=multipathway)
+  step2 <- stepAIC(fit2, direction="both")
+  
+  fit3 <- lm(drugs_short[,i]~subtype)
+  
+  multiresults[[shortlist[i]]]=list(R2=summary(step1)$r.squared,model=round(summary(step1)$coeff,4),R2_sub=summary(step2)$r.squared,model_sub=round(summary(step2)$coeff,4),R2_sub_only=summary(fit3)$r.squared,model_sub_only=round(summary(fit3)$coeff,4))
+  multimodels[[shortlist[i]]]=list(mod=step1,mod_sub=step2,mod_sub_only=fit3)
+}
 ############for multipathway predictions########
 multiresults=multimodels=list()
 for (i in 1:ncol(drugs_short)){
@@ -242,16 +264,45 @@ for (i in 1:length(results)){
 
 
 #### Plots
+par(mfrow = c(2,1))
+plot(multimodels$'Cisplatin'$mod$fit,multimodels$'Cisplatin'$mod$model[,1],main=paste("Cisplatin Predicted vs Actual Efficacy \nPathway Only (R2=",round(summary(multimodels$'Cisplatin'$mod)$r.squared,2),")",sep=''),xlab="Precticted Efficacy",ylab="Actual Efficacy")
+abline(0,1,col=2)
+plot(multimodels$'Cisplatin'$mod_sub$fit,multimodels$'Cisplatin'$mod_sub$model[,1],main=paste("Cisplatin Predicted vs Actual Efficacy \nPathway + subtype (R2=",round(summary(multimodels$'Cisplatin'$mod_sub)$r.squared,2),")",sep=''),xlab="Precticted Efficacy",ylab="Actual Efficacy")
+abline(0,1,col=2)
 
-par(mfrow = c(1,1))
-plot(models$'Sigma.AKT1.2.inhibitor'$mod$fit,models$'Sigma.AKT1.2.inhibitor'$mod$model[,1],main=paste("Sigma.AKT1.2.inhibitor Predicted vs Actual Efficacy (R2=",round(summary(models$'Sigma.AKT1.2.inhibitor'$mod)$r.squared,2),")",sep=''),xlab="Precticted Efficacy",ylab="Actual Efficacy")
+par(mfrow = c(2,1))
+plot(multimodels$'CGC.11047'$mod$fit,multimodels$'CGC.11047'$mod$model[,1],main=paste("CGC.11047 Predicted vs Actual Efficacy \nPathway Only (R2=",round(summary(multimodels$'CGC.11047'$mod)$r.squared,2),")",sep=''),xlab="Precticted Efficacy",ylab="Actual Efficacy")
 abline(0,1,col=2)
-plot(models$'Sigma.AKT1.2.inhibitor'$mod_sub$fit,models$'Sigma.AKT1.2.inhibitor'$mod_sub$model[,1],main=paste("Sigma.AKT1.2.inhibitor Predicted vs Actual Efficacy (R2=",round(summary(models$'Sigma.AKT1.2.inhibitor'$mod_sub)$r.squared,2),")",sep=''),xlab="Precticted Efficacy",ylab="Actual Efficacy")
+plot(multimodels$'CGC.11047'$mod_sub$fit,multimodels$'CGC.11047'$mod_sub$model[,1],main=paste("CGC.11047 Predicted vs Actual Efficacy \nPathway + subtype (R2=",round(summary(multimodels$'CGC.11047'$mod_sub)$r.squared,2),")",sep=''),xlab="Precticted Efficacy",ylab="Actual Efficacy")
 abline(0,1,col=2)
 
-plot(models$'GSK2141795'$mod$fit,models$'GSK2141795'$mod$model[,1],main=paste("GSK2141795 Predicted vs Actual Efficacy (R2=",round(summary(models$'GSK2141795'$mod)$r.squared,2),")",sep=''),xlab="Precticted Efficacy",ylab="Actual Efficacy")
+
+
+par(mfrow = c(2,1))
+plot(multimodels$'Sigma.AKT1.2.inhibitor'$mod$fit,multimodels$'Sigma.AKT1.2.inhibitor'$mod$model[,1],main=paste("Sigma.AKT1.2.inhibitor Predicted vs Actual Efficacy\nPathway Only (R2=",round(summary(multimodels$'Sigma.AKT1.2.inhibitor'$mod)$r.squared,2),")",sep=''),xlab="Precticted Efficacy",ylab="Actual Efficacy")
 abline(0,1,col=2)
-plot(models$'GSK2141795'$mod_sub$fit,models$'GSK2141795'$mod_sub$model[,1],main=paste("GSK2141795 Predicted vs Actual Efficacy (R2=",round(summary(models$'GSK2141795'$mod_sub)$r.squared,2),")",sep=''),xlab="Precticted Efficacy",ylab="Actual Efficacy")
+plot(multimodels$'Sigma.AKT1.2.inhibitor'$mod_sub$fit,multimodels$'Sigma.AKT1.2.inhibitor'$mod_sub$model[,1],main=paste("Sigma.AKT1.2.inhibitor Predicted vs Actual Efficacy \nPathway + subtype(R2=",round(summary(multimodels$'Sigma.AKT1.2.inhibitor'$mod_sub)$r.squared,2),")",sep=''),xlab="Precticted Efficacy",ylab="Actual Efficacy")
+abline(0,1,col=2)
+
+par(mfrow = c(2,1))
+plot(multimodels$'GSK2141795'$mod$fit,multimodels$'GSK2141795'$mod$model[,1],main=paste("GSK2141795 Predicted vs Actual Efficacy \nPathway (R2=",round(summary(multimodels$'GSK2141795'$mod)$r.squared,2),")",sep=''),xlab="Precticted Efficacy",ylab="Actual Efficacy")
+abline(0,1,col=2)
+plot(multimodels$'GSK2141795'$mod_sub$fit,multimodels$'GSK2141795'$mod_sub$model[,1],main=paste("GSK2141795 Predicted vs Actual Efficacy \nPathway + subtype (R2=",round(summary(multimodels$'GSK2141795'$mod_sub)$r.squared,2),")",sep=''),xlab="Precticted Efficacy",ylab="Actual Efficacy")
+abline(0,1,col=2)
+
+
+par(mfrow = c(2,1))
+plot(multimodels$'Lapatinib'$mod$fit,multimodels$'Lapatinib'$mod$model[,1],main=paste("Lapatinib Predicted vs Actual Efficacy \nPathway (R2=",round(summary(multimodels$'Lapatinib'$mod)$r.squared,2),")",sep=''),xlab="Precticted Efficacy",ylab="Actual Efficacy")
+abline(0,1,col=2)
+plot(multimodels$'Lapatinib'$mod_sub$fit,multimodels$'Lapatinib'$mod_sub$model[,1],main=paste("Lapatinib Predicted vs Actual Efficacy \nPathway + subtype (R2=",round(summary(multimodels$'Lapatinib'$mod_sub)$r.squared,2),")",sep=''),xlab="Precticted Efficacy",ylab="Actual Efficacy")
+abline(0,1,col=2)
+
+
+
+par(mfrow = c(2,1))
+plot(multimodels$'BIBW2992'$mod$fit,multimodels$'BIBW2992'$mod$model[,1],main=paste("BIBW2992 Predicted vs Actual Efficacy \nPathway (R2=",round(summary(multimodels$'BIBW2992'$mod)$r.squared,2),")",sep=''),xlab="Precticted Efficacy",ylab="Actual Efficacy")
+abline(0,1,col=2)
+plot(multimodels$'BIBW2992'$mod_sub$fit,multimodels$'BIBW2992'$mod_sub$model[,1],main=paste("BIBW2992 Predicted vs Actual Efficacy \nPathway + subtype (R2=",round(summary(multimodels$'BIBW2992'$mod_sub)$r.squared,2),")",sep=''),xlab="Precticted Efficacy",ylab="Actual Efficacy")
 abline(0,1,col=2)
 
 

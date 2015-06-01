@@ -107,10 +107,10 @@ for (i in 1:ncol(drugs_short)){
   fit1 <- lm(drugs_short[,i]~.,data=multipathway)
   step1 <- stepAIC(fit1, direction="both")
   
-  fit2 <- lm(drugs_short[,i]~.+subtype,data=multipathway)
+  fit2 <- lm(drugs_short[,i]~.+subtype_ERBB2,data=multipathway)
   step2 <- stepAIC(fit2, direction="both")
   
-  fit3 <- lm(drugs_short[,i]~subtype)
+  fit3 <- lm(drugs_short[,i]~subtype_ERBB2)
   
   multiresults[[shortlist[i]]]=list(R2=summary(step1)$r.squared,model=round(summary(step1)$coeff,4),R2_sub=summary(step2)$r.squared,model_sub=round(summary(step2)$coeff,4),R2_sub_only=summary(fit3)$r.squared,model_sub_only=round(summary(fit3)$coeff,4))
   multimodels[[shortlist[i]]]=list(mod=step1,mod_sub=step2,mod_sub_only=fit3)

@@ -125,11 +125,36 @@ bootstrap_compare<-function(pathway_predictions,pred_drug,boot_cors){
     }
   return (best_pathway)
   }
-
+correlation_plot<-function(pathway,drug,text,pval){
+ plot(pathway,drug,main=text,ylab="Drug Response",xlab="Pathway Activation")
+ tmp<-lm(drug~pathway)
+ abline(tmp,col="red")
+ mtext(side = 1,pval) 
+}
 ```
 calculating the best predicting pathway for each drug..
 ```{r,echo=FALSE}
+options(digits = 2)
+pdf("~/Dropbox/bild_signatures/bild_signatures/Results/Drug_correlations.pdf")
+par(lwd=4)
+correlation_plot(pred_drug[,which(colnames(pred_drug)=="her2_bad/adap_adap_multi/bad")],pred_drug$CPT.11,text="CPT response versus the BAD pathway prediction",pval = paste("Cor:",round(cor_tables[paste(gsub(pattern='/',replacement = '.',colnames(pred_drug)[which(colnames(pred_drug)=="her2_bad/adap_adap_multi/bad")]),'CPT.11',sep='__'),]$Corr,digits = 2),"p-value:",round(cor_tables[paste(gsub(pattern='/',replacement = '.',colnames(pred_drug)[which(colnames(pred_drug)=="her2_bad/adap_adap_multi/bad")]),'CPT.11',sep='__'),]$p_val,digits=2), sep=' '))
 
+correlation_plot(pred_drug[,which(colnames(pred_drug)=="her2_bad/adap_adap_multi/bad")],pred_drug$CGC.11047,text="CGC.11047 response versus the BAD pathway prediction",pval = paste("Cor:",round(cor_tables[paste(gsub(pattern='/',replacement = '.',colnames(pred_drug)[141]),'CGC.11047',sep='__'),]$Corr,digits=2),"p-value:",round(cor_tables[paste(gsub(pattern='/',replacement = '.',colnames(pred_drug)[141]),'CGC.11047',sep='__'),]$p_val,digits=2), sep=' '))
+correlation_plot(pred_drug[,which(colnames(pred_drug)=="her2_bad/adap_adap_multi/bad")],pred_drug$Carboplatin,text="Carboplatin response versus the BAD pathway prediction",pval = paste("Cor:",round(cor_tables[paste(gsub(pattern='/',replacement = '.',colnames(pred_drug)[which(colnames(pred_drug)=="her2_bad/adap_adap_multi/bad")]),'Carboplatin',sep='__'),]$Corr,digits=2),"p-value:",round(cor_tables[paste(gsub(pattern='/',replacement = '.',colnames(pred_drug)[which(colnames(pred_drug)=="her2_bad/adap_adap_multi/bad")]),'Carboplatin',sep='__'),]$p_val,digits=2), sep=' '))
+correlation_plot(pred_drug[,which(colnames(pred_drug)=="her2_bad/adap_adap_multi/bad")],pred_drug$Cisplatin,text="Cisplatin response versus the BAD pathway prediction",pval = paste("Cor:",round(cor_tables[paste(gsub(pattern='/',replacement = '.',colnames(pred_drug)[which(colnames(pred_drug)=="her2_bad/adap_adap_multi/bad")]),'Cisplatin',sep='__'),]$Corr,digits=2),"p-value:",round(cor_tables[paste(gsub(pattern='/',replacement = '.',colnames(pred_drug)[which(colnames(pred_drug)=="her2_bad/adap_adap_multi/bad")]),'Cisplatin',sep='__'),]$p_val,digits=2), sep=' '))
+correlation_plot(pred_drug[,which(colnames(pred_drug)=="her2_bad_igf1r/adap_adap_multi/bad")],pred_drug$Docetaxel,text="Docetaxel response versus the BAD pathway prediction",pval = paste("Cor:",round(cor_tables[paste(gsub(pattern='/',replacement = '.',colnames(pred_drug)[which(colnames(pred_drug)=="her2_bad_igf1r/adap_adap_multi/bad")]),'Docetaxel',sep='__'),]$Corr,digits=2),"p-value:",round(cor_tables[paste(gsub(pattern='/',replacement = '.',colnames(pred_drug)[which(colnames(pred_drug)=="her2_bad_igf1r/adap_adap_multi/bad")]),'Docetaxel',sep='__'),]$p_val,digits=4), sep=' '))
+correlation_plot(pred_drug[,which(colnames(pred_drug)=="her2_bad_igf1r/adapB_multi/bad")],pred_drug$Epirubicin,text="Epirubicin response versus the BAD pathway prediction",pval = paste("Cor:",round(cor_tables[paste(gsub(pattern='/',replacement = '.',colnames(pred_drug)[which(colnames(pred_drug)=="her2_bad_igf1r/adapB_multi/bad")]),'Epirubicin',sep='__'),]$Corr,digits=2),"p-value:",round(cor_tables[paste(gsub(pattern='/',replacement = '.',colnames(pred_drug)[which(colnames(pred_drug)=="her2_bad_igf1r/adapB_multi/bad")]),'Epirubicin',sep='__'),]$p_val,digits=2), sep=' '))
+correlation_plot(pred_drug[,which(colnames(pred_drug)=="her2_bad_igf1r/adapB_multi/bad")],pred_drug$Oxaliplatin,text="Oxaliplatin response versus the BAD pathway prediction",pval = paste("Cor:",round(cor_tables[paste(gsub(pattern='/',replacement = '.',colnames(pred_drug)[which(colnames(pred_drug)=="her2_bad_igf1r/adapB_multi/bad")]),'Oxaliplatin',sep='__'),]$Corr,digits=2),"p-value:",round(cor_tables[paste(gsub(pattern='/',replacement = '.',colnames(pred_drug)[which(colnames(pred_drug)=="her2_bad_igf1r/adapB_multi/bad")]),'Oxaliplatin',sep='__'),]$p_val,digits=2), sep=' '))
+correlation_plot(pred_drug[,which(colnames(pred_drug)=="her2_bad_igf1r/adapB_multi/bad")],pred_drug$Doxorubicin,text="Doxorubicin response versus the BAD pathway prediction",pval = paste("Cor:",round(cor_tables[paste(gsub(pattern='/',replacement = '.',colnames(pred_drug)[which(colnames(pred_drug)=="her2_bad_igf1r/adapB_multi/bad")]),'Doxorubicin',sep='__'),]$Corr,digits=2),"p-value:",round(cor_tables[paste(gsub(pattern='/',replacement = '.',colnames(pred_drug)[which(colnames(pred_drug)=="her2_bad_igf1r/adapB_multi/bad")]),'Doxorubicin',sep='__'),]$p_val,digits=2), sep=' '))
+#correlation_plot(pred_drug[,which(colnames(pred_drug)=="her2_bad_igf1r/adapB_multi/bad")],pred_drug$ICRF.193,text="ICRF.193 response versus the BAD pathway prediction",pval = paste("Cor:",cor_tables[paste(gsub(pattern='/',replacement = '.',colnames(pred_drug)[which(colnames(pred_drug)=="her2_bad_igf1r/adapB_multi/bad")]),'ICRF.193',sep='__'),]$Corr,"p-value:",cor_tables[paste(gsub(pattern='/',replacement = '.',colnames(pred_drug)[which(colnames(pred_drug)=="her2_bad_igf1r/adapB_multi/bad")]),'ICRF.193',sep='__'),]$p_val, sep=' '))
+correlation_plot(pred_drug[,which(colnames(pred_drug)=="her2_bad/adap_adap_multi/bad")],pred_drug$Paclitaxel,text="Paclitaxel response versus the BAD pathway prediction",pval = paste("Cor:",round(cor_tables[paste(gsub(pattern='/',replacement = '.',colnames(pred_drug)[which(colnames(pred_drug)=="her2_bad/adap_adap_multi/bad")]),'Paclitaxel',sep='__'),]$Corr,digits=2),"p-value:",round(cor_tables[paste(gsub(pattern='/',replacement = '.',colnames(pred_drug)[which(colnames(pred_drug)=="her2_bad/adap_adap_multi/bad")]),'Paclitaxel',sep='__'),]$p_val,digits=2), sep=' '))
+correlation_plot(pred_drug[,which(colnames(pred_drug)=="her2_bad_igf1r/adapB_multi/bad")],pred_drug$Topotecan,text="Topotecan response versus the BAD pathway prediction",pval = paste("Cor:",round(cor_tables[paste(gsub(pattern='/',replacement = '.',colnames(pred_drug)[which(colnames(pred_drug)=="her2_bad_igf1r/adapB_multi/bad")]),'Topotecan',sep='__'),]$Corr,digits=2),"p-value:",round(cor_tables[paste(gsub(pattern='/',replacement = '.',colnames(pred_drug)[which(colnames(pred_drug)=="her2_bad_igf1r/adapB_multi/bad")]),'Topotecan',sep='__'),]$p_val,digits=2), sep=' '))
+correlation_plot(pred_drug[,which(colnames(pred_drug)=="her2_bad_igf1r/adapB_multi/bad")],pred_drug$Sigma.AKT1.2.inhibitor,text="Sigma.AKT1.2.inhibitor response\n versus the BAD pathway prediction",pval = paste("Cor:",round(cor_tables[paste(gsub(pattern='/',replacement = '.',colnames(pred_drug)[which(colnames(pred_drug)=="her2_bad_igf1r/adapB_multi/bad")]),'Sigma.AKT1.2.inhibitor',sep='__'),]$Corr,digits=2),"p-value:",round(cor_tables[paste(gsub(pattern='/',replacement = '.',colnames(pred_drug)[which(colnames(pred_drug)=="her2_bad_igf1r/adapB_multi/bad")]),'Sigma.AKT1.2.inhibitor',sep='__'),]$p_val,digits=2), sep=' '))
+correlation_plot(pred_drug[,which(colnames(pred_drug)=="her2_bad/adap_adap_multi/bad")],pred_drug$GSK2141795,text="GSK2141795 response versus the BAD pathway prediction",pval = paste("Cor:",round(cor_tables[paste(gsub(pattern='/',replacement = '.',colnames(pred_drug)[which(colnames(pred_drug)=="her2_bad/adap_adap_multi/bad")]),'GSK2141795',sep='__'),]$Corr,digits=2),"p-value:",round(cor_tables[paste(gsub(pattern='/',replacement = '.',colnames(pred_drug)[which(colnames(pred_drug)=="her2_bad/adap_adap_multi/bad")]),'GSK2141795',sep='__'),]$p_val,digits=2), sep=' '))
+correlation_plot(pred_drug[,which(colnames(pred_drug)=="her2_bad/adap_adap_multi/bad")],pred_drug$Everolimus,text="Everolimus response versus the BAD pathway prediction",pval = paste("Cor:",round(cor_tables[paste(gsub(pattern='/',replacement = '.',colnames(pred_drug)[which(colnames(pred_drug)=="her2_bad/adap_adap_multi/bad")]),'Everolimus',sep='__'),]$Corr,digits=2),"p-value:",round(cor_tables[paste(gsub(pattern='/',replacement = '.',colnames(pred_drug)[which(colnames(pred_drug)=="her2_bad/adap_adap_multi/bad")]),'Everolimus',sep='__'),]$p_val,digits=4), sep=' '))
+correlation_plot(pred_drug[,which(colnames(pred_drug)=="her2_bad/adap_adap_multi/bad")],pred_drug$Temsirolimus,text="Temsirolimus response versus the BAD pathway prediction",pval = paste("Cor:",round(cor_tables[paste(gsub(pattern='/',replacement = '.',colnames(pred_drug)[which(colnames(pred_drug)=="her2_bad/adap_adap_multi/bad")]),'Temsirolimus',sep='__'),]$Corr,digits=2),"p-value:",round(cor_tables[paste(gsub(pattern='/',replacement = '.',colnames(pred_drug)[which(colnames(pred_drug)=="her2_bad/adap_adap_multi/bad")]),'Temsirolimus',sep='__'),]$p_val,digits=2), sep=' '))
+correlation_plot(pred_drug[,which(colnames(pred_drug)=="her2_bad/adap_adap_multi/bad")],pred_drug$Rapamycin,text="Rapamycin response versus the BAD pathway prediction",pval = paste("Cor:",round(cor_tables[paste(gsub(pattern='/',replacement = '.',colnames(pred_drug)[which(colnames(pred_drug)=="her2_bad/adap_adap_multi/bad")]),'Temsirolimus',sep='__'),]$Corr,digits=2),"p-value:",round(cor_tables[paste(gsub(pattern='/',replacement = '.',colnames(pred_drug)[which(colnames(pred_drug)=="her2_bad/adap_adap_multi/bad")]),'Temsirolimus',sep='__'),]$p_val,digits=2), sep=' '))
+dev.off()
 # chemolist<-c("X5.FU","X5.FdUR","CGC.11047","CGC.11144","CPT.11","Carboplatin","Cisplatin","Docetaxel","Doxorubicin","Epirubicin","Etoposide","Gemcitabine","Oxaliplatin","Methotrexate","ICRF.193","Ixabepilone","Paclitaxel","Pemetrexed","Topotecan","Vinorelbine")
 # 
 # targeted_list<-c("AG1478","Sigma.AKT1.2.inhibitor",  "Triciribine",	"AS.252424",	"BEZ235",	"BIBW2992",		"ERKi.II..FR180304.",		"Erlotinib",	"Everolimus",	"GSK1120212",	"GSK1059868",	"GSK1838705",	"GSK2119563",	"GSK2126458",	"GSK2141795",	"GSK1059615",	"Lapatinib",	"Imatinib",	"Gefitinib",	"Rapamycin",	"Temsirolimus")
@@ -201,7 +226,7 @@ calculating the best predicting pathway for each drug..
 ```
 
 ```{r echo=FALSE}
-best_pathway_predictions=apply(subset(pred_drug,select=c(34,35,37,108,145,150)),2,scale)
+best_pathway_predictions=apply(subset(pred_drug,select=c(133,147,154,160,150)),2,scale)
 rownames(best_pathway_predictions)<-rownames(pred_drug)
 #########this subtype analysis is the transcriptional subtype + HER2 status based.#########
 subtype_her2<-pred_drug[,162]
@@ -214,11 +239,10 @@ par(mar=c(3,3,3, 0.5),lwd=4)
 #pdf("~/Dropbox/bild_signatures/bild_signatures/Results/ICBP_predictions.pdf")
 #min(best_pathway_predictions)
 boxplot(best_pathway_predictions[,1]~subtype_her2,main="AKT across breast cell lines",col=2:5,ylim=c(-2.5,2))
-boxplot(best_pathway_predictions[,2]~subtype_her2,main="BAD across breast cell lines",col=2:5,ylim=c(-2.5,2))
+boxplot(best_pathway_predictions[,2]~subtype_her2,main="BAD across breast cell lines",col=2:5,ylim=c(-2.5,2),ylab="Scaled pathway activity")
 boxplot(best_pathway_predictions[,3]~subtype_her2,main="IGF1R across breast cell lines",col=2:5,ylim=c(-2.5,2))
 boxplot(best_pathway_predictions[,4]~subtype_her2,main="ERK across breast cell lines",col=2:5,ylim=c(-2.5,2))
-boxplot(best_pathway_predictions[,5]~subtype_her2,main="HER2(3) across breast cell lines",col=2:5,ylim=c(-2.5,2))
-boxplot(best_pathway_predictions[,6]~subtype_her2,main="HER2(2) across breast cell lines",col=2:5,ylim=c(-2.5,2))
+boxplot(best_pathway_predictions[,5]~subtype_her2,main="HER2(2) across breast cell lines",col=2:5,ylim=c(-2.5,2))
 #best_pathway_predictions[,"subtype_her2"]<-subtype_her2
 cell_basal<-best_pathway_predictions[subtype_her2=="BASAL",]
 boxplot(cell_basal[,1],cell_basal[,2],cell_basal[,3],cell_basal[,4],cell_basal[,5],cell_basal[,6],names=c("AKT","BAD","IGF1R","ERK","HER2(3)","HER2(2)"),main="Pathway activity in BASAL cell lines",col=2:7,ylim=c(-2.5,2))
@@ -265,6 +289,18 @@ normal=subset(subtype_best_pred,subtype=="NORMAL")
 Things that I am working on now with ERK..
 ```{r}
 proteomics_cell<-read.table("~/Dropbox/bild_signatures/bild_signatures//Datasets/proteomics.txt", header=1, row.names=1)
+best_pred_pro<-merge_drop(best_pathway_predictions,proteomics_cell,by=0)
+cor(best_pred_pro[,1],best_pred_pro$Akt)
+cor(best_pred_pro[,1],best_pred_pro$Aktp308)
+cor(best_pred_pro[,1],best_pred_pro$Aktp473)
+cor(best_pred_pro[,2],best_pred_pro$Akt)
+cor(best_pred_pro[,2],best_pred_pro$Aktp308)
+cor(best_pred_pro[,2],best_pred_pro$Aktp473)
+cor(best_pred_pro[,3],best_pred_pro$Bcl2)
+
+cor(best_pred_pro[,4],best_pred_pro$IGFR1)
+cor(best_pred_pro[,5],best_pred_pro$MAPKp)
+cor(best_pred_pro[,5],best_pred_pro$ERK2)
 
 erk_pred<-read.csv("~/Dropbox/bild_signatures/icbp_15_mar_all/bad_igf1r_her2_erk/adap_adap_multi/pathway_activity_testset.csv",header=1,row.names=1)
 erk_pred_adapB<-read.csv("~/Dropbox/bild_signatures/icbp_15_mar_all/bad_igf1r_her2_erk/adapB_multi/pathway_activity_testset.csv",header=1,row.names=1)

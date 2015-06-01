@@ -13,9 +13,10 @@ library(utils)
 
 Reading in the signature datasets...
 ```{r include=FALSE,echo=FALSE}
-setwd("~/Documents/ThesisWork/GitRepos/bild_signature_validation_old_repo/Datasets")
-setwd("~/Dropbox/bild_signature/Datasets")
-expr<-as.matrix(read.table("GFP18_AKT_BAD_HER2_IGF1R_RAF_ERK.tpmlog",sep='\t',row.names=1,header=1))
+source("~/Dropbox/bild_signatures//bild_signatures/Rmarkdowns_scripts//Key_ASSIGN_functions.Rmd")
+#setwd("~/Documents/ThesisWork/GitRepos/bild_signature_validation_old_repo/Datasets")
+setwd("/Users/mumtahenarahman/Dropbox/bild_signature/Datasets")
+expr<-as.matrix(read.table("/Users/mumtahenarahman/Dropbox/Datasets/GFP18_AKT_BAD_HER2_IGF1R_RAF_ERK.tpmlog",sep='\t',row.names=1,header=1))
 control<-subset(expr, select=GFP.1:GFP.12)
 her2<-subset(expr, select=HER2.1:HER2.6)
 akt<-subset(expr,select=AKT.1:AKT.6)
@@ -24,12 +25,13 @@ igf1r<-subset(expr,select=IGF1R.1:IGF1R.6)
 erk<-subset(expr,select=ERK.1:ERK.6)
 expr_all<-cbind(control,akt,bad,her2,igf1r,erk)
 dim(expr_all)
-icbp<-as.matrix(read.table("~/Documents/ThesisWork/GitRepos/bild_signature_validation_old_repo/Datasets/ICBP/icbp_Rsubread_tpmlog.txt", sep='\t', stringsAsFactors=FALSE, header=1, row.names=1))
-#icbp<-as.matrix(read.table("icbp_Rsubread_tpmlog.txt", sep='\t', stringsAsFactors=FALSE, header=1, row.names=1))
+#icbp<-as.matrix(read.table("~/Documents/ThesisWork/GitRepos/bild_signature_validation_old_repo/Datasets/ICBP/icbp_Rsubread_tpmlog.txt", sep='\t', stringsAsFactors=FALSE, header=1, row.names=1))
+icbp<-as.matrix(read.table("~/Dropbox/bild_signatures/Datasets/icbp_Rsubread_tpmlog.txt", sep='\t', stringsAsFactors=FALSE, header=1, row.names=1))
 expr_all_f <-expr_all[apply(expr_all[,1:41]==0,1,mean) < 0.85,]
 dim(expr_all_f)
 expr_all_icbp_f<-merge_drop(expr_all_f,icbp,by=0)
 sub<-c(12,6,6,5,6,6,55)
+
 pdf("pca_plots.pdf")
 pcaplot(expr_all_icbp_f,sub)
 bat1<-as.matrix(cbind(c(colnames(expr_all_f),colnames(icbp)),c(rep(1,length(colnames(expr_all_f))),rep(2,length(colnames(icbp))))))
@@ -44,16 +46,23 @@ c_her2<-subset(combat_expr1, select=HER2.1:HER2.6)
 c_igf1r<-subset(combat_expr1, select=IGF1R.1:IGF1R.6)
 c_erk<-subset(combat_expr1, select=ERK.1:ERK.6)
 c_test<-combat_expr1[,42:96]
-basedir="~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/icbp_15_mar_all"
-basedir=""
+#basedir="~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/icbp_15_mar_all"
+basedir="~/Dropbox/bild_signatures/icbp_15_april_assign_adap_/"
 dir.create( basedir)
 
 #############trying one pathways at a time in multipathway#############
 #1. AKT
 trainingLabela<-list(control=list(akt=1:12),akt=13:18)
-sub_dir<-paste(basedir,"akt",sep='/')
+sub_dir<-paste(basedir,"akt_150",sep='/')
 dir.create( sub_dir)
 assign_easy_multi(trainingData = cbind(c_gfp,c_akt),test=c_test,trainingLabel1 = trainingLabela,g=150,out_dir_base = sub_dir,single = 1)
+#set.seed(1234)
+#assign.wrapper(trainingData=cbind(c_gfp,c_akt), testData=c_test, trainingLabel=trainingLabela, geneList=NULL, n_sigGene=150, adaptive_B=T, adaptive_S=F, mixture_beta=F, outputDir=sub_dir, theta0=0.05, theta1=0.9, iter=100000, burn_in=5000,p_beta=0.5)
+
+sub_dir<-paste(basedir,"akt_0.1",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_akt),test=c_test,trainingLabel1 = trainingLabela,g=150,out_dir_base = sub_dir,single = 1)
+
 
 #2. BAD
 trainingLabelb<-list(control=list(bad=1:12),bad=13:18)
@@ -63,9 +72,14 @@ assign_easy_multi(trainingData = cbind(c_gfp,c_bad),test=c_test,trainingLabel1 =
 
 #3. HER2
 trainingLabelh<-list(control=list(her2=1:12),her2=13:17)
-sub_dir<-paste(basedir,"her2_witherk",sep='/')
+sub_dir<-paste(basedir,"her2",sep='/')
 dir.create( sub_dir)
 assign_easy_multi(trainingData = cbind(c_gfp,c_her2),test=c_test,trainingLabel1 = trainingLabelh,g=15,out_dir_base = sub_dir,single = 1)
+
+trainingLabelh<-list(control=list(her2=1:12),her2=13:17)
+sub_dir<-paste(basedir,"her2_25",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_her2),test=c_test,trainingLabel1 = trainingLabelh,g=25,out_dir_base = sub_dir,single = 1)
 
 #4. IGF1R
 trainingLabeli<-list(control=list(igf1r=1:12),igf1r=13:18)
@@ -73,12 +87,32 @@ sub_dir<-paste(basedir,"igf1r",sep='/')
 dir.create( sub_dir)
 assign_easy_multi(trainingData = cbind(c_gfp,c_igf1r),test=c_test,trainingLabel1 = trainingLabeli,g=100,out_dir_base = sub_dir,single = 1)
 
-#5. ERK
+trainingLabeli<-list(control=list(igf1r=1:12),igf1r=13:18)
+sub_dir<-paste(basedir,"igf1r_15",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_igf1r),test=c_test,trainingLabel1 = trainingLabeli,g=15,out_dir_base = sub_dir,single = 1)
+
+trainingLabeli<-list(control=list(igf1r=1:12),igf1r=13:18)
+sub_dir<-paste(basedir,"igf1r_45",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_igf1r),test=c_test,trainingLabel1 = trainingLabeli,g=45,out_dir_base = sub_dir,single = 1)
+
+trainingLabeli<-list(control=list(igf1r=1:12),igf1r=13:18)
+sub_dir<-paste(basedir,"igf1r_75",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_igf1r),test=c_test,trainingLabel1 = trainingLabeli,g=75,out_dir_base = sub_dir,single = 1)
+
+
+ #5. ERK
 trainingLabele<-list(control=list(erk=1:12),erk=13:18)
 sub_dir<-paste(basedir,"erk",sep='/')
 dir.create( sub_dir)
 assign_easy_multi(trainingData = cbind(c_gfp,c_erk),test=c_test,trainingLabel1 = trainingLabele,g=100,out_dir_base = sub_dir,single = 1)
 
+trainingLabele<-list(control=list(erk=1:12),erk=13:18)
+sub_dir<-paste(basedir,"erk_65",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_erk),test=c_test,trainingLabel1 = trainingLabele,g=65,out_dir_base = sub_dir,single = 1)
 #############trying two pathways at a time in multipathway#############
 #1. HER2 & AKT
 trainha<-cbind(c_gfp,c_akt,c_her2)
@@ -303,7 +337,7 @@ colnames(data_icbp)<-gsub(pattern = "/pathway_activity_testset.csv",replacement 
 head(data_icbp)
 rownames(data_icbp)[1:7]<-c("184A1","184B5","21MT1","21MT2","21NT","21PT","600MPE")
 
-drugs<-read.delim("ICBP_drugs.txt", header=1, sep='\t',row.names=1)
+drugs<-read.delim("~/Dropbox/bild_signatures/Datasets/ICBP_drugs.txt", header=1,row.names=1)
 head(drugs);dim(drugs)
 pred_drug<-merge_drop(data_icbp,drugs,by=0)
 dim(pred_drug)

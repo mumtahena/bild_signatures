@@ -1,0 +1,480 @@
+---
+title: "Singlel pathway optimization"
+author: "Mumtahena Rahman"
+date: "April 19, 2015"
+output: html_document
+---
+```{r,echo=FALSE,cache=TRUE,include=FALSE}
+library(sva)
+library(ASSIGN)
+library(utils)
+```
+
+Reading in the signature datasets...
+```{r include=FALSE,echo=FALSE}
+source("~/Dropbox/bild_signatures//bild_signatures/Rmarkdowns_scripts//Key_ASSIGN_functions.Rmd")
+#setwd("~/Documents/ThesisWork/GitRepos/bild_signature_validation_old_repo/Datasets")
+setwd("/Users/mumtahenarahman/Dropbox/bild_signature/Datasets/")
+expr<-as.matrix(read.table("/Users/mumtahenarahman/Dropbox/Datasets/GFP18_AKT_BAD_HER2_IGF1R_RAF_ERK.tpmlog",sep='\t',row.names=1,header=1))
+control<-subset(expr, select=GFP.1:GFP.12)
+her2<-subset(expr, select=HER2.1:HER2.6)
+akt<-subset(expr,select=AKT.1:AKT.6)
+bad<-subset(expr,select=BAD.1:BAD.6)
+igf1r<-subset(expr,select=IGF1R.1:IGF1R.6)
+raf<-subset(expr,select=RAF.1:RAF.6)
+erk<-subset(expr,select=ERK.1:ERK.6)
+expr_all<-cbind(control,akt,bad,her2,igf1r,raf,erk)
+dim(expr_all)
+expr_all_f <-expr_all[apply(expr_all[,1:47]==0,1,mean) < 0.85,]
+multi<-read.table("~/Dropbox/egfr_opt/hmec_multi_egfr_mek_FeatureCount.tpmlog", sep='\t', header=1, row.names=1)
+head(multi)
+dim(multi)
+multi<-multi[,order(colnames(multi))]
+head(multi)
+colnames(multi)
+control_l<-multi[,1:6]
+egfr_l<-multi[,7:12]
+control_egfr_l<-cbind(control_l,egfr_l)
+gfp_egfr_multi_f <- merge_drop(control_egfr_l,expr_all_f)
+dim(gfp_egfr_multi_f)
+
+icbp<-as.matrix(read.table("~/Dropbox/bild_signatures/Datasets/icbp_Rsubread_tpmlog.txt", sep='\t', stringsAsFactors=FALSE, header=1, row.names=1))
+
+
+gfp_egfr_icbp_f<-merge_drop(gfp_egfr_multi_f,icbp,by=0)
+colnames(gfp_egfr_icbp_f)
+sub<-c(6,6,12,6,6,5,6,6,6,55)
+pdf("pca_plots_4_21.pdf")
+pcaplot(mat = gfp_egfr_icbp_f,sub = sub)
+length(colnames(gfp_egfr_icbp_f))
+bat1<-as.matrix(cbind(c(colnames(gfp_egfr_multi_f),colnames(icbp)),as.numeric(c(rep(1,12),rep(2,47),rep(3,55)))))
+combat_expr1<-ComBat(dat=gfp_egfr_icbp_f, batch=bat1[,2], mod=NULL, numCovs=NULL,par.prior = T,prior.plots = T)
+pcaplot(combat_expr1,sub)
+dev.off()
+
+c_gfp<-subset(combat_expr1, select=GFP.1:GFP.12)
+c_akt<-subset(combat_expr1, select=AKT.1:AKT.6)
+c_bad<-subset(combat_expr1, select=BAD.1:BAD.6)
+c_her2<-subset(combat_expr1, select=HER2.1:HER2.6)
+c_igf1r<-subset(combat_expr1, select=IGF1R.1:IGF1R.6)
+c_raf<-subset(combat_expr1, select=RAF.1:RAF.6)
+c_erk<-subset(combat_expr1, select=ERK.1:ERK.6)
+train_egfr<-combat_expr1[,1:12]
+c_test<-combat_expr1[,60:114]
+
+
+###where the results are store##
+#basedir="~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/icbp_15_mar_all"
+basedir="~/Dropbox/bild_signatures/icbp_15_april_assign_adap_egfr_l_combat/"
+dir.create( basedir)
+
+# paths<-c("AKT","BAD","HER2","IGF1R","RAF1","ERK")
+# paths_1<-combn(paths,1,simplify = F)
+# paths_2<-combn(paths,2,simplify = F)
+# paths_3<-combn(paths,3,simplify = F)
+# paths_4<-combn(paths,4,simplify = F)
+# paths_5<-combn(paths,5,simplify = F)
+# paths_6<-combn(paths,6,simplify = F)
+
+#############trying one pathways at a time in multipathway#############
+#1. AKT
+trainingLabela<-list(control=list(akt=1:12),akt=13:18)
+sub_dir<-paste(basedir,"akt_25_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_akt),test=c_test,trainingLabel1 = trainingLabela,g=25,out_dir_base = sub_dir,single = 1)
+
+trainingLabela<-list(control=list(akt=1:12),akt=13:18)
+sub_dir<-paste(basedir,"akt_50_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_akt),test=c_test,trainingLabel1 = trainingLabela,g=50,out_dir_base = sub_dir,single = 1)
+
+trainingLabela<-list(control=list(akt=1:12),akt=13:18)
+sub_dir<-paste(basedir,"akt_75_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_akt),test=c_test,trainingLabel1 = trainingLabela,g=75,out_dir_base = sub_dir,single = 1)
+
+trainingLabela<-list(control=list(akt=1:12),akt=13:18)
+sub_dir<-paste(basedir,"akt_100_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_akt),test=c_test,trainingLabel1 = trainingLabela,g=100,out_dir_base = sub_dir,single = 1)
+
+trainingLabela<-list(control=list(akt=1:12),akt=13:18)
+sub_dir<-paste(basedir,"akt_150_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_akt),test=c_test,trainingLabel1 = trainingLabela,g=150,out_dir_base = sub_dir,single = 1)
+
+trainingLabela<-list(control=list(akt=1:12),akt=13:18)
+sub_dir<-paste(basedir,"akt_200_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_akt),test=c_test,trainingLabel1 = trainingLabela,g=200,out_dir_base = sub_dir,single = 1)
+
+trainingLabela<-list(control=list(akt=1:12),akt=13:18)
+sub_dir<-paste(basedir,"akt_250_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_akt),test=c_test,trainingLabel1 = trainingLabela,g=250,out_dir_base = sub_dir,single = 1)
+
+trainingLabela<-list(control=list(akt=1:12),akt=13:18)
+sub_dir<-paste(basedir,"akt_300_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_akt),test=c_test,trainingLabel1 = trainingLabela,g=300,out_dir_base = sub_dir,single = 1)
+
+
+#2. BAD
+#basedir="~/Dropbox/bild_signatures/icbp_15_april_assign_adap_/"
+trainingLabelb<-list(control=list(bad=1:12),bad=13:18)
+sub_dir<-paste(basedir,"bad_25_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_bad),test=c_test,trainingLabel1 = trainingLabelb,g=25,out_dir_base = sub_dir,single = 1)
+
+trainingLabelb<-list(control=list(bad=1:12),bad=13:18)
+sub_dir<-paste(basedir,"bad_50_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_bad),test=c_test,trainingLabel1 = trainingLabelb,g=50,out_dir_base = sub_dir,single = 1)
+
+trainingLabelb<-list(control=list(bad=1:12),bad=13:18)
+sub_dir<-paste(basedir,"bad_75_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_bad),test=c_test,trainingLabel1 = trainingLabelb,g=75,out_dir_base = sub_dir,single = 1)
+
+trainingLabelb<-list(control=list(bad=1:12),bad=13:18)
+sub_dir<-paste(basedir,"bad_100_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_bad),test=c_test,trainingLabel1 = trainingLabelb,g=100,out_dir_base = sub_dir,single = 1)
+
+trainingLabelb<-list(control=list(bad=1:12),bad=13:18)
+sub_dir<-paste(basedir,"bad_150_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_bad),test=c_test,trainingLabel1 = trainingLabelb,g=150,out_dir_base = sub_dir,single = 1)
+
+trainingLabelb<-list(control=list(bad=1:12),bad=13:18)
+sub_dir<-paste(basedir,"bad_200_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_bad),test=c_test,trainingLabel1 = trainingLabelb,g=200,out_dir_base = sub_dir,single = 1)
+
+trainingLabelb<-list(control=list(bad=1:12),bad=13:18)
+sub_dir<-paste(basedir,"bad_250_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_bad),test=c_test,trainingLabel1 = trainingLabelb,g=250,out_dir_base = sub_dir,single = 1)
+
+trainingLabelb<-list(control=list(bad=1:12),bad=13:18)
+sub_dir<-paste(basedir,"bad_300_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_bad),test=c_test,trainingLabel1 = trainingLabelb,g=300,out_dir_base = sub_dir,single = 1)
+
+
+
+#3. HER2
+trainingLabelh<-list(control=list(her2=1:12),her2=13:17)
+sub_dir<-paste(basedir,"her2_15_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_her2),test=c_test,trainingLabel1 = trainingLabelh,g=15,out_dir_base = sub_dir,single = 1)
+trainingLabelh<-list(control=list(her2=1:12),her2=13:17)
+sub_dir<-paste(basedir,"her2_25_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_her2),test=c_test,trainingLabel1 = trainingLabelh,g=25,out_dir_base = sub_dir,single = 1)
+trainingLabelh<-list(control=list(her2=1:12),her2=13:17)
+sub_dir<-paste(basedir,"her2_50_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_her2),test=c_test,trainingLabel1 = trainingLabelh,g=50,out_dir_base = sub_dir,single = 1)
+sub_dir<-paste(basedir,"her2_75_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_her2),test=c_test,trainingLabel1 = trainingLabelh,g=75,out_dir_base = sub_dir,single = 1)
+sub_dir<-paste(basedir,"her2_100_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_her2),test=c_test,trainingLabel1 = trainingLabelh,g=100,out_dir_base = sub_dir,single = 1)
+sub_dir<-paste(basedir,"her2_150_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_her2),test=c_test,trainingLabel1 = trainingLabelh,g=150,out_dir_base = sub_dir,single = 1)
+sub_dir<-paste(basedir,"her2_200_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_her2),test=c_test,trainingLabel1 = trainingLabelh,g=200,out_dir_base = sub_dir,single = 1)
+sub_dir<-paste(basedir,"her2_250_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_her2),test=c_test,trainingLabel1 = trainingLabelh,g=250,out_dir_base = sub_dir,single = 1)
+sub_dir<-paste(basedir,"her2_300_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_her2),test=c_test,trainingLabel1 = trainingLabelh,g=300,out_dir_base = sub_dir,single = 1)
+
+
+
+
+#4. IGF1R
+
+trainingLabeli<-list(control=list(igf1r=1:12),igf1r=13:18)
+sub_dir<-paste(basedir,"igf1r_10_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_igf1r),test=c_test,trainingLabel1 = trainingLabeli,g=10,out_dir_base = sub_dir,single = 1)
+
+trainingLabeli<-list(control=list(igf1r=1:12),igf1r=13:18)
+sub_dir<-paste(basedir,"igf1r_15_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_igf1r),test=c_test,trainingLabel1 = trainingLabeli,g=15,out_dir_base = sub_dir,single = 1)
+
+trainingLabeli<-list(control=list(igf1r=1:12),igf1r=13:18)
+sub_dir<-paste(basedir,"igf1r_25_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_igf1r),test=c_test,trainingLabel1 = trainingLabeli,g=25,out_dir_base = sub_dir,single = 1)
+
+
+trainingLabeli<-list(control=list(igf1r=1:12),igf1r=13:18)
+sub_dir<-paste(basedir,"igf1r_45_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_igf1r),test=c_test,trainingLabel1 = trainingLabeli,g=45,out_dir_base = sub_dir,single = 1)
+
+trainingLabeli<-list(control=list(igf1r=1:12),igf1r=13:18)
+sub_dir<-paste(basedir,"igf1r_50_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_igf1r),test=c_test,trainingLabel1 = trainingLabeli,g=50,out_dir_base = sub_dir,single = 1)
+
+
+trainingLabeli<-list(control=list(igf1r=1:12),igf1r=13:18)
+sub_dir<-paste(basedir,"igf1r_75_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_igf1r),test=c_test,trainingLabel1 = trainingLabeli,g=75,out_dir_base = sub_dir,single = 1)
+
+trainingLabeli<-list(control=list(igf1r=1:12),igf1r=13:18)
+sub_dir<-paste(basedir,"igf1r_100_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_igf1r),test=c_test,trainingLabel1 = trainingLabeli,g=100,out_dir_base = sub_dir,single = 1)
+
+
+trainingLabeli<-list(control=list(igf1r=1:12),igf1r=13:18)
+sub_dir<-paste(basedir,"igf1r_150_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_igf1r),test=c_test,trainingLabel1 = trainingLabeli,g=150,out_dir_base = sub_dir,single = 1)
+
+trainingLabeli<-list(control=list(igf1r=1:12),igf1r=13:18)
+sub_dir<-paste(basedir,"igf1r_200_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_igf1r),test=c_test,trainingLabel1 = trainingLabeli,g=200,out_dir_base = sub_dir,single = 1)
+
+trainingLabeli<-list(control=list(igf1r=1:12),igf1r=13:18)
+sub_dir<-paste(basedir,"igf1r_250_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_igf1r),test=c_test,trainingLabel1 = trainingLabeli,g=250,out_dir_base = sub_dir,single = 1)
+
+trainingLabeli<-list(control=list(igf1r=1:12),igf1r=13:18)
+sub_dir<-paste(basedir,"igf1r_300_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_igf1r),test=c_test,trainingLabel1 = trainingLabeli,g=300,out_dir_base = sub_dir,single = 1)
+
+
+
+ #5. RAF
+
+trainingLabelr<-list(control=list(raf=1:12),raf=13:18)
+sub_dir<-paste(basedir,"raf_25_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_raf),test=c_test,trainingLabel1 = trainingLabelr,g=25,out_dir_base = sub_dir,single = 1)
+trainingLabelr<-list(control=list(raf=1:12),raf=13:18)
+sub_dir<-paste(basedir,"raf_50_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_raf),test=c_test,trainingLabel1 = trainingLabelr,g=50,out_dir_base = sub_dir,single = 1)
+trainingLabelr<-list(control=list(raf=1:12),raf=13:18)
+sub_dir<-paste(basedir,"raf_75_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_raf),test=c_test,trainingLabel1 = trainingLabelr,g=75,out_dir_base = sub_dir,single = 1) 
+
+
+trainingLabelr<-list(control=list(raf=1:12),raf=13:18)
+sub_dir<-paste(basedir,"raf_100_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_raf),test=c_test,trainingLabel1 = trainingLabelr,g=100,out_dir_base = sub_dir,single = 1)
+
+trainingLabelr<-list(control=list(raf=1:12),raf=13:18)
+sub_dir<-paste(basedir,"raf_150_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_raf),test=c_test,trainingLabel1 = trainingLabelr,g=150,out_dir_base = sub_dir,single = 1)
+trainingLabelr<-list(control=list(raf=1:12),raf=13:18)
+sub_dir<-paste(basedir,"raf_200_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_raf),test=c_test,trainingLabel1 = trainingLabelr,g=200,out_dir_base = sub_dir,single = 1) 
+trainingLabelr<-list(control=list(raf=1:12),raf=13:18)
+sub_dir<-paste(basedir,"raf_250_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_raf),test=c_test,trainingLabel1 = trainingLabelr,g=250,out_dir_base = sub_dir,single = 1)
+trainingLabelr<-list(control=list(raf=1:12),raf=13:18)
+sub_dir<-paste(basedir,"raf_300_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_raf),test=c_test,trainingLabel1 = trainingLabelr,g=300,out_dir_base = sub_dir,single = 1) 
+#6. ERK
+
+
+trainingLabele<-list(control=list(erk=1:12),erk=13:18)
+sub_dir<-paste(basedir,"erk_25_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_erk),test=c_test,trainingLabel1 = trainingLabele,g=25,out_dir_base = sub_dir,single = 1)
+
+trainingLabele<-list(control=list(erk=1:12),erk=13:18)
+sub_dir<-paste(basedir,"erk_50_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_erk),test=c_test,trainingLabel1 = trainingLabele,g=50,out_dir_base = sub_dir,single = 1)
+
+trainingLabele<-list(control=list(erk=1:12),erk=13:18)
+sub_dir<-paste(basedir,"erk_75_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_erk),test=c_test,trainingLabel1 = trainingLabele,g=75,out_dir_base = sub_dir,single = 1)
+
+trainingLabele<-list(control=list(erk=1:12),erk=13:18)
+sub_dir<-paste(basedir,"erk_100_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_erk),test=c_test,trainingLabel1 = trainingLabele,g=100,out_dir_base = sub_dir,single = 1)
+
+trainingLabele<-list(control=list(erk=1:12),erk=13:18)
+sub_dir<-paste(basedir,"erk_150_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_erk),test=c_test,trainingLabel1 = trainingLabele,g=150,out_dir_base = sub_dir,single = 1)
+
+trainingLabele<-list(control=list(erk=1:12),erk=13:18)
+sub_dir<-paste(basedir,"erk_200_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_erk),test=c_test,trainingLabel1 = trainingLabele,g=200,out_dir_base = sub_dir,single = 1)
+
+
+trainingLabele<-list(control=list(erk=1:12),erk=13:18)
+sub_dir<-paste(basedir,"erk_250_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_erk),test=c_test,trainingLabel1 = trainingLabele,g=250,out_dir_base = sub_dir,single = 1)
+
+trainingLabele<-list(control=list(erk=1:12),erk=13:18)
+sub_dir<-paste(basedir,"erk_300_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_erk),test=c_test,trainingLabel1 = trainingLabele,g=300,out_dir_base = sub_dir,single = 1)
+
+trainingLabele<-list(control=list(erk=1:12),erk=13:18)
+sub_dir<-paste(basedir,"erk_400_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_erk),test=c_test,trainingLabel1 = trainingLabele,g=400,out_dir_base = sub_dir,single = 1)
+```
+Now validating Luise's EGFR signature
+```{r}
+trainingLabel1 <- list(control = list(egfr=1:6), egfr=7:12) 
+#trainingLabel1
+sub_dir<-paste(basedir,"egfr_15_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = train_egfr,test=test,trainingLabel1 = trainingLabel1,g=15,out_dir_base = sub_dir,single = 1)
+
+sub_dir<-paste(basedir,"egfr_10_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = train_egfr,test=test,trainingLabel1 = trainingLabel1,g=10,out_dir_base = sub_dir,single = 1)
+
+sub_dir<-paste(basedir,"egfr_5_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = train_egfr,test=test,trainingLabel1 = trainingLabel1,g=5,out_dir_base = sub_dir,single = 1)
+
+sub_dir<-paste(basedir,"egfr_20_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = train_egfr,test=test,trainingLabel1 = trainingLabel1,g=20,out_dir_base = sub_dir,single = 1)
+
+sub_dir<-paste(basedir,"egfr_25_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = train_egfr,test=test,trainingLabel1 = trainingLabel1,g=25,out_dir_base = sub_dir,single = 1)
+
+sub_dir<-paste(basedir,"egfr_50_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = train_egfr,test=test,trainingLabel1 = trainingLabel1,g=50,out_dir_base = sub_dir,single = 1)
+sub_dir<-paste(basedir,"egfr_75_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = train_egfr,test=test,trainingLabel1 = trainingLabel1,g=75,out_dir_base = sub_dir,single = 1)
+
+sub_dir<-paste(basedir,"egfr_100_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = train_egfr,test=test,trainingLabel1 = trainingLabel1,g=100,out_dir_base = sub_dir,single = 1)
+
+sub_dir<-paste(basedir,"egfr_150_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = train_egfr,test=test,trainingLabel1 = trainingLabel1,g=150,out_dir_base = sub_dir,single = 1)
+
+sub_dir<-paste(basedir,"egfr_200_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = train_egfr,test=test,trainingLabel1 = trainingLabel1,g=200,out_dir_base = sub_dir,single = 1)
+
+sub_dir<-paste(basedir,"egfr_250_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = train_egfr,test=test,trainingLabel1 = trainingLabel1,g=250,out_dir_base = sub_dir,single = 1)
+
+sub_dir<-paste(basedir,"egfr_300_gene_list",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = train_egfr,test=test,trainingLabel1 = trainingLabel1,g=300,out_dir_base = sub_dir,single = 1)
+
+```
+Combining all the predictions with drug response
+```{r}
+setwd("~/Dropbox/bild_signatures/icbp_15_april_assign_adap_/")
+filenames<-system("ls *gene_list/*/pathway_activity_testset*", intern=TRUE)
+filenames
+
+for(i in 1:length(filenames))
+  {
+   f<-read.csv(filenames[i], header=1,row.names=1) ###reading in the filess one at a time
+   colnames(f)<-paste(filenames[i],colnames(f),sep='/')
+   if(i!=1){
+     print(i)
+     data_icbp<-cbind(data_icbp,f)
+    }
+   else{
+     data_icbp<-f
+     }
+  }
+#head(data_icbp)
+#dim(data_icbp)
+
+colnames(data_icbp)<-gsub(pattern = "/pathway_activity_testset.csv",replacement = "",x = colnames(data_icbp))
+head(data_icbp)
+rownames(data_icbp)[1:7]<-c("184A1","184B5","21MT1","21MT2","21NT","21PT","600MPE")
+setwd("~/Dropbox/bild_signatures//Datasets")
+drugs<-read.delim("ICBP_drugs.txt", header=1, sep='\t',row.names=1)
+icbp_drug<-merge_drop(data_icbp,drugs)
+colnames(icbp_drug)
+cor_mat=p_mat=matrix(0,length(filenames),90)
+rownames(cor_mat)=rownames(p_mat)=colnames(icbp_drug)[1:length(filenames)]
+colnames(cor_mat)=colnames(p_mat)=colnames(icbp_drug)[(length(filenames)+11):ncol(icbp_drug)]
+
+for(i in 1:length(filenames)){
+  for(j in 1:90){
+  temp=cor.test(icbp_drug[,i],icbp_drug[,(j+length(filenames)+10)],use="pairwise",method="spearman")
+  print(j)
+  print(temp)
+  cor_mat[i,j]=temp$estimate
+  p_mat[i,j]=temp$p.value
+  }
+}
+write.table(cor_mat,"single_cor_drug_mat_4_21.txt",col.names = NA,quote=F,sep='\t')
+colnames(p_mat)=paste(colnames(p_mat),"p_value",sep="_")
+write.table(p_mat,"single_p_drug_mat_4_21.txt",col.names = NA,quote=F,sep='\t')
+cor_p_mat<-cbind(cor_mat,p_mat)
+order(colnames(cor_p_mat))
+cor_p_mat<-cor_p_mat[,order(colnames(cor_p_mat))]
+write.table(cor_p_mat,"single_cor_p_mat_4_21.txt",col.names = NA,quote=F,sep='\t')
+```
+Now,combining predictions and proteomics data
+```{r}
+prot<-read.table("~/Dropbox/bild_signatures/bild_signatures/Datasets/proteomics.txt",sep='\t',header=1,row.names=1)
+pred_prot<-merge_drop(data_icbp,prot)
+cor_mat=p_mat=matrix(0,length(filenames),70)
+rownames(cor_mat)=rownames(p_mat)=colnames(pred_prot)[1:length(filenames)]
+colnames(cor_mat)=colnames(p_mat)=colnames(pred_prot)[(length(filenames)+1):ncol(pred_prot)]
+
+for(i in 1:length(filenames)){
+  for(j in 1:70){
+  temp=cor.test(pred_prot[,i],pred_prot[,j+length(filenames)],use="pairwise",method="spearman")
+  print(j)
+  print(temp)
+  cor_mat[i,j]=temp$estimate
+  p_mat[i,j]=temp$p.value
+  }
+}
+colnames(p_mat)=paste(colnames(p_mat),"p_value",sep="_")
+cor_p_mat<-cbind(cor_mat,p_mat)
+order(colnames(cor_p_mat))
+cor_p_mat<-cor_p_mat[,order(colnames(cor_p_mat))]
+write.table(cor_mat,"single_protein_cor_mat_4_21.txt",col.names = NA,quote=F,sep='\t')
+write.table(p_mat,"single_protein_p_mat_4_21.txt",col.names = NA,quote=F,sep='\t')
+write.table(cor_p_mat,"single_protein_cor_p_mat_4_21.txt",col.names = NA,quote=F,sep='\t')
+```
+
+
+```{r echo=FALSE}
+time<-format(Sys.time(),"%a %b %d %X %Y")
+```
+This analysis was run on `r time` 

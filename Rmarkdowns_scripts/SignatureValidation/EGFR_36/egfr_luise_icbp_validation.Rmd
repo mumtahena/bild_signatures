@@ -70,7 +70,7 @@ setwd("~/Dropbox/egfr_opt/")
 # dim(gfp)
 # egfr<- read.table("36hr_EGFR_train_TPMlog.txt",header = 1, row.names=1)
 # dim(egfr)
-multi<-read.table("hmec_multi_egfr_mek_FeatureCount.tpmlog", sep='\t', header=1, row.names=1)
+multi<-read.table("~/Dropbox/egfr_opt/hmec_multi_egfr_mek_FeatureCount.tpmlog", sep='\t', header=1, row.names=1)
 head(multi)
 dim(multi)
 multi<-multi[,order(colnames(multi))]
@@ -151,17 +151,17 @@ dim(pred_drug)
 for(i in 1:length(filenames)){
   print(colnames(pred_drug)[i])
   print("for Gefitinib")
-  print(cor(pred_drug[,i],pred_drug$Gefitinib,use="na.or.complete"))
+  print(cor(pred_drug[,i],pred_drug$Gefitinib,use="pairwise",method="spearman"))
   print("for Erlotinib")
-  print(cor(pred_drug[,i],pred_drug$Erlotinib,use="na.or.complete"))
+  print(cor(pred_drug[,i],pred_drug$Erlotinib,use="pairwise",method="spearman"))
   print("for BIBW2992")
-  print(cor(pred_drug[,i],pred_drug$BIBW2992,use="na.or.complete"))
+  print(cor(pred_drug[,i],pred_drug$BIBW2992,use="pairwise",method="spearman"))
   print("for AG1478")
-  print(cor(pred_drug[,i],pred_drug$AG1478,use="na.or.complete"))
+  print(cor(pred_drug[,i],pred_drug$AG1478,use="pairwise",method="spearman"))
   print("for Sigma AKT 1/2 inhibitor")
-  print(cor(pred_drug[,i],pred_drug$Sigma.AKT1.2.inhibitor,use="na.or.complete"))
+  print(cor(pred_drug[,i],pred_drug$Sigma.AKT1.2.inhibitor,use="pairwise",method="spearman"))
   print("for Lapatinib")
-  print(cor(pred_drug[,i],pred_drug$Lapatinib,use="na.or.complete"))
+  print(cor(pred_drug[,i],pred_drug$Lapatinib,use="pairwise",method="spearman"))
 }
 
 
@@ -183,7 +183,7 @@ final_mat
 plot(final_mat$EGFR)
 for(i in 2:length(filenames)+1){
   print(colnames(final_mat)[i])
-  print(cor(final_mat[,i],final_mat$EGFR))
+  print(cor(final_mat[,i],final_mat$EGFR,method="spearman",use="pairwise"))
   
 }
 ```
@@ -215,6 +215,7 @@ Staring to validate in TCGA
 ```{r}
 EGFRStatus <- read.delim("~/Dropbox/bild_signatures//Datasets/EGFR/PANCAN12_EGFR_MutationStatus.txt", , row.names=1,header=FALSE)
 head(EGFRStatus)
+rownames(EGFRStatus)<-short_to_long_TCGA_id(shortnames = rownames(EGFRStatus),longnames = rownames(data))
 combined_egfr_status = merge_drop(EGFRStatus, data, by=0)
 head(combined_egfr_status)
 boxplot(combined_egfr_status$EGFR_Status,combined_egfr_status[,1])

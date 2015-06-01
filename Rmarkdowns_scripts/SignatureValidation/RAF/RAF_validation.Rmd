@@ -1,0 +1,159 @@
+---
+title: "Untitled"
+author: "Mumtahena Rahman"
+date: "April 16, 2015"
+output: html_document
+---
+```{r}
+source("~/Dropbox/bild_signatures//bild_signatures/Rmarkdowns_scripts//Key_ASSIGN_functions.Rmd")
+#setwd("~/Documents/ThesisWork/GitRepos/bild_signature_validation_old_repo/Datasets")
+setwd("/Users/mumtahenarahman/Dropbox/bild_signature/Datasets")
+expr<-as.matrix(read.table("/Users/mumtahenarahman/Dropbox/Datasets/GFP18_AKT_BAD_HER2_IGF1R_RAF_ERK.tpmlog",sep='\t',row.names=1,header=1))
+control<-subset(expr, select=GFP.1:GFP.12)
+her2<-subset(expr, select=HER2.1:HER2.6)
+akt<-subset(expr,select=AKT.1:AKT.6)
+bad<-subset(expr,select=BAD.1:BAD.6)
+igf1r<-subset(expr,select=IGF1R.1:IGF1R.6)
+raf<-subset(expr,select=RAF.1:RAF.6)
+erk<-subset(expr,select=ERK.1:ERK.6)
+expr_all<-cbind(control,akt,bad,her2,igf1r,raf,erk)
+dim(expr_all)
+#icbp<-as.matrix(read.table("~/Documents/ThesisWork/GitRepos/bild_signature_validation_old_repo/Datasets/ICBP/icbp_Rsubread_tpmlog.txt", sep='\t', stringsAsFactors=FALSE, header=1, row.names=1))
+icbp<-as.matrix(read.table("~/Dropbox/bild_signatures/Datasets/icbp_Rsubread_tpmlog.txt", sep='\t', stringsAsFactors=FALSE, header=1, row.names=1))
+expr_all_f <-expr_all[apply(expr_all[,1:47]==0,1,mean) < 0.85,]
+dim(expr_all_f)
+expr_all_icbp_f<-merge_drop(expr_all_f,icbp,by=0)
+sub<-c(12,6,6,5,6,6,6,55)
+
+pdf("pca_plots.pdf")
+pcaplot(expr_all_icbp_f,sub)
+bat1<-as.matrix(cbind(c(colnames(expr_all_f),colnames(icbp)),c(rep(1,length(colnames(expr_all_f))),rep(2,length(colnames(icbp))))))
+#bat1
+combat_expr1<-ComBat(dat=expr_all_icbp_f, batch=bat1[,2], mod=NULL, numCovs=NULL)
+pcaplot(combat_expr1,sub)
+dev.off()
+c_gfp<-subset(combat_expr1, select=GFP.1:GFP.12)
+c_akt<-subset(combat_expr1, select=AKT.1:AKT.6)
+c_bad<-subset(combat_expr1, select=BAD.1:BAD.6)
+c_her2<-subset(combat_expr1, select=HER2.1:HER2.6)
+c_igf1r<-subset(combat_expr1, select=IGF1R.1:IGF1R.6)
+c_raf<-subset(combat_expr1, select=RAF.1:RAF.6)
+c_erk<-subset(combat_expr1, select=ERK.1:ERK.6)
+c_test<-combat_expr1[,48:102]
+#basedir="~/Documents/ThesisWork/GitRepos/bild_signatures/ASSIGN_Results_Ignore_too_big/icbp_15_mar_all"
+basedir="~/Dropbox/bild_signatures/icbp_15_april_assign_adap_/"
+dir.create( basedir)
+
+
+```
+Running ASSIGN for various gene numbers for RAF signature
+```{r}
+#1. RAF 200 genes
+trainingLabelr<-list(control=list(raf=1:12),raf=13:18)
+sub_dir<-paste(basedir,"raf",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_raf),test=c_test,trainingLabel1 = trainingLabelr,g=200,out_dir_base = sub_dir,single = 1)
+#2. RAF 100 genes
+trainingLabelr<-list(control=list(raf=1:12),raf=13:18)
+sub_dir<-paste(basedir,"raf_100",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_raf),test=c_test,trainingLabel1 = trainingLabelr,g=100,out_dir_base = sub_dir,single = 1)
+#3. RAF 150 genes
+trainingLabelr<-list(control=list(raf=1:12),raf=13:18)
+sub_dir<-paste(basedir,"raf_150",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_raf),test=c_test,trainingLabel1 = trainingLabelr,g=150,out_dir_base = sub_dir,single = 1)
+#4. RAF 50 genes
+trainingLabelr<-list(control=list(raf=1:12),raf=13:18)
+sub_dir<-paste(basedir,"raf_50",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_raf),test=c_test,trainingLabel1 = trainingLabelr,g=50,out_dir_base = sub_dir,single = 1)
+#5. RAF 250
+trainingLabelr<-list(control=list(raf=1:12),raf=13:18)
+sub_dir<-paste(basedir,"raf_250",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_raf),test=c_test,trainingLabel1 = trainingLabelr,g=250,out_dir_base = sub_dir,single = 1)
+#6. RAF 25
+trainingLabelr<-list(control=list(raf=1:12),raf=13:18)
+sub_dir<-paste(basedir,"raf_25",sep='/')
+dir.create( sub_dir)
+assign_easy_multi(trainingData = cbind(c_gfp,c_raf),test=c_test,trainingLabel1 = trainingLabelr,g=25,out_dir_base = sub_dir,single = 1)
+
+
+```
+Drug response correlations
+```{r}
+setwd("~/Dropbox/bild_signatures/icbp_15_april_assign_adap_/")
+filenames_raf<-system("ls raf*/*/pathway_activity_testset*", intern=TRUE)
+filenames_raf
+
+for(i in 1:length(filenames_raf))
+  {
+   f<-read.csv(filenames_raf[i], header=1,row.names=1) ###reading in the filess one at a time
+   colnames(f)<-paste(filenames_raf[i],colnames(f),sep='/')
+   if(i==1){
+     data_icbp<-f
+     }
+   else{
+     data_icbp<-cbind(data_icbp,f)
+    }
+  }
+#head(data_icbp)
+#dim(data_icbp)
+
+colnames(data_icbp)<-gsub(pattern = "/pathway_activity_testset.csv",replacement = "",x = colnames(data_icbp))
+head(data_icbp)
+rownames(data_icbp)[1:7]<-c("184A1","184B5","21MT1","21MT2","21NT","21PT","600MPE")
+setwd("~/Dropbox/bild_signatures//Datasets")
+drugs<-read.delim("ICBP_drugs.txt", header=1, sep='\t',row.names=1)
+raf_drugs<-merge_drop(data_icbp,drugs)
+dim(raf_drugs)
+colnames(raf_drugs)
+cor_mat=p_mat=matrix(0,6,90)
+rownames(cor_mat)=rownames(p_mat)=colnames(raf_drugs)[1:6]
+colnames(cor_mat)=colnames(p_mat)=colnames(raf_drugs)[17:106]
+
+for(i in 1:6){
+  for(j in 1:90){
+  temp=cor.test(raf_drugs[,i],raf_drugs[,j+16],use="pairwise",method="spearman")
+  print(j)
+  print(temp)
+  cor_mat[i,j]=temp$estimate
+  p_mat[i,j]=temp$p.value
+  }
+}
+colnames(p_mat)=paste(colnames(p_mat),"p_value",sep="_")
+cor_p_mat<-cbind(cor_mat,p_mat)
+order(colnames(cor_p_mat))
+cor_p_mat<-cor_p_mat[,order(colnames(cor_p_mat))]
+write.table(cor_p_mat,"raf_cor_p_mat.txt",col.names = NA,quote=F,sep='\t')
+```
+multipathway..
+```{r}
+multi<-read.csv("~/Dropbox/bild_signatures//icbp_15_april_assign_adap_/akt_bad_her2_erk_igf1r_raf_egfr/adap_adap_multi/pathway_activity_testset.csv",header=1,row.names=1)
+
+rownames(multi)[1:7]<-c("184A1","184B5","21MT1","21MT2","21NT","21PT","600MPE")
+setwd("~/Dropbox/bild_signatures//Datasets")
+drugs<-read.delim("ICBP_drugs.txt", header=1, sep='\t',row.names=1)
+multi_drug<-merge_drop(multi,drugs)
+colnames(multi_drug)
+cor_mat=p_mat=matrix(0,7,90)
+rownames(cor_mat)=rownames(p_mat)=colnames(multi_drug)[1:7]
+colnames(cor_mat)=colnames(p_mat)=colnames(raf_drugs)[18:107]
+
+for(i in 1:7){
+  for(j in 1:90){
+  temp=cor.test(multi_drug[,i],multi_drug[,j+17],use="pairwise",method="spearman")
+  print(j)
+  print(temp)
+  cor_mat[i,j]=temp$estimate
+  p_mat[i,j]=temp$p.value
+  }
+}
+colnames(p_mat)=paste(colnames(p_mat),"p_value",sep="_")
+cor_p_mat<-cbind(cor_mat,p_mat)
+order(colnames(cor_p_mat))
+cor_p_mat<-cor_p_mat[,order(colnames(cor_p_mat))]
+write.table(cor_p_mat,"multi_cor_p_mat.txt",col.names = NA,quote=F,sep='\t')
+```
+

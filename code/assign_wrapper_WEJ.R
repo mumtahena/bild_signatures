@@ -36,28 +36,9 @@ assign.wrapper<-function (trainingData = NULL, testData, trainingLabel, testLabe
  plot(mcmc.chain.testData$S_mcmc)
  abline(h=0,col="red")
  dev.off()
- dim=c(dim(mcmc.chain.testData$Delta_mcmc)[2],length(pathName)))
- gene_list_posterior=array(0,dim = c(dim(mcmc.chain.testData$Delta_mcmc)[2],length(pathName)))
- for(i in 1:length(pathName)){
-   gene_list_posterior[,i]<-apply(mcmc.chain.testData$Delta_mcmc[,,i],2,mean)
- }
- dimnames(gene_list_posterior)=dimnames(mcmc.pos.mean.testData$Delta_pos)=dimnames(processed.data$S_matrix)
+ dimnames(mcmc.pos.mean.testData$Delta_pos)=dimnames(processed.data$S_matrix)
  
- deltas<-cbind(processed.data$S_matrix,processed.data$Delta_matrix,gene_list_posterior,mcmc.pos.mean.testData$Delta_pos)
- colnames(deltas)=c(paste("prior_S",pathName,sep="_"),paste("prior_delta",pathName,sep="_"),paste("posterior_mean_Delta_mcmc",pathName,sep="_"),paste("mcmc.pos.mean.testData$Delta_pos",pathName,sep="_"))
-# deltas<-cbind(processed.data$S_matrix,processed.data$Delta_matrix,mcmc.pos.mean.testData$Delta_pos,mcmc.chain.testData$Delta_mcmc)
-# colnames(deltas)=c("prior S","prior_delta","mcmc.pos.mean.testData$Delta_pos","mcmc.chain.testData$Delta_mcmc")
-
-#sum(mcmc.pos.mean.testData$Delta_pos== gene_list_posterior)
- write.csv(deltas,"posterior_delta.csv",quote=F)
- #write.csv(subset(deltas,deltas[,4]>0.5,select = c(1,4)),"posterior_gene_list_delta_over_0.5.csv",quote=F)
 #####End: added by moom###
-  
-#   if(!is.null(control_gene)){
-#     plot(mcmc.chain.testData$beta_mcmc[control_gene,,])
-#   }
-  
-  
   cat("Outputing results...\n")
   if (mixture_beta) {
     if (!is.null(trainingData)) {
@@ -72,18 +53,12 @@ assign.wrapper<-function (trainingData = NULL, testData, trainingLabel, testLabe
     coef_test = mcmc.pos.mean.testData$beta_pos
   }
   cwd <- getwd()
-  dir.create(outputDir,showWarnings = F)##moom added this to create the output folder.
+  dir.create(outputDir,showWarnings = F)##moom added this to create the output folder if doesn't exist already.
   setwd(outputDir)
-  if (is.null(geneList)) {
-    pathName <- names(trainingLabel)[-1]
-  }
-  else {
-    pathName <- names(geneList)
-  }
-  print(paste("This analysis was run using the following parameters :",
+  writeFile(paste(pathName,"analysis was run using the following parameters :",
               "n_sigGene=",n_sigGene, "adaptive_B=",adaptive_B,"adaptive_S=", adaptive_S,
               "mixture_beta=",mixture_beta,"p_beta=",p_beta,"theta0=", theta0, "theta1=",theta1, 
-              "iter=",iter, "burn_in=",burn_in,"The output files are located at:",outputDir,sep=' '))###moom added this 
+              "iter=",iter, "burn_in=",burn_in,"The output files are located at:",outputDir,sep=' '),"parameters.txt")###moom added this 
   if (!is.null(trainingData)) {
     rownames(coef_train) <- colnames(processed.data$trainingData_sub)
     colnames(coef_train) <- pathName
@@ -103,6 +78,9 @@ assign.wrapper<-function (trainingData = NULL, testData, trainingLabel, testLabe
     heatmap.test.pos(testData = processed.data$testData_sub, 
                      Delta_pos = mcmc.pos.mean.testData$Delta_pos, trainingLabel, 
                      testLabel, Delta_cutoff = 0.95, coef_test, geneList)
+    deltas<-cbind(processed.data$S_matrix,processed.data$Delta_matrix,mcmc.pos.mean.testData$Delta_pos,mcmc.pos.mean.testData$S_pos)
+    colnames(deltas)=c(paste("Prior change in expression",pathName,sep=":"),paste("Prior probability of inclusion",pathName,sep=":"),paste("Posterior probability of inclusion",pathName,sep=":"),paste("Posterior change in expression",pathName,sep=":"))
+    write.csv(round(deltas,digits = 4),"posterior_delta.csv",quote=F)
       }
   if (!is.null(trainingData)) {
     scatter.plot.train(coef_train, trainingData, trainingLabel)

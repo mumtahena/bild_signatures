@@ -1,3 +1,12 @@
+resistant_or_sensitive=function(value,cutoff){
+  if(value>cutoff){
+  status='S'
+  }
+  else{
+  status='R'
+  }
+  return (status)
+}
 short_to_long_TCGA_id=function(longnames=NULL,shortnames=NULL){
   counter=0
   for (j in 1:length(shortnames)){
@@ -10,40 +19,38 @@ short_to_long_TCGA_id=function(longnames=NULL,shortnames=NULL){
   return(shortnames)
 }
 
-merge_drop<-function(x,y,by=0)
+merge_drop<-function(x,y,by=0,...)
 {
-  new_m<-merge(x,y,by=by)
+  new_m<-merge(x,y,by=by,...)
   rownames(new_m)<-new_m$Row.names
   return(new_m[,2:length(colnames(new_m))])
 }
 
 
-pcaplot<-function(mat,sub,scale=T){
-  if(sum(sub)!=length(mat)){
+pcaplot<-function(mat,sub,center=T,scale=T){
+  if(sum(sub)!=length(mat))
+    {
     print("verify the subscripts...exiting now")
     }
   else{
-    pca_mat <- prcomp(t(mat), center=T,scale=scale)
+    pca_mat <- prcomp(t(mat), center=center,scale=scale)
     plot(pca_mat)
     plot(pca_mat$x[,1],pca_mat$x[,2])
-    index= 1
-    for(i in 1:length(sub)){
-      #print(rownames(pca_mat$x)[index:sub[i]+index-1],"has color", )
+    abline(h=0,v=0)
+    for(i in length(sub):1)
+      {
       print(i)
-      if(i==1){
-        points(pca_mat$x[1:sub[i]],pca_mat$x[1:sub[i],2],col=i+1,pch=i+1)
+      if(i!=1)
+        {
+          points(pca_mat$x[sum(sub[1:i-1]):sum(sub[1:i])],pca_mat$x[sum(sub[1:i-1]):sum(sub[1:i]),2],col=i)
         }
-      else if(i==length(sub)){
-         points(pca_mat$x[index:length(rownames(pca_mat$x))],pca_mat$x[index:length(rownames(pca_mat$x)),2],col=i+1,pch=i+1)
-         }
-      else{
-        points(pca_mat$x[index:index+sub[i]],pca_mat$x[index:index+sub[i],2],col=i+1,pch=i+1)
+      else #if(i==1)
+        {
+        points(pca_mat$x[1:sub[i]],pca_mat$x[1:sub[i],2],col=i)
         }
-       index=index+sub[i]
       }
   }
 }
-
 
 assign_easy<-function(trainingData=train, testData=test, trainingLabel1=NULL,g=100,out_dir_base="~/Dropbox/bild_signatures/",cov=0){
 if(cov==0){
@@ -60,16 +67,16 @@ else{
 }
 
 set.seed(1234)
-assign.wrapper(trainingData=trainingData, testData=testData, trainingLabel=trainingLabel1, testLabel=NULL, geneList=NULL, n_sigGene=g, adaptive_B=T, adaptive_S=F, mixture_beta=F, outputDir=adap_folder, theta0=0.05, theta1=0.9, iter=2000, burn_in=1000)  
+assign.wrapper(trainingData=trainingData, testData=testData, trainingLabel=trainingLabel1, testLabel=NULL, geneList=NULL, n_sigGene=g, adaptive_B=T, adaptive_S=F, mixture_beta=F, outputDir=adap_folder, theta0=0.05, theta1=0.9, iter=2000, burn_in=1000,p_beta=0.5)  
 
 set.seed(1234)
-assign.wrapper(trainingData=trainingData, testData=testData, trainingLabel=trainingLabel1, testLabel=NULL, geneList=NULL, n_sigGene=g, adaptive_B=F, adaptive_S=F, mixture_beta=F, outputDir=nonadap_folder, theta0=0.05, theta1=0.9, iter=2000, burn_in=1000)  
+assign.wrapper(trainingData=trainingData, testData=testData, trainingLabel=trainingLabel1, testLabel=NULL, geneList=NULL, n_sigGene=g, adaptive_B=F, adaptive_S=F, mixture_beta=F, outputDir=nonadap_folder, theta0=0.05, theta1=0.9, iter=2000, burn_in=1000,...)  
 
 }
 
 ## 
 # 1 = true, 0 = false
-assign_easy_multi<-function(trainingData=train, testData=test, trainingLabel1=NULL,g=100,out_dir_base="~/Desktop/tmp",cov=0, single=0){
+assign_easy_multi<-function(trainingData=train, testData=test, trainingLabel1=NULL,g=100,out_dir_base="~/Desktop/tmp",cov=0, geneList=NULL,single=0){
 if(cov==0 & single==0){
   adapB_folder<-paste(out_dir_base,paste( "adapB_multi",sep=''),sep='/')
   dir.create(file.path(out_dir_base,paste( "adapB_multi",sep='')))
@@ -85,12 +92,22 @@ else if (cov==0 & single==1){
   }
 
 
-set.seed(1234)
-assign.wrapper(trainingData=trainingData, testData=testData, trainingLabel=trainingLabel1, geneList=NULL, n_sigGene=g, adaptive_B=T, adaptive_S=F, mixture_beta=F, outputDir=adapB_folder, theta0=0.05, theta1=0.9, iter=100000, burn_in=5000)  
+if(is.null(geneList)){
+  set.seed(1234)
+  assign.wrapper(trainingData=trainingData, testData=testData, trainingLabel=trainingLabel1, geneList=NULL, n_sigGene=g, adaptive_B=T, adaptive_S=F, mixture_beta=F, outputDir=adapB_folder, theta0=0.05, theta1=0.9, iter=100000, burn_in=5000)  
 
-set.seed(1234)
-assign.wrapper(trainingData=trainingData, testData=testData, trainingLabel=trainingLabel1, geneList=NULL, n_sigGene=g, adaptive_B=T, adaptive_S=T, mixture_beta=F, outputDir=adap_adap_folder, theta0=0.05, theta1=0.9, iter=100000, burn_in=5000) 
+  set.seed(1234)
+  assign.wrapper(trainingData=trainingData, testData=testData, trainingLabel=trainingLabel1, geneList=NULL, n_sigGene=g, adaptive_B=T, adaptive_S=T, mixture_beta=F, outputDir=adap_adap_folder, theta0=0.05, theta1=0.9, iter=100000, burn_in=5000) 
+}
+else{
+  set.seed(1234)
+  assign.wrapper(trainingData=trainingData, testData=testData, trainingLabel=trainingLabel1, geneList=geneList, n_sigGene=g, adaptive_B=T, adaptive_S=F, mixture_beta=F, outputDir=adapB_folder, theta0=0.05, theta1=0.9, iter=100000, burn_in=5000)  
 
+  set.seed(1234)
+  assign.wrapper(trainingData=trainingData, testData=testData, trainingLabel=trainingLabel1, geneList=geneList, n_sigGene=g, adaptive_B=T, adaptive_S=T, mixture_beta=F, outputDir=adap_adap_folder, theta0=0.05, theta1=0.9, iter=100000, burn_in=5000) 
+
+
+}
 }
 
 getGeneList = function(rDataPath) {
