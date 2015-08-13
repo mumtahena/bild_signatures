@@ -1,0 +1,353 @@
+---
+title: "Pathway predictions in TCGA BRCA samples based on subtypes"
+output: html_document
+---
+
+```{r include=FALSE}
+
+source('~/Dropbox/bild_signatures/bild_signatures/Rmarkdowns_scripts//Key_ASSIGN_functions.Rmd', echo=TRUE)
+data_tcga<-gatherFile("~/Desktop/PANCAN24_BRCA_1119/")
+data_tcga<-gatherFile("~/Dropbox/bild_signatures/tcga_BRCA_5_9/assign_1.0.0")
+rownames(data_tcga)=gsub("\\.","-",rownames(data_tcga))
+colnames(data_tcga)<-gsub(pattern = "/pathway_activity_testset.csv",replacement = "",x = colnames(data_tcga))
+#head(data_tcga)
+data_tcga_kras<-gatherFile("~/Dropbox/bild_signatures/tcga_BRCA_5_9/assign_1.0.0/KRAS/")
+colnames(data_tcga_kras)<-gsub(pattern = "/pathway_activity_testset.csv",replacement = "",x = colnames(data_tcga_kras))
+data_tcga<-merge_drop(data_tcga,data_tcga_kras)
+single_pathway_best_tcga<-data_tcga[,c("akt_75_gene_list/adap_adap_single/akt","her2_15_gene_list/adap_adap_single/her2","igf1r_75_gene_list/adap_adap_single/igf1r","bad_200_gene_list/adap_adap_single/bad","erk_250_gene_list/adap_adap_single/erk","raf_100_gene_list/adap_adap_single/raf","egfr_25_gene_list/adap_adap_single/egfr","krasgv_300_gene_list/adap_adap_single/krasgv","krasqh_300_gene_list/adap_adap_single/krasqh")]#,"kraswt_300_gene_list/adap_adap_single/sigProtein")]
+
+#multi_pathway_best_tcga<-data_tcga[,c("akt_bad_her2_raf/adap_adap_multi/akt","akt_bad_her2_erk/adap_adap_multi/bad")]#,"her2_igf1r/adap_adap_multi/her2","igf1r_raf_her2_erk/adap_adap_multi/igf1r","erk_bad/adap_adap_multi/erk","akt_bad_igf1r_raf/adapB_multi/raf","egfr_25_gene_list/adap_adap_single/egfr","krasgv_300_gene_list/adap_adap_single/krasgv","krasqh_300_gene_list/adap_adap_single/krasqh")]#,"kraswt_300_gene_list/adap_adap_single/sigProtein")]
+multi_pathway_best_tcga<-data_tcga[,c("akt_bad_gene_list/adap_adap_multi/akt","akt_bad_her2_erk_gene_list/adap_adap_multi/bad","her2_igf1r_gene_list/adap_adap_multi/her2","igf1r_raf_her2_erk_gene_list/adap_adap_multi/igf1r","erk_bad_gene_list/adap_adap_multi/erk","akt_bad_igf1r_raf_gene_list/adapB_multi/raf","egfr_25_gene_list/adap_adap_single/egfr","krasgv_300_gene_list/adap_adap_single/krasgv","krasqh_300_gene_list/adap_adap_single/krasqh")]#,"kraswt_300_gene_list/adap_adap_single/sigProtein")]
+heatmap.2(as.matrix(single_pathway_best_tcga),col=bluered)
+
+brca_subtypes<-read.table("~/Dropbox/bild_signatures/Datasets/BRCA.547.PAM50.SigClust.Subtypes.txt",header=1,row.names=1, sep='\t')
+subtypes_preds<-merge_drop(brca_subtypes,data_tcga)
+boxplot2(subtypes_preds[,5]~subtypes_preds$PAM50,col=c(2,4,5,5,6),ylab="AKT Activity",ylim=c(0,1),las=1)
+boxplot2(subtypes_preds[,7]~subtypes_preds$PAM50,col=c(2,4,5,5,6),ylab="BAD Activity",ylim=c(0,1),las=1)
+boxplot(subtypes_preds[,5]~subtypes_preds$PAM50)
+boxplot(subtypes_preds[,6]~subtypes_preds$PAM50)
+boxplot(subtypes_preds[,7]~subtypes_preds$PAM50)
+brca_mut<-t(read.table("~/Dropbox/bild_signatures/Datasets/TCGA_PANCAN_mut.txt",header=1,row.names=1, sep='\t', check.names = F))
+prot_brca<-read.csv("~/Dropbox/bild_signatures/Datasets/TCGA-BRCA-RBN.csv",header=1,check.names = F)
+longnames=rownames(subtypes_preds)
+new_longnames=NULL
+counter=0
+for (j in 1:length(longnames)){
+  new_longnames[j]<-paste(strsplit(longnames[j],"-")[[1]][1:3],collapse = "-")
+}
+########protein validation
+subtypes_preds$Short_names=new_longnames
+subtypes_preds_mut<-merge(subtypes_preds,brca_mut,by.x=24,by.y=0)
+boxplot(subtypes_preds_mut[,6]~subtypes_preds_mut$PIK3CA,ylab="AKT Activity",names=c("No PIK3CA\nmutation","PIK3CA\nmutation"))##AKT validation
+
+t.test(subtypes_preds_mut[,6]~subtypes_preds_mut$PIK3CA)
+boxplot(subtypes_preds_mut[,8]~subtypes_preds_mut$PIK3CA,ylab="BAD Activity",names=c("No PIK3CA\nmutation","PIK3CA\nmutation"))##BAD validation
+t.test(subtypes_preds_mut[,8]~subtypes_preds_mut$PIK3CA)
+boxplot(subtypes_preds_mut[,10]~subtypes_preds_mut$EGFR)##EGFR validation; not many samples with 
+t.test(subtypes_preds_mut[,10]~subtypes_preds_mut$EGFR)
+
+boxplot(subtypes_preds_mut[,18]~subtypes_preds_mut$MAP3K2)
+t.test(subtypes_preds_mut[,18]~subtypes_preds_mut$BRAF)
+boxplot(subtypes_preds_mut[,18]~subtypes_preds_mut$EGFR)
+t.test(subtypes_preds_mut[,18]~subtypes_preds_mut$EGFR)
+
+boxplot(subtypes_preds_mut[,20]~subtypes_preds_mut$KRAS,ylab="KRAS Activity",names=c("No KRAS\nmutation","KRAS\nmutation"))
+t.test(subtypes_preds_mut[,20]~subtypes_preds_mut$KRAS)
+boxplot(subtypes_preds_mut[,22]~subtypes_preds_mut$KRAS,ylab="KRAS Activity",names=c("No KRAS\nmutation","KRAS\nmutation"))
+t.test(subtypes_preds_mut[,22]~subtypes_preds_mut$KRAS)
+
+
+
+
+subtypes_preds_prot<-merge(subtypes_preds,prot_brca,by.x=24,by.y=1)
+cor.test(subtypes_preds_prot[,6],subtypes_preds_prot$Akt,method = "spearman",use="pairwise")
+cor.test(subtypes_preds_prot[,8],subtypes_preds_prot$Akt,method = "spearman",use="pairwise")
+cor.test(subtypes_preds_prot[,10],subtypes_preds_prot$EGFR,method = "spearman",use="pairwise")
+
+cor.test(subtypes_preds_prot[,12],subtypes_preds_prot[,160])#$PKC-alpha
+cor.test(subtypes_preds_prot[,14],subtypes_preds_prot$HER2_pY1248)
+cor.test(subtypes_preds_prot[,14],subtypes_preds_prot$HER2)
+cor.test(subtypes_preds_prot[,16],subtypes_preds_prot$IRS1)
+cor.test(subtypes_preds_prot[,18],subtypes_preds_prot$S6)#$Caveolin-1)#$C-Raf)
+
+
+
+
+single_tcga<-data_tcga[,c(2,4,6,8,10,12,14,16,18)]
+colnames(single_tcga)<-c("AKT","BAD","EGFR","ERK","HER2","IGF1R","RAF", "KRASGV","KRASQH")
+heatmap.2(as.matrix(single_tcga),col = bluered,density.info = "none",trace="none",scale = "row", margins = c(8,8))
+boxplot(subtypes_preds[,5]~subtypes_preds$PAM50)
+pdf("~/Dropbox/tcga_within_pathway_cor.pdf")
+par(mfrow = c(1,1),lwd=1)
+heatmap.2(cor(single_tcga,method="spearman"),col = bluered,density.info = "none",trace="none",margins = c(6.5,6.5),main="Within pathways correations \n in TCGA")
+par(mfrow = c(2,1),lwd=4)
+boxplot(subtypes_preds[,5]~subtypes_preds$PAM50,col=2:6,main="AKT Activity across TCGA Subtypes")
+boxplot(subtypes_preds[,5]~subtypes_preds$PAM50,col=2:6,main="AKT Activity across TCGA Subtypes")
+heatmap.2(cor(select_subtypes_preds[,2:8],method="spearman"),col = bluered,density.info = "none",trace="none",margins = c(6.5,6.5))
+
+
+dev.off()
+ord_subtypes_preds<-subtypes_preds[order(subtypes_preds$PAM50),]
+colnames(select_subtypes_preds)[2:9]<-c("AKT","BAD","EGFR","HER2","IGF1R","RAF","KRASGV","KRASQH")
+
+select_subtypes_preds<-ord_subtypes_preds[,c(3,5,7,9,13,15,17,18,21)]
+
+heatmap.2(as.matrix(select_subtypes_preds[,2:9]), RowSideColors = c(rep("gray", sum(select_subtypes_preds$PAM50=="Basal")),rep("blue", sum(select_subtypes_preds$PAM50=="Her2")),rep("brown", sum(select_subtypes_preds$PAM50=="LumA")),rep("green", sum(select_subtypes_preds$PAM50=="LumB")),rep("yellow",sum(select_subtypes_preds$PAM50=="Normal"))),col=bluered,density.info = 'none',trace="none",margins=c(6.5,6.5),main="",labRow = F,)#,scale='row')#,Rowv=F,Colv=F)
+par(lend = 1)           # square line ends for the color legend
+legend("topright",legend = c("Basal", "HER2", "Luminal A","Luminal B","Normal-like"), col = c("gray", "blue","brown", "green","yellow"),  lty= 1,lwd = 10,cex = 0.45)
+```
+
+
+```{r include=FALSE}
+if (!require("survival")) {
+   install.packages("survival", dependencies = TRUE)
+   library(survival)
+   }
+if (!require("gplots")) {
+   install.packages("gplots", dependencies = TRUE)
+   library(gplots)
+   }
+if (!require("RColorBrewer")) {
+   install.packages("RColorBrewer", dependencies = TRUE)
+   library(RColorBrewer)
+   }
+prediction_heatmap<-function(x,type=NULL)
+{colnames(x)<-gsub(pattern = "/adap.*/",replacement = '/',colnames(x))
+ heatmap.2(as.matrix(x),col=bluered,margins=c(3,9),dendrogram="none",Rowv = NULL, Colv = NULL, cexCol = 0.5,cexRow = 0.5,trace="none",main=paste(type,"Multi BRCA",sep = "\n"),density.info = 'none',scale = 'row')#,cellnote = round(x[,51:54],digits = 2),notecol = 'black',
+ 
+}
+correlation_heatmap<-function(x,drugs_names=NULL,type=NULL)
+{
+  adapB_single=subset(x,select=grep("adapB_single",colnames(x)))
+  adap_adap_single=subset(x,select=grep("adap_adap_single",colnames(x)))
+  adapB_multi=subset(x,select=grep("akt_bad_her2_igf1r_erk/adapB",colnames(x)))
+  adap_adap_multi=subset(x,select=grep("akt_bad_her2_igf1r_erk/adap_adap",colnames(x)))
+  cors = pval=matrix(-2,20,7)
+  #rownames(cors)=c(colnames(x)[43:46],colnames(x)[51:54])#selecting the adaptive multipathway and single pathway prediction columns
+  pathways<-cbind(adapB_single,adap_adap_single,adapB_multi,adap_adap_multi)
+  drugs<-subset(x,select=drugs_names)
+  colnames(cors)=drugs_names
+  rownames(cors)=colnames(pathways)
+  rownames(cors)=gsub(pattern = "akt_bad_her2_igf1r_erk/",replacement = "",x = rownames(cors))
+  #rownames(cors)=gsub(pattern = "*/*/adapB",replacement = "B",x = rownames(cors))
+  
+  for (i in 1:20){
+    for (j in 1:length(colnames(drugs))){
+      ci=cor.ci(cbind(pathways[,i],drugs[,j]),method="spearman",plot=F)
+      cors[i,j]=ci$rho[2,1]
+      print(cors[i,j]);print(ci$ci[[5]])
+      pval[i,j]=ci$ci[[5]]
+    }
+  }
+  par(mar=c(1, 0.5, 3, 10),lwd=4)
+
+heatmap.2(as.matrix(cors),col=redgreen,margins =c(13,18),dendrogram="none",Rowv = NULL, Colv = NULL, trace="none",main=paste("Correlations of pathway"," drug response in",type,sep='\n '),cellnote = round(cors,digits = 2),notecol = 'black',density.info = 'none')
+}
+pam50<-read.table("~/Dropbox/Datasets/tcga_breast_pam50.txt",sep='\t', stringsAsFactors = T,header=T, row.names=1)
+surv<-read.table("~/Dropbox/Datasets/TCGA_BRCA_survival_tcga.txt",header=1,row.names=1,sep='\t',stringsAsFactors = T,skip = 1)
+head(surv)
+head(pam50)
+rownames(surv)<-gsub(pattern = "-",replacement = ".",x = rownames(surv))
+pam50_surv<-merge_drop(pam50,surv)
+partial_sample_names<-rownames(pam50_surv)
+sample_names<-rownames(data_tcga)
+counter=0
+for (j in 1:length(partial_sample_names)){
+    if(!is.na(pmatch(partial_sample_names[j],sample_names))){
+      partial_sample_names[j]<-sample_names[pmatch(partial_sample_names[j],sample_names, duplicates.ok=F)]  
+      counter=counter+1
+    }
+}
+rownames(pam50_surv)<-partial_sample_names
+my_palette <- colorRampPalette(c("darkblue","aliceblue","brown4"))(n = 299)
+col_breaks = c(seq(0,0.2,length=100), seq(0.2,0.4,length=100), seq(0.4,1,length=100)) 
+#data_tcga<-apply(data_tcga,2,scale)
+pred_sub<-merge_drop(data_tcga,pam50_surv,by=0)
+colnames(pred_sub)<-gsub(pattern = "/pathway_activity_testset.csv",replacement = "",x = colnames(pred_sub))
+```
+
+pathway analysis in TCGA BRCA data
+
+```{r echo=T}
+par(mar=c(3,3,3, 0.5),lwd=4)
+#pdf("~/Dropbox/bild_signatures/bild_signatures/Results/TCGA_predictions.pdf")
+boxplot(scale(pred_sub[,34])~pred_sub$PAM50.mRNA.x,main="AKT pathway in TCGA BRCA samples",col=2:6)
+boxplot(scale(pred_sub[,35])~pred_sub$PAM50.mRNA.x,main="BAD pathway in TCGA BRCA samples",col = 2:6)
+boxplot(scale(pred_sub[,37])~pred_sub$PAM50.mRNA.x,main="IGF1R pathway in TCGA BRCA samples",col=2:6)
+boxplot(scale(pred_sub[,150])~pred_sub$PAM50.mRNA.x,main="ERBB2 pathway in TCGA BRCA samples",col=2:6)
+
+boxplot(scale(pred_sub[,160])~pred_sub$PAM50.mRNA.x,main="ERK pathway in TCGA BRCA samples",col=2:6)
+boxplot(scale(pred_sub[,133])~pred_sub$PAM50.mRNA.x,main="AKT pathway in TCGA BRCA samples",col=2:6)
+boxplot(scale(pred_sub[,147])~pred_sub$PAM50.mRNA.x,main="BAD pathway in TCGA BRCA samples",col = 2:6)
+boxplot(scale(pred_sub[,37])~pred_sub$PAM50.mRNA.x,main="IGF1R pathway in TCGA BRCA samples",col=2:6)
+boxplot(scale(pred_sub[,160])~pred_sub$PAM50.mRNA.x,main="ERK pathway in TCGA BRCA samples",col=2:6)
+
+best_predictors<-apply(pred_sub[,c(133,147,37,150,160)],2,scale)
+rownames(best_predictors)<-rownames(pred_sub)
+# par(xpd=F)
+# 
+# fit<-survfit(Surv(pred_sub$OS.Time,pred_sub$OS.event)~pred_sub$PAM50.mRNA.x)
+# plot(fit,col=c(1:5), xlab="Time",ylab="Survival probability")
+# legend(2.8,-1,c("Basal-like","HER2-enriched","Luminal A","Luminal B","Normal-like"),col=1:6,lwd=0.05,box.lwd = 0)
+```
+Survival analysis with TCGA BRCA data...
+```{r}
+bad_status<-pred_sub[,147]
+bad_cutoff<- median(pred_sub[,147])
+for(i in 1:length(bad_status)){
+  if(bad_status[i]< bad_cutoff){
+    bad_status[i]="Low"}
+  else{
+    bad_status[i]="High"}
+  }
+pred_sub$bad_status<-bad_status
+fit<-survfit(Surv(pred_sub$OS.Time,pred_sub$OS.event)~pred_sub$bad_status)
+plot(fit,col=c(3:2), xlab="Time in days",ylab="Survival probability",main="Survival in TCGA BRCA\n patients based on BAD pathway status")
+legend("topright",c("High","Low"),col=3:2,lwd=4,box.lwd = 1)
+survdiff(Surv(pred_sub$OS.Time,pred_sub$OS.event)~pred_sub$bad_status,rho=0)
+
+
+erk_status<-pred_sub[,160]
+erk_cutoff<-median(pred_sub[,160])
+for(i in 1:length(erk_status)){
+  if(erk_status[i] < erk_cutoff){
+    erk_status[i]="Low"}
+  else{
+    erk_status[i]="High"}
+  }
+pred_sub$erk_status<-erk_status
+fit<-survfit(Surv(pred_sub$OS.Time,pred_sub$OS.event)~pred_sub$erk_status)
+plot(fit,col=c(2:3), xlab="Time in days",ylab="Survival probability",main="Survival in TCGA BRCA\n patients based on ERK pathway status")
+legend("topright",c("High","Low"),col=2:3,lwd=4,box.lwd = 1)
+
+#mtext(side=1,line = 2,at=c(5,7),"p=",col = "red")
+
+#summary(fit)
+survdiff(Surv(pred_sub$OS.Time,pred_sub$OS.event)~pred_sub$erk_status,rho=0)
+
+basal<-subset(pred_sub[,c(133,147,37,106,145,150,179,180,191,192)],pred_sub$PAM50.mRNA.x=="Basal-like")
+her<-subset(pred_sub[,c(133,147,37,106,145,150,179,180,191,192)],pred_sub$PAM50.mRNA.x=="HER2-enriched")
+luminal<-subset(pred_sub[,c(133,147,37,106,145,150,179,180,191,192)],pred_sub$PAM50.mRNA.x=="Luminal A"|pred_sub$PAM50.mRNA.x=="Luminal B")
+normal<-subset(pred_sub[,c(133,147,37,106,145,150,179,180,191,192)],pred_sub$PAM50.mRNA.x=="Normal-like")
+
+fit<-survfit(Surv(basal$OS.Time,basal$OS.event)~basal$bad_status)
+plot(fit,col=c(2:3), xlab="Time in days",ylab="Survival probability",main="Basal TCGA BRCA\n patients based on BAD pathway status")
+legend("topright",c("High","Low"),col=2:3,lwd=4,box.lwd = 1)
+survdiff(Surv(basal$OS.Time,basal$OS.event)~basal$bad_status,rho=0)
+mtext(side=1,line = 2,at=c(5,7),"p=0.0767",col = "red")
+
+
+fit<-survfit(Surv(basal$OS.Time,basal$OS.event)~basal$erk_status)
+plot(fit,col=c(2:3), xlab="Time in days",ylab="Survival probability",main="Basal TCGA BRCA\n patients based on ERK pathway status")
+legend("topright",c("High","Low"),col=2:3,lwd=4,box.lwd = 1)
+survdiff(Surv(basal$OS.Time,basal$OS.event)~basal$erk_status,rho=0)
+mtext(side=1,line = 2,at=c(5,7),"p=0.187",col = "red")
+
+fit<-survfit(Surv(her$OS.Time,her$OS.event)~her$bad_status)
+plot(fit,col=c(2:3), xlab="Time in days",ylab="Survival probability",main="ERBB2-amp TCGA BRCA\n patients based on bad pathway status")
+legend("topright",c("High","Low"),col=2:3,lwd=4,box.lwd = 1)
+survdiff(Surv(her$OS.Time,her$OS.event)~her$bad_status,rho=0)
+mtext(side=1,line = 2,at=c(5,7),"p=0.353",col = "red")
+
+fit<-survfit(Surv(her$OS.Time,her$OS.event)~her$erk_status)
+plot(fit,col=c(2:3), xlab="Time in days",ylab="Survival probability",main="ERBB2-amp TCGA BRCA\n patients based on ERK pathway status")
+legend("topright",c("High","Low"),col=2:3,lwd=4,box.lwd = 1)
+survdiff(Surv(her$OS.Time,her$OS.event)~her$erk_status,rho=0)
+mtext(side=1,line = 2,at=c(5,7),"p=0.0682",col = "red")
+
+fit<-survfit(Surv(luminal$OS.Time,luminal$OS.event)~luminal$bad_status)
+plot(fit,col=c(2:3), xlab="Time in days",ylab="Survival probability",main="Luminal TCGA BRCA\n patients based on BAD pathway status")
+legend("topright",c("High","Low"),col=2:3,lwd=4,box.lwd = 1)
+survdiff(Surv(luminal$OS.Time,luminal$OS.event)~luminal$bad_status,rho=0)
+mtext(side=1,line = 2,at=c(5,7),"p=0.889 ",col = "red")
+
+fit<-survfit(Surv(luminal$OS.Time,luminal$OS.event)~luminal$erk_status)
+plot(fit,col=c(2:3), xlab="Time in days",ylab="Survival probability",main="Luminal TCGA BRCA\n patients based on ERK pathway status")
+legend("topright",c("High","Low"),col=2:3,lwd=4,box.lwd = 1)
+survdiff(Surv(luminal$OS.Time,luminal$OS.event)~luminal$erk_status,rho=0)
+mtext(side=1,line = 2,at=c(5,7),"p=0.445 ",col = "red")
+
+#dev.off()
+#####Only 8 normal samples#####
+# fit<-survfit(Surv(normal$OS.Time,normal$OS.event)~normal$erk_status)
+# plot(fit,col=c(2:3), xlab="Time",ylab="Survival probability",main="Survival in TCGA BRCA\n patients based on ERK pathway status")
+# legend("topright",c("High","Low"),col=2:3,lwd=4,box.lwd = 1)
+```
+
+```{r,echo=FALSE}
+# #Checking survival based on the treatment..
+# brca_drug<-read.table("~/Dropbox/bild_signatures/Datasets/nationwidechildrens.org_clinical_drug_brca.txt",header=1, skip=1, sep='\t')
+# brca_drug$bcr_patient_barcode<-short_to_long_TCGA_id(longnames = rownames(pred_sub),shortnames = gsub(pattern = "-",replacement = ".",brca_drug$bcr_patient_barcode))
+# chemo_all_pt<-brca_drug[brca_drug[,8]=="Chemotherapy",]
+# dim(chemo_all_pt)
+# hormone_all_pt<-brca_drug[brca_drug[,8]%in%c("Hormone Therapy","Other,specify","Targeted Molecular therapy"),]
+# ###in patients receiving chemo only
+# chemo_only<-chemo_all_pt[!chemo_all_pt$bcr_patient_barcode%in%hormone_all_pt$bcr_patient_barcode,]
+# length(chemo_only$bcr_patient_barcode)
+# chemo_only_preds<-pred_sub[rownames(pred_sub)%in%chemo_only$bcr_patient_barcode,]
+# #boxplot(chemo_only_preds[,108]~chemo_only_preds$erk_status)##to see if there is high low variation in erk status
+# fit<-survfit(Surv(chemo_only_preds$OS.Time,chemo_only_preds$OS.event)~chemo_only_preds$erk_status)
+# survdiff(formula = Surv(chemo_only_preds$OS.Time,chemo_only_preds$OS.event)~chemo_only_preds$bad_status,rho=0)
+# plot(fit,col=c(3:2), xlab="Time in days",ylab="Survival probability",main="Survival in TCGA BRCA\n chemo receiving patients based on BAD pathway status")
+# legend("topright",c("High","Low"),col=3:2,lwd=4,box.lwd = 1)
+# survdiff(Surv(chemo_only_preds$OS.Time,chemo_only_preds$OS.event)~chemo_only_preds$erk_status,rho=0)
+# fit
+# 
+# # length(unique(chemo_all_pt$bcr_patient_barcode))-sum(unique(chemo_all_pt$bcr_patient_barcode)%in%unique(hormone_all_pt$bcr_patient_barcode))##161 pts received only chemo type therapy
+# # unique(chemo_all_pt$bcr_patient_barcode)
+# 
+# 
+# 
+# hormone_only<-hormone_all_pt[!hormone_all_pt$bcr_patient_barcode%in%chemo_all_pt$bcr_patient_barcode,]
+# # dim(hormone_all_pt)
+# # length(unique(hormone_only$bcr_patient_barcode))
+# # length(unique(hormone_all_pt$bcr_patient_barcode))-sum(unique(hormone_all_pt$bcr_patient_barcode)%in%unique(chemo_all_pt$bcr_patient_barcode))
+# targeted_only_preds<-pred_sub[rownames(pred_sub)%in%hormone_only$bcr_patient_barcode,]
+# #boxplot(targeted_only_preds[,108]~targeted_only_preds$erk_status)
+# fit<-survfit(Surv(targeted_only_preds$OS.Time,targeted_only_preds$OS.event)~targeted_only_preds$erk_status)
+# plot(fit,col=c(3:2), xlab="Time in days",ylab="Survival probability",main="Survival in TCGA BRCA\n chemo receiving patients based on ERK pathway status")
+# survdiff(formula = Surv(targeted_only_preds$OS.Time,targeted_only_preds$OS.event)~targeted_only_preds$erk_status,rho=0)
+# 
+# legend("bottomright",c("High","Low"),col=3:2,lwd=4,box.lwd = 1)
+# fit
+
+```
+
+```{r}
+proteomics_cell_tcga<-read.csv("~/Dropbox/bild_signatures/Datasets/TCGA-BRCA-RBN.csv", header=1)
+proteomics_cell_tcga$TCGA_patient_barcode<-short_to_long_TCGA_id(longnames = rownames(pred_sub),shortnames = gsub(pattern = "-",replacement = ".",proteomics_cell_tcga$TCGA_patient_barcode))
+rownames(proteomics_cell_tcga)<-proteomics_cell_tcga$TCGA_patient_barcode
+
+tcga_pred_prot<-merge(best_predictors,proteomics_cell_tcga,by.x=0,by.y = 1)
+
+#####AKT correlation with TCGA proteomica data
+cor(as.numeric(tcga_pred_prot$Akt_pS473),as.numeric(tcga_pred_prot[,2]),method = "spearman")#
+cor(tcga_pred_prot$Akt,tcga_pred_prot[,2], method="spearman")#
+cor(tcga_pred_prot$Akt_pT308,tcga_pred_prot[,2], method="spearman")#
+
+#######BAD correlation with TCGA proteomics data
+
+cor(tcga_pred_prot$Bad_pS112,tcga_pred_prot[3],method="spearman")##pS112 inactivates bad
+cor(tcga_pred_prot$Bcl.xL,tcga_pred_prot[3],method="spearman")
+cor(tcga_pred_prot$Bcl.2,tcga_pred_prot[3],method="spearman")
+
+#####ERK correlation with TCGA proteomics data
+cor(tcga_pred_prot$MAPK_pT202_Y204,tcga_pred_prot[,6], method="spearman")#igf1r_her2_erk/adap_adap_multi/erk
+
+
+######HER2 correlation with TCGA proteomics data
+
+cor(tcga_pred_prot$HER2_pY1248,tcga_pred_prot[,5], method="spearman")#"her2_bad_igf1r/adapB_multi/her2"  
+cor(tcga_pred_prot$HER2,tcga_pred_prot[,5], method="spearman")#"her2_igf1r/adapB_multi/her2"    
+
+#######IGF1R correlation with TCGA proteomics data
+cor(tcga_pred_prot$IRS1,tcga_pred_prot[,4], method="spearman")#"akt_bad_her2_igf1r_erk/adap_adap_multi/igf1r"
+
+```
+
+
+```{r echo=FALSE}
+time<-format(Sys.time(),"%a %b %d %X %Y")
+```
+This analysis was run on `r time` 
+

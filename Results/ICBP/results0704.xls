@@ -1,0 +1,2507 @@
+Results for Pathway/Drug Models
+
+X17.AAG
+Model R2 (no subtype): 0.2083
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	5.7538	0.4675	12.308	0
+`akt_75_gene_list/adap_adap_single/akt`	2.1135	0.7373	2.8666	0.007
+`egfr_25_gene_list/adap_adap_single/egfr`	1.2251	0.4371	2.8029	0.0082
+Important genes:  (),
+Genes that add to the pathway model:  (),
+Important proteins: srcp416 (0.2), srcp527 (0.2), p53 (0.15), src (0.15), EN1 (0.13), EGFRp1068 (0.13),
+Proteins that add to the pathway model:  (),
+
+Model R2 (+subtype): 0.2083
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	5.7538	0.4675	12.308	0
+`akt_75_gene_list/adap_adap_single/akt`	2.1135	0.7373	2.8666	0.007
+`egfr_25_gene_list/adap_adap_single/egfr`	1.2251	0.4371	2.8029	0.0082
+Important genes:  (),
+Genes that add to the pathway model:  (),
+Important proteins: srcp416 (0.2), srcp527 (0.2), p53 (0.15), src (0.15), EN1 (0.13), EGFRp1068 (0.13),
+Proteins that add to the pathway model:  (),
+
+
+X5.FU
+Model R2 (no subtype): 0.23
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	3.3872	0.4542	7.458	0
+`her2_15_gene_list/adap_adap_single/her2`	1.9293	0.6936	2.7815	0.0089
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	1.5294	0.6737	2.2701	0.0299
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	-1.9064	1.2192	-1.5637	0.1274
+Important genes: PCDHB11 (0.17), FAT2 (0.13), TP53 (0.12),
+Genes that add to the pathway model: ARHGAP39 (0.11), FAT2 (0.11),
+Important proteins: PTEN (0.25), Aktp473 (0.21), GSK3p21.9 (0.19), AMPKp (0.17), p53 (0.13), srcp416 (0.11), EGFRp1068 (0.1), CCNB1 (0.1),
+Proteins that add to the pathway model: PTEN (0.27), GSK3p21.9 (0.22), Aktp473 (0.15), AMPKp (0.14), p38p (0.13), X1 (0.11), ER (0.1),
+
+Model R2 (+subtype): 0.447
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	0.7776	1.0382	0.749	0.4601
+`akt_75_gene_list/adap_adap_single/akt`	-2.1249	0.9216	-2.3057	0.0287
+`bad_200_gene_list/adap_adap_single/bad`	3.5906	1.0987	3.268	0.0029
+`her2_15_gene_list/adap_adap_single/her2`	3.3904	1.0455	3.2427	0.0031
+`igf1r_75_gene_list/adap_adap_single/igf1r`	1.5431	1.227	1.2577	0.2189
+model_subsubtype_ERBB2Claudin-low	0.193	0.5444	0.3545	0.7256
+model_subsubtype_ERBB2ERBB2	0.3979	0.4773	0.8337	0.4115
+model_subsubtype_ERBB2LUMINAL	1.0931	0.4702	2.325	0.0275
+model_subsubtype_ERBB2NORMAL	0.9855	0.5471	1.8014	0.0824
+Important genes: PCDHB11 (0.17), FAT2 (0.13), TP53 (0.12),
+Genes that add to the pathway model: TP53 (0.25), PRB3 (0.24), CFTR (0.24), PIK3CA (0.23), EPHA10 (0.22), NID2 (0.22), XIRP2 (0.22), ZNF804B (0.21), NBPF10 (0.21), ARHGAP39 (0.21), SYNE2 (0.21), RIF1 (0.21), TTN (0.21), ATP4A (0.21), PCDHB11 (0.21), SYNE1 (0.21), GRAMD1A (0.21), COL5A2 (0.21), FAT2 (0.21), SLC9B1P4 (0.21),
+Important proteins: PTEN (0.25), Aktp473 (0.21), GSK3p21.9 (0.19), AMPKp (0.17), p53 (0.13), srcp416 (0.11), EGFRp1068 (0.1), CCNB1 (0.1),
+Proteins that add to the pathway model: Fortilin (0.22), JNK (0.19), MAPKp (0.18), PKCalpha (0.18), GSK3p21.9 (0.18), IGFBP2 (0.18), EN1 (0.17), Caveolin (0.17), S6p240.244 (0.17), CCND1 (0.17), PKCalphap657 (0.16), CD31 (0.16), GATA3 (0.16), srcp416 (0.15), Telomerase (0.15), VEGFR2 (0.15), Stathmin (0.15), Akt (0.15), S6p235.236 (0.15), p70S6.Kinase (0.15), COMT (0.15), p21 (0.15), AcCoAp (0.15), FGFR1 (0.15), Aktp473 (0.15), GSK3 (0.14), E.cadherin (0.14), PTEN (0.14), CCNE1 (0.14), AMPKp (0.14), HER2p1248 (0.14), JNKp183.5 (0.14), ER (0.14), EIG121 (0.14), ERp118 (0.14), NOTCH3 (0.14), p53 (0.14), PDK1p241 (0.14), cleaved.caspase.7 (0.14), mTor (0.14), IGFR1 (0.14), EGFRp1068 (0.14), B.Catenin (0.14), srcp527 (0.14), YB1 (0.13), p38 (0.13), Rab25 (0.13), cJUN (0.13), Aktp308 (0.13), Collagen.VI (0.13), Bcl2 (0.13), MEK1 (0.13), src (0.13), stat3 (0.13), AR (0.13), ERK2 (0.13), X4EBP1p37 (0.13), EGFR (0.13), HER2 (0.13), CCNB1 (0.13), X1 (0.13), stat3p705 (0.13), PDK1 (0.13), p38p (0.13), PAI1 (0.13), TSC2 (0.13), p70S6Kp389 (0.13), Rb (0.13), PR (0.13), p110alpha (0.13),
+
+
+X5.FdUR
+Model R2 (no subtype): 0.2087
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	3.7295	0.2494	14.9516	0
+`raf_100_gene_list/adap_adap_single/raf`	-5.5736	1.8719	-2.9775	0.0052
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	6.0171	1.9991	3.01	0.0048
+Important genes: FAT2 (0.3), TP53 (0.19), PCDHB11 (0.17), PRB3 (0.11),
+Genes that add to the pathway model: FAT2 (0.19), TP53 (0.17),
+Important proteins: VEGFR2 (0.19), EGFRp1068 (0.15), Aktp473 (0.13), p70S6.Kinase (0.13), Aktp308 (0.1),
+Proteins that add to the pathway model: CCNB1 (0.11),
+
+Model R2 (+subtype): 0.4099
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	2.052	0.7228	2.8392	0.008
+`egfr_25_gene_list/adap_adap_single/egfr`	-1.1037	0.7376	-1.4963	0.145
+`erk_250_gene_list/adap_adap_single/erk`	1.9059	1.2888	1.4788	0.1496
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	3.9612	1.4813	2.6742	0.012
+model_subsubtype_ERBB2Claudin-low	0.2491	0.4825	0.5162	0.6095
+model_subsubtype_ERBB2ERBB2	0.4387	0.4095	1.0713	0.2926
+model_subsubtype_ERBB2LUMINAL	1.3127	0.4614	2.8453	0.0079
+model_subsubtype_ERBB2NORMAL	0.145	0.4063	0.357	0.7236
+Important genes: FAT2 (0.3), TP53 (0.19), PCDHB11 (0.17), PRB3 (0.11),
+Genes that add to the pathway model: TP53 (0.35), PRB3 (0.27), FAT2 (0.21), GRAMD1A (0.17), XIRP2 (0.16), TTN (0.15), NID2 (0.15), PCDHB11 (0.15), CFTR (0.15), PIK3CA (0.15), EPHA10 (0.14), SYNE2 (0.14), ZNF141 (0.14), COL5A2 (0.13), NBPF10 (0.13), ATP4A (0.13), RIF1 (0.13), ZNF804B (0.13), SLC9B1P4 (0.13), SYNE1 (0.13), ARHGAP39 (0.13), FAM86B2 (0.13),
+Important proteins: VEGFR2 (0.19), EGFRp1068 (0.15), Aktp473 (0.13), p70S6.Kinase (0.13), Aktp308 (0.1),
+Proteins that add to the pathway model: VEGFR2 (0.23), stat3p705 (0.23), PAI1 (0.22), NOTCH3 (0.22), cJUN (0.2), GSK3 (0.19), S6p235.236 (0.19), S6p240.244 (0.18), PKCalphap657 (0.18), E.cadherin (0.17), YB1 (0.17), PDK1 (0.17), srcp416 (0.17), GSK3p21.9 (0.16), CCNE1 (0.16), p38p (0.16), CD31 (0.16), EIG121 (0.16), mTor (0.15), Rab25 (0.15), MAPKp (0.15), Telomerase (0.15), MEK1 (0.15), PTEN (0.15), ER (0.15), Fortilin (0.14), JNK (0.14), p53 (0.14), PKCalpha (0.14), PR (0.14), X1 (0.14), B.Catenin (0.14), Aktp308 (0.14), EGFRp1068 (0.14), ERK2 (0.14), Stathmin (0.13), EGFR (0.13), cleaved.caspase.7 (0.13), GATA3 (0.13), CCNB1 (0.13), p70S6.Kinase (0.13), EN1 (0.13), p38 (0.13), stat3 (0.13), HER2p1248 (0.13), src (0.13), Bcl2 (0.13), PDK1p241 (0.13), JNKp183.5 (0.13), AR (0.13), COMT (0.13), HER2 (0.12), Aktp473 (0.12), Rb (0.12), p21 (0.12), IGFR1 (0.12), X4EBP1p37 (0.12), AMPKp (0.12), Collagen.VI (0.12), Caveolin (0.12), TSC2 (0.12), Akt (0.12), srcp527 (0.12), p110alpha (0.12), ERp118 (0.12), AcCoAp (0.12), CCND1 (0.12), p70S6Kp389 (0.12), FGFR1 (0.12), IGFBP2 (0.12),
+
+
+AG1478
+Model R2 (no subtype): 0.1748
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	3.1499	0.7674	4.1044	3e-04
+`raf_100_gene_list/adap_adap_single/raf`	2.5146	0.9782	2.5707	0.015
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	1.9134	1.3439	1.4237	0.1642
+Important genes: ZNF804B (0.17), ATP4A (0.13), SLC9B1P4 (0.12),
+Genes that add to the pathway model: NBPF10 (0.11), SLC9B1P4 (0.11),
+Important proteins: EGFR (0.29), cleaved.caspase.7 (0.22), HER2p1248 (0.19), HER2 (0.15), AcCoAp (0.14), GATA3 (0.12), PAI1 (0.11),
+Proteins that add to the pathway model: HER2p1248 (0.34), HER2 (0.29), cleaved.caspase.7 (0.23), ERK2 (0.21), EGFR (0.2), NOTCH3 (0.19), AR (0.18), Rab25 (0.17), GATA3 (0.17), JNKp183.5 (0.14), PAI1 (0.14), p38 (0.13), Akt (0.13), p38p (0.12), CD31 (0.12),
+
+Model R2 (+subtype): 0.8249
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	6.6095	0.9186	7.1954	0
+`erk_250_gene_list/adap_adap_single/erk`	-1.6055	1.0971	-1.4635	0.1549
+`igf1r_75_gene_list/adap_adap_single/igf1r`	-2.5044	1.0944	-2.2884	0.0302
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	-2.1411	1.3777	-1.5541	0.1318
+model_subsubtype_ERBB2Claudin-low	-0.954	0.5133	-1.8584	0.074
+model_subsubtype_ERBB2ERBB2	1.4999	0.2806	5.3445	0
+model_subsubtype_ERBB2LUMINAL	-0.1453	0.2542	-0.5717	0.5723
+model_subsubtype_ERBB2NORMAL	1.8974	0.3944	4.8105	1e-04
+Important genes: ZNF804B (0.17), ATP4A (0.13), SLC9B1P4 (0.12),
+Genes that add to the pathway model:  (),
+Important proteins: EGFR (0.29), cleaved.caspase.7 (0.22), HER2p1248 (0.19), HER2 (0.15), AcCoAp (0.14), GATA3 (0.12), PAI1 (0.11),
+Proteins that add to the pathway model:  (),
+
+
+Sigma.AKT1.2.inhibitor
+Model R2 (no subtype): 0.5511
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	4.5714	0.1454	31.4509	0
+`akt_75_gene_list/adap_adap_single/akt`	1.4201	0.2908	4.8828	0
+`igf1r_75_gene_list/adap_adap_single/igf1r`	0.9183	0.3668	2.5038	0.0171
+Important genes: ARHGAP39 (0.22), PIK3CA (0.15), ATP4A (0.1),
+Genes that add to the pathway model: XIRP2 (0.12), PIK3CA (0.11), FAT2 (0.1),
+Important proteins: ERp118 (0.55), PDK1 (0.54), p38p (0.53), X1 (0.53), IGFBP2 (0.47), ER (0.38), cJUN (0.37), AR (0.35), EIG121 (0.34), COMT (0.32), Telomerase (0.28), PDK1p241 (0.28), HER2p1248 (0.26), HER2 (0.26), PKCalphap657 (0.25), TSC2 (0.24), EN1 (0.23), YB1 (0.23), p70S6.Kinase (0.22), Aktp308 (0.22), PKCalpha (0.22), stat3 (0.21), PTEN (0.2), Rab25 (0.2), CCNB1 (0.19), PAI1 (0.16), Fortilin (0.15), Akt (0.15), E.cadherin (0.14), CCNE1 (0.14), MAPKp (0.13), PR (0.13), EGFRp1068 (0.12), GSK3 (0.11), GATA3 (0.11),
+Proteins that add to the pathway model: CCNE1 (0.18), p38p (0.17), cleaved.caspase.7 (0.12), EN1 (0.1),
+
+Model R2 (+subtype): 0.7449
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	3.9984	0.4051	9.8709	0
+`akt_75_gene_list/adap_adap_single/akt`	0.953	0.4571	2.0847	0.046
+`her2_15_gene_list/adap_adap_single/her2`	1.4844	0.4869	3.0487	0.0049
+`igf1r_75_gene_list/adap_adap_single/igf1r`	2.0514	0.4525	4.5333	1e-04
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-1.1807	0.6162	-1.9163	0.0652
+model_subsubtype_ERBB2Claudin-low	0.4421	0.2255	1.9604	0.0596
+model_subsubtype_ERBB2ERBB2	-0.486	0.2403	-2.0224	0.0524
+model_subsubtype_ERBB2LUMINAL	-0.3691	0.2231	-1.6542	0.1089
+model_subsubtype_ERBB2NORMAL	1.2115	0.2645	4.5799	1e-04
+Important genes: ARHGAP39 (0.22), PIK3CA (0.15), ATP4A (0.1),
+Genes that add to the pathway model:  (),
+Important proteins: ERp118 (0.55), PDK1 (0.54), p38p (0.53), X1 (0.53), IGFBP2 (0.47), ER (0.38), cJUN (0.37), AR (0.35), EIG121 (0.34), COMT (0.32), Telomerase (0.28), PDK1p241 (0.28), HER2p1248 (0.26), HER2 (0.26), PKCalphap657 (0.25), TSC2 (0.24), EN1 (0.23), YB1 (0.23), p70S6.Kinase (0.22), Aktp308 (0.22), PKCalpha (0.22), stat3 (0.21), PTEN (0.2), Rab25 (0.2), CCNB1 (0.19), PAI1 (0.16), Fortilin (0.15), Akt (0.15), E.cadherin (0.14), CCNE1 (0.14), MAPKp (0.13), PR (0.13), EGFRp1068 (0.12), GSK3 (0.11), GATA3 (0.11),
+Proteins that add to the pathway model:  (),
+
+
+Triciribine
+Model R2 (no subtype): 0.2722
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	3.8033	0.6674	5.6986	0
+`akt_75_gene_list/adap_adap_single/akt`	2.2699	1.3122	1.7299	0.0933
+`her2_15_gene_list/adap_adap_single/her2`	-1.178	0.837	-1.4074	0.1689
+`raf_100_gene_list/adap_adap_single/raf`	1.57	0.9686	1.6209	0.1149
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	2.6582	1.7276	1.5386	0.1337
+Important genes: COL5A2 (0.13), NBPF10 (0.12), PRB3 (0.1),
+Genes that add to the pathway model: COL5A2 (0.18), NBPF10 (0.16), ATP4A (0.15), ARHGAP39 (0.11),
+Important proteins: EIG121 (0.52), FGFR1 (0.22), Rab25 (0.2), p38p (0.16), ERp118 (0.14), p110alpha (0.14), PDK1 (0.14), cJUN (0.1),
+Proteins that add to the pathway model: EIG121 (0.36), Telomerase (0.3), MEK1 (0.28), E.cadherin (0.25), GSK3p21.9 (0.25), CCND1 (0.23), MAPKp (0.22), CCNB1 (0.21), srcp527 (0.2), S6p240.244 (0.2), p38p (0.19), stat3 (0.19), src (0.19), IGFBP2 (0.19), S6p235.236 (0.18), PDK1 (0.18), YB1 (0.18), srcp416 (0.18), Bcl2 (0.18), ER (0.18), ERK2 (0.18), AMPKp (0.17), AR (0.17), Caveolin (0.17), X4EBP1p37 (0.17), FGFR1 (0.17), p21 (0.17), CD31 (0.17), EN1 (0.17), COMT (0.17), EGFRp1068 (0.17), Aktp473 (0.17), IGFR1 (0.17), Fortilin (0.17), VEGFR2 (0.16), JNKp183.5 (0.16), PKCalpha (0.16), CCNE1 (0.16), NOTCH3 (0.16), stat3p705 (0.16), Rab25 (0.16), AcCoAp (0.16), mTor (0.16), B.Catenin (0.16), EGFR (0.16), GSK3 (0.16), Akt (0.16), HER2p1248 (0.16), JNK (0.16), p53 (0.16), p110alpha (0.16), PAI1 (0.16), cleaved.caspase.7 (0.15), PKCalphap657 (0.15), p70S6.Kinase (0.15), HER2 (0.15), Stathmin (0.15), p38 (0.15), p70S6Kp389 (0.15), TSC2 (0.15), PTEN (0.15), cJUN (0.15), Aktp308 (0.15), PDK1p241 (0.15), Collagen.VI (0.15), Rb (0.15), GATA3 (0.15), X1 (0.15), ERp118 (0.15), PR (0.15),
+
+Model R2 (+subtype): 0.2722
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	3.8033	0.6674	5.6986	0
+`akt_75_gene_list/adap_adap_single/akt`	2.2699	1.3122	1.7299	0.0933
+`her2_15_gene_list/adap_adap_single/her2`	-1.178	0.837	-1.4074	0.1689
+`raf_100_gene_list/adap_adap_single/raf`	1.57	0.9686	1.6209	0.1149
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	2.6582	1.7276	1.5386	0.1337
+Important genes: COL5A2 (0.13), NBPF10 (0.12), PRB3 (0.1),
+Genes that add to the pathway model: COL5A2 (0.18), NBPF10 (0.16), ATP4A (0.15), ARHGAP39 (0.11),
+Important proteins: EIG121 (0.52), FGFR1 (0.22), Rab25 (0.2), p38p (0.16), ERp118 (0.14), p110alpha (0.14), PDK1 (0.14), cJUN (0.1),
+Proteins that add to the pathway model: EIG121 (0.36), Telomerase (0.3), MEK1 (0.28), E.cadherin (0.25), GSK3p21.9 (0.25), CCND1 (0.23), MAPKp (0.22), CCNB1 (0.21), srcp527 (0.2), S6p240.244 (0.2), p38p (0.19), stat3 (0.19), src (0.19), IGFBP2 (0.19), S6p235.236 (0.18), PDK1 (0.18), YB1 (0.18), srcp416 (0.18), Bcl2 (0.18), ER (0.18), ERK2 (0.18), AMPKp (0.17), AR (0.17), Caveolin (0.17), X4EBP1p37 (0.17), FGFR1 (0.17), p21 (0.17), CD31 (0.17), EN1 (0.17), COMT (0.17), EGFRp1068 (0.17), Aktp473 (0.17), IGFR1 (0.17), Fortilin (0.17), VEGFR2 (0.16), JNKp183.5 (0.16), PKCalpha (0.16), CCNE1 (0.16), NOTCH3 (0.16), stat3p705 (0.16), Rab25 (0.16), AcCoAp (0.16), mTor (0.16), B.Catenin (0.16), EGFR (0.16), GSK3 (0.16), Akt (0.16), HER2p1248 (0.16), JNK (0.16), p53 (0.16), p110alpha (0.16), PAI1 (0.16), cleaved.caspase.7 (0.15), PKCalphap657 (0.15), p70S6.Kinase (0.15), HER2 (0.15), Stathmin (0.15), p38 (0.15), p70S6Kp389 (0.15), TSC2 (0.15), PTEN (0.15), cJUN (0.15), Aktp308 (0.15), PDK1p241 (0.15), Collagen.VI (0.15), Rb (0.15), GATA3 (0.15), X1 (0.15), ERp118 (0.15), PR (0.15),
+
+
+AS.252424
+Model R2 (no subtype): 0.2369
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	3.884	0.3952	9.829	0
+`akt_75_gene_list/adap_adap_single/akt`	0.8551	0.543	1.575	0.1248
+`bad_200_gene_list/adap_adap_single/bad`	1.4999	0.7941	1.8887	0.0677
+`erk_250_gene_list/adap_adap_single/erk`	-1.5105	1.0177	-1.4842	0.1472
+`her2_15_gene_list/adap_adap_single/her2`	0.8321	0.4384	1.8979	0.0665
+Important genes: RIF1 (0.15), ARHGAP39 (0.15),
+Genes that add to the pathway model: RIF1 (0.25), COL5A2 (0.25), ARHGAP39 (0.22), TP53 (0.19), PIK3CA (0.19), XIRP2 (0.18), SYNE2 (0.18), ZNF141 (0.17), TTN (0.17), NID2 (0.17), CFTR (0.17), ATP4A (0.17), EPHA10 (0.17), SYNE1 (0.17), PRB3 (0.16), FAT2 (0.16), SLC9B1P4 (0.16), ZNF804B (0.16), PCDHB11 (0.16), FAM86B2 (0.16), GRAMD1A (0.16), NBPF10 (0.16),
+Important proteins: PTEN (0.25), E.cadherin (0.22), ERp118 (0.22), HER2p1248 (0.17), PDK1 (0.16), HER2 (0.14), PR (0.14), X1 (0.14), Fortilin (0.14), VEGFR2 (0.13), stat3 (0.12), PDK1p241 (0.11), p38p (0.11), ER (0.1),
+Proteins that add to the pathway model: Fortilin (0.23), IGFR1 (0.21), Bcl2 (0.2), COMT (0.19), E.cadherin (0.19), ERp118 (0.18), p70S6Kp389 (0.17), stat3 (0.17), p38p (0.17), PTEN (0.16), JNKp183.5 (0.16), X1 (0.16), VEGFR2 (0.15), Aktp308 (0.14), PR (0.14), EGFR (0.14), CCNE1 (0.14), Collagen.VI (0.13), MAPKp (0.13), ERK2 (0.12), ER (0.12), PKCalpha (0.11), S6p240.244 (0.11), PDK1 (0.11), EGFRp1068 (0.11), stat3p705 (0.11), PKCalphap657 (0.11), EN1 (0.11), GSK3 (0.11), IGFBP2 (0.11), S6p235.236 (0.11), HER2p1248 (0.11), AR (0.1), CCND1 (0.1), FGFR1 (0.1), MEK1 (0.1), p21 (0.1),
+
+Model R2 (+subtype): 0.3479
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	2.2061	0.9854	2.2388	0.033
+`bad_200_gene_list/adap_adap_single/bad`	1.5033	0.7887	1.9061	0.0666
+`igf1r_75_gene_list/adap_adap_single/igf1r`	0.8925	0.7028	1.2699	0.2142
+`raf_100_gene_list/adap_adap_single/raf`	1.3009	0.759	1.7141	0.0972
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	1.7941	1.1791	1.5216	0.1389
+model_subsubtype_ERBB2Claudin-low	0.4005	0.445	0.8999	0.3756
+model_subsubtype_ERBB2ERBB2	0.7394	0.261	2.8335	0.0083
+model_subsubtype_ERBB2LUMINAL	0.9162	0.307	2.9842	0.0057
+model_subsubtype_ERBB2NORMAL	0.0242	0.2677	0.0903	0.9287
+Important genes: RIF1 (0.15), ARHGAP39 (0.15),
+Genes that add to the pathway model: RIF1 (0.22), ARHGAP39 (0.17), SLC9B1P4 (0.16), COL5A2 (0.15), SYNE2 (0.14), XIRP2 (0.14), CFTR (0.12), PIK3CA (0.12), NID2 (0.12), PRB3 (0.12), EPHA10 (0.11), FAM86B2 (0.11), ZNF141 (0.11), SYNE1 (0.1), GRAMD1A (0.1), FAT2 (0.1), PCDHB11 (0.1), ATP4A (0.1), NBPF10 (0.1),
+Important proteins: PTEN (0.25), E.cadherin (0.22), ERp118 (0.22), HER2p1248 (0.17), PDK1 (0.16), HER2 (0.14), PR (0.14), X1 (0.14), Fortilin (0.14), VEGFR2 (0.13), stat3 (0.12), PDK1p241 (0.11), p38p (0.11), ER (0.1),
+Proteins that add to the pathway model: E.cadherin (0.28), p38p (0.26), ER (0.24), VEGFR2 (0.23), ERp118 (0.22), JNKp183.5 (0.22), p70S6Kp389 (0.21), CCNE1 (0.21), Bcl2 (0.2), EGFR (0.2), Akt (0.18), PTEN (0.18), IGFR1 (0.18), Fortilin (0.18), EN1 (0.18), MAPKp (0.17), CCNB1 (0.17), X1 (0.16), EIG121 (0.16), PR (0.16), ERK2 (0.16), PKCalphap657 (0.15), PKCalpha (0.15), GSK3 (0.15), stat3p705 (0.15), EGFRp1068 (0.15), Collagen.VI (0.14), IGFBP2 (0.14), Telomerase (0.14), PDK1 (0.14), stat3 (0.14), p21 (0.13), HER2p1248 (0.13), AcCoAp (0.13), Rab25 (0.13), Caveolin (0.13), AR (0.13), MEK1 (0.13), Rb (0.12), Stathmin (0.12), p70S6.Kinase (0.12), GSK3p21.9 (0.12), YB1 (0.12), p110alpha (0.12), S6p240.244 (0.11), COMT (0.11), TSC2 (0.11), src (0.11), cleaved.caspase.7 (0.11), srcp416 (0.11), CD31 (0.11), Aktp308 (0.11), CCND1 (0.11), JNK (0.11), mTor (0.11), B.Catenin (0.11), HER2 (0.11), p38 (0.11), S6p235.236 (0.11), PAI1 (0.11), cJUN (0.11), GATA3 (0.11), FGFR1 (0.11), p53 (0.11), AMPKp (0.11), srcp527 (0.11), PDK1p241 (0.11), Aktp473 (0.11), X4EBP1p37 (0.11), NOTCH3 (0.11),
+
+
+AZD6244
+Model R2 (no subtype): 0.6796
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	7.2865	0.956	7.6216	0
+`akt_75_gene_list/adap_adap_single/akt`	1.9647	0.9662	2.0334	0.0509
+`egfr_25_gene_list/adap_adap_single/egfr`	2.9356	0.8626	3.4034	0.0019
+`erk_250_gene_list/adap_adap_single/erk`	-6.1983	1.4666	-4.2262	2e-04
+`her2_15_gene_list/adap_adap_single/her2`	-1.355	0.7083	-1.9131	0.0653
+`igf1r_75_gene_list/adap_adap_single/igf1r`	-3.9723	1.157	-3.4333	0.0018
+`raf_100_gene_list/adap_adap_single/raf`	-6.2845	2.2226	-2.8275	0.0083
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	4.3582	2.3058	1.8901	0.0684
+Important genes: ZNF804B (0.29), RIF1 (0.18), FAM86B2 (0.16), CFTR (0.12), NID2 (0.11), COL5A2 (0.11),
+Genes that add to the pathway model:  (),
+Important proteins: PAI1 (0.23), CCNB1 (0.22), Telomerase (0.22), MEK1 (0.22), X1 (0.2), COMT (0.19), IGFBP2 (0.17), VEGFR2 (0.17), EGFR (0.17), AcCoAp (0.16), stat3p705 (0.16), TSC2 (0.14), ER (0.12), stat3 (0.12), cleaved.caspase.7 (0.11), MAPKp (0.11), EGFRp1068 (0.11),
+Proteins that add to the pathway model:  (),
+
+Model R2 (+subtype): 0.6796
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	7.2865	0.956	7.6216	0
+`akt_75_gene_list/adap_adap_single/akt`	1.9647	0.9662	2.0334	0.0509
+`egfr_25_gene_list/adap_adap_single/egfr`	2.9356	0.8626	3.4034	0.0019
+`erk_250_gene_list/adap_adap_single/erk`	-6.1983	1.4666	-4.2262	2e-04
+`her2_15_gene_list/adap_adap_single/her2`	-1.355	0.7083	-1.9131	0.0653
+`igf1r_75_gene_list/adap_adap_single/igf1r`	-3.9723	1.157	-3.4333	0.0018
+`raf_100_gene_list/adap_adap_single/raf`	-6.2845	2.2226	-2.8275	0.0083
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	4.3582	2.3058	1.8901	0.0684
+Important genes: ZNF804B (0.29), RIF1 (0.18), FAM86B2 (0.16), CFTR (0.12), NID2 (0.11), COL5A2 (0.11),
+Genes that add to the pathway model:  (),
+Important proteins: PAI1 (0.23), CCNB1 (0.22), Telomerase (0.22), MEK1 (0.22), X1 (0.2), COMT (0.19), IGFBP2 (0.17), VEGFR2 (0.17), EGFR (0.17), AcCoAp (0.16), stat3p705 (0.16), TSC2 (0.14), ER (0.12), stat3 (0.12), cleaved.caspase.7 (0.11), MAPKp (0.11), EGFRp1068 (0.11),
+Proteins that add to the pathway model:  (),
+
+
+BEZ235
+Model R2 (no subtype): 0.3189
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	1.9106	1.107	1.7259	0.0934
+`bad_200_gene_list/adap_adap_single/bad`	2.7606	1.2315	2.2416	0.0316
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	6.659	1.7139	3.8853	4e-04
+Important genes: PIK3CA (0.11), FAM86B2 (0.1),
+Genes that add to the pathway model: SYNE1 (0.11), NBPF10 (0.1),
+Important proteins: PKCalpha (0.31), PKCalphap657 (0.29), X1 (0.24), PDK1 (0.22), PDK1p241 (0.21), E.cadherin (0.21), AR (0.21), HER2 (0.21), HER2p1248 (0.19), ERp118 (0.18), p38p (0.16), cJUN (0.15), IGFBP2 (0.14), cleaved.caspase.7 (0.12), TSC2 (0.12), GSK3 (0.1),
+Proteins that add to the pathway model:  (),
+
+Model R2 (+subtype): 0.5475
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	1.9985	1.9877	1.0054	0.3236
+`akt_75_gene_list/adap_adap_single/akt`	-2.142	1.6635	-1.2876	0.2088
+`bad_200_gene_list/adap_adap_single/bad`	5.4466	1.7845	3.0521	0.0051
+`raf_100_gene_list/adap_adap_single/raf`	5.3454	4.1061	1.3018	0.204
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-8.7236	4.1309	-2.1118	0.0441
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	7.9519	3.1268	2.5431	0.017
+model_subsubtype_ERBB2Claudin-low	-1.2358	1.0269	-1.2035	0.2392
+model_subsubtype_ERBB2ERBB2	1.0677	0.6071	1.7587	0.09
+model_subsubtype_ERBB2LUMINAL	0.7181	0.7246	0.991	0.3305
+model_subsubtype_ERBB2NORMAL	1.0086	0.6565	1.5365	0.1361
+Important genes: PIK3CA (0.11), FAM86B2 (0.1),
+Genes that add to the pathway model: SLC9B1P4 (0.16),
+Important proteins: PKCalpha (0.31), PKCalphap657 (0.29), X1 (0.24), PDK1 (0.22), PDK1p241 (0.21), E.cadherin (0.21), AR (0.21), HER2 (0.21), HER2p1248 (0.19), ERp118 (0.18), p38p (0.16), cJUN (0.15), IGFBP2 (0.14), cleaved.caspase.7 (0.12), TSC2 (0.12), GSK3 (0.1),
+Proteins that add to the pathway model: PDK1 (0.15), E.cadherin (0.12), PDK1p241 (0.11), IGFR1 (0.11),
+
+
+BIBW2992
+Model R2 (no subtype): 0.2019
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	2.5295	1.5678	1.6134	0.1175
+`bad_200_gene_list/adap_adap_single/bad`	3.4656	1.6131	2.1484	0.0402
+`igf1r_75_gene_list/adap_adap_single/igf1r`	2.0569	1.4988	1.3724	0.1805
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	4.9185	1.9044	2.5827	0.0151
+Important genes: EPHA10 (0.13), ATP4A (0.13), PRB3 (0.12),
+Genes that add to the pathway model: ATP4A (0.17), NID2 (0.1),
+Important proteins: HER2p1248 (0.6), HER2 (0.55), EIG121 (0.18), EGFR (0.17), p38p (0.14), YB1 (0.13), COMT (0.12), X1 (0.11), PTEN (0.11), Stathmin (0.11), AR (0.11),
+Proteins that add to the pathway model: HER2p1248 (0.49), HER2 (0.46), GATA3 (0.27), JNKp183.5 (0.25), AR (0.25), p38p (0.22), NOTCH3 (0.22), mTor (0.21), Rab25 (0.2), EGFR (0.19), PAI1 (0.19), AcCoAp (0.17), MAPKp (0.17), CCNE1 (0.17), COMT (0.16), FGFR1 (0.16), Akt (0.16), EGFRp1068 (0.15), Telomerase (0.14), cJUN (0.14), Collagen.VI (0.14), stat3 (0.13), Stathmin (0.13), PTEN (0.13), ERK2 (0.13), JNK (0.13), stat3p705 (0.12), X1 (0.12), Aktp473 (0.12), MEK1 (0.12), YB1 (0.11), PR (0.11), EIG121 (0.11), p53 (0.11), VEGFR2 (0.11), B.Catenin (0.11), cleaved.caspase.7 (0.11), src (0.11), CCND1 (0.1), CCNB1 (0.1), p21 (0.1), X4EBP1p37 (0.1),
+
+Model R2 (+subtype): 0.8914
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	7.2817	0.3979	18.302	0
+`egfr_25_gene_list/adap_adap_single/egfr`	-0.8886	0.4587	-1.9372	0.0641
+`raf_100_gene_list/adap_adap_single/raf`	-3.268	1.485	-2.2007	0.0372
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	2.4732	1.5353	1.6109	0.1198
+model_subsubtype_ERBB2Claudin-low	-0.5225	0.3103	-1.6839	0.1047
+model_subsubtype_ERBB2ERBB2	1.0069	0.2716	3.7072	0.001
+model_subsubtype_ERBB2LUMINAL	-1.4691	0.3106	-4.7304	1e-04
+model_subsubtype_ERBB2NORMAL	1.1911	0.2378	5.0092	0
+Important genes: EPHA10 (0.13), ATP4A (0.13), PRB3 (0.12),
+Genes that add to the pathway model:  (),
+Important proteins: HER2p1248 (0.6), HER2 (0.55), EIG121 (0.18), EGFR (0.17), p38p (0.14), YB1 (0.13), COMT (0.12), X1 (0.11), PTEN (0.11), Stathmin (0.11), AR (0.11),
+Proteins that add to the pathway model:  (),
+
+
+Baicalein
+Model R2 (no subtype): 0.2589
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	4.1616	0.3321	12.5326	0
+`erk_250_gene_list/adap_adap_single/erk`	0.9612	0.5513	1.7436	0.09
+`igf1r_75_gene_list/adap_adap_single/igf1r`	0.7097	0.3926	1.8076	0.0793
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	-0.8701	0.3893	-2.2351	0.0319
+Important genes: NID2 (0.14), SLC9B1P4 (0.12),
+Genes that add to the pathway model: SLC9B1P4 (0.17), NID2 (0.11),
+Important proteins: HER2 (0.19), cJUN (0.18), HER2p1248 (0.18), E.cadherin (0.12), p70S6Kp389 (0.12), X1 (0.11), IGFBP2 (0.11), CCND1 (0.1),
+Proteins that add to the pathway model:  (),
+
+Model R2 (+subtype): 0.2589
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	4.1616	0.3321	12.5326	0
+`erk_250_gene_list/adap_adap_single/erk`	0.9612	0.5513	1.7436	0.09
+`igf1r_75_gene_list/adap_adap_single/igf1r`	0.7097	0.3926	1.8076	0.0793
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	-0.8701	0.3893	-2.2351	0.0319
+Important genes: NID2 (0.14), SLC9B1P4 (0.12),
+Genes that add to the pathway model: SLC9B1P4 (0.17), NID2 (0.11),
+Important proteins: HER2 (0.19), cJUN (0.18), HER2p1248 (0.18), E.cadherin (0.12), p70S6Kp389 (0.12), X1 (0.11), IGFBP2 (0.11), CCND1 (0.1),
+Proteins that add to the pathway model:  (),
+
+
+Bortezomib
+Model R2 (no subtype): 0.22
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	7.0433	0.5258	13.3965	0
+`egfr_25_gene_list/adap_adap_single/egfr`	1.1537	0.6227	1.8529	0.0729
+`raf_100_gene_list/adap_adap_single/raf`	4.7217	2.3309	2.0257	0.0509
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-6.3871	2.3431	-2.7259	0.0102
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	1.8781	1.0667	1.7606	0.0876
+Important genes: PIK3CA (0.46), SYNE2 (0.3), NID2 (0.27),
+Genes that add to the pathway model: PIK3CA (0.35), SYNE2 (0.26), NID2 (0.17), ZNF141 (0.11),
+Important proteins: Aktp473 (0.25), AMPKp (0.24), p70S6.Kinase (0.23), IGFBP2 (0.17), ER (0.13), srcp527 (0.12), PTEN (0.11), EGFRp1068 (0.11), Aktp308 (0.1), stat3p705 (0.1),
+Proteins that add to the pathway model: IGFBP2 (0.25), ER (0.19), p70S6.Kinase (0.18), srcp527 (0.15), FGFR1 (0.14), ERp118 (0.14), AMPKp (0.13), stat3 (0.13), src (0.12), Aktp473 (0.12), srcp416 (0.11),
+
+Model R2 (+subtype): 0.22
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	7.0433	0.5258	13.3965	0
+`egfr_25_gene_list/adap_adap_single/egfr`	1.1537	0.6227	1.8529	0.0729
+`raf_100_gene_list/adap_adap_single/raf`	4.7217	2.3309	2.0257	0.0509
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-6.3871	2.3431	-2.7259	0.0102
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	1.8781	1.0667	1.7606	0.0876
+Important genes: PIK3CA (0.46), SYNE2 (0.3), NID2 (0.27),
+Genes that add to the pathway model: PIK3CA (0.35), SYNE2 (0.26), NID2 (0.17), ZNF141 (0.11),
+Important proteins: Aktp473 (0.25), AMPKp (0.24), p70S6.Kinase (0.23), IGFBP2 (0.17), ER (0.13), srcp527 (0.12), PTEN (0.11), EGFRp1068 (0.11), Aktp308 (0.1), stat3p705 (0.1),
+Proteins that add to the pathway model: IGFBP2 (0.25), ER (0.19), p70S6.Kinase (0.18), srcp527 (0.15), FGFR1 (0.14), ERp118 (0.14), AMPKp (0.13), stat3 (0.13), src (0.12), Aktp473 (0.12), srcp416 (0.11),
+
+
+CGC.11047
+Model R2 (no subtype): 0.534
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	1.1426	0.9877	1.1569	0.2559
+`akt_75_gene_list/adap_adap_single/akt`	-5.0996	1.1748	-4.3409	1e-04
+`bad_200_gene_list/adap_adap_single/bad`	4.399	1.291	3.4073	0.0018
+`her2_15_gene_list/adap_adap_single/her2`	2.7555	0.8741	3.1524	0.0035
+`raf_100_gene_list/adap_adap_single/raf`	8.6546	2.7763	3.1173	0.0038
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-11.0506	2.8972	-3.8143	6e-04
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	6.5807	1.9696	3.3412	0.0021
+Important genes: FAM86B2 (0.14),
+Genes that add to the pathway model: TP53 (0.1),
+Important proteins: Aktp308 (0.32), Bcl2 (0.25), PTEN (0.22), IGFBP2 (0.22), p70S6.Kinase (0.2), Aktp473 (0.19), ER (0.19), cJUN (0.17), AMPKp (0.14), PDK1 (0.13), X1 (0.13), p53 (0.13), COMT (0.11), ERp118 (0.1),
+Proteins that add to the pathway model: Bcl2 (0.2), CCNE1 (0.18), E.cadherin (0.18), S6p235.236 (0.17), VEGFR2 (0.17), GATA3 (0.16), S6p240.244 (0.16), B.Catenin (0.16), p110alpha (0.15), PTEN (0.15), stat3p705 (0.15), p21 (0.15), EGFR (0.15), Akt (0.15), HER2p1248 (0.14), JNKp183.5 (0.14), cleaved.caspase.7 (0.14), YB1 (0.14), EGFRp1068 (0.14), PKCalphap657 (0.14), srcp527 (0.14), MEK1 (0.14), TSC2 (0.13), p38 (0.13), PR (0.13), HER2 (0.13), X1 (0.13), Stathmin (0.13), X4EBP1p37 (0.13), FGFR1 (0.13), AcCoAp (0.13), ER (0.13), Telomerase (0.13), p53 (0.13), CD31 (0.13), JNK (0.13), COMT (0.13), IGFBP2 (0.13), AMPKp (0.13), src (0.13), p70S6Kp389 (0.13), Collagen.VI (0.13), PDK1 (0.13), ERp118 (0.13), Fortilin (0.13), Aktp308 (0.13), p38p (0.13), ERK2 (0.13), mTor (0.13), cJUN (0.13), GSK3 (0.13), EN1 (0.13), NOTCH3 (0.13), PKCalpha (0.13), IGFR1 (0.13), Aktp473 (0.13), p70S6.Kinase (0.13), stat3 (0.13), AR (0.13), srcp416 (0.12), MAPKp (0.12), GSK3p21.9 (0.12), Rb (0.12), EIG121 (0.12), Rab25 (0.12), PDK1p241 (0.12), Caveolin (0.12), CCNB1 (0.12), CCND1 (0.12), PAI1 (0.12),
+
+Model R2 (+subtype): 0.534
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	1.1426	0.9877	1.1569	0.2559
+`akt_75_gene_list/adap_adap_single/akt`	-5.0996	1.1748	-4.3409	1e-04
+`bad_200_gene_list/adap_adap_single/bad`	4.399	1.291	3.4073	0.0018
+`her2_15_gene_list/adap_adap_single/her2`	2.7555	0.8741	3.1524	0.0035
+`raf_100_gene_list/adap_adap_single/raf`	8.6546	2.7763	3.1173	0.0038
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-11.0506	2.8972	-3.8143	6e-04
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	6.5807	1.9696	3.3412	0.0021
+Important genes: FAM86B2 (0.14),
+Genes that add to the pathway model: TP53 (0.1),
+Important proteins: Aktp308 (0.32), Bcl2 (0.25), PTEN (0.22), IGFBP2 (0.22), p70S6.Kinase (0.2), Aktp473 (0.19), ER (0.19), cJUN (0.17), AMPKp (0.14), PDK1 (0.13), X1 (0.13), p53 (0.13), COMT (0.11), ERp118 (0.1),
+Proteins that add to the pathway model: Bcl2 (0.2), CCNE1 (0.18), E.cadherin (0.18), S6p235.236 (0.17), VEGFR2 (0.17), GATA3 (0.16), S6p240.244 (0.16), B.Catenin (0.16), p110alpha (0.15), PTEN (0.15), stat3p705 (0.15), p21 (0.15), EGFR (0.15), Akt (0.15), HER2p1248 (0.14), JNKp183.5 (0.14), cleaved.caspase.7 (0.14), YB1 (0.14), EGFRp1068 (0.14), PKCalphap657 (0.14), srcp527 (0.14), MEK1 (0.14), TSC2 (0.13), p38 (0.13), PR (0.13), HER2 (0.13), X1 (0.13), Stathmin (0.13), X4EBP1p37 (0.13), FGFR1 (0.13), AcCoAp (0.13), ER (0.13), Telomerase (0.13), p53 (0.13), CD31 (0.13), JNK (0.13), COMT (0.13), IGFBP2 (0.13), AMPKp (0.13), src (0.13), p70S6Kp389 (0.13), Collagen.VI (0.13), PDK1 (0.13), ERp118 (0.13), Fortilin (0.13), Aktp308 (0.13), p38p (0.13), ERK2 (0.13), mTor (0.13), cJUN (0.13), GSK3 (0.13), EN1 (0.13), NOTCH3 (0.13), PKCalpha (0.13), IGFR1 (0.13), Aktp473 (0.13), p70S6.Kinase (0.13), stat3 (0.13), AR (0.13), srcp416 (0.12), MAPKp (0.12), GSK3p21.9 (0.12), Rb (0.12), EIG121 (0.12), Rab25 (0.12), PDK1p241 (0.12), Caveolin (0.12), CCNB1 (0.12), CCND1 (0.12), PAI1 (0.12),
+
+
+CGC.11144
+Model R2 (no subtype): 0.0601
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	5.6634	0.3422	16.5509	0
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	1.1704	0.7606	1.5386	0.1324
+Important genes:  (),
+Genes that add to the pathway model:  (),
+Important proteins: PAI1 (0.16), EN1 (0.13), EIG121 (0.12), CD31 (0.11),
+Proteins that add to the pathway model: CD31 (0.16), p70S6Kp389 (0.15), JNKp183.5 (0.13),
+
+Model R2 (+subtype): 0.0601
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	5.6634	0.3422	16.5509	0
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	1.1704	0.7606	1.5386	0.1324
+Important genes:  (),
+Genes that add to the pathway model:  (),
+Important proteins: PAI1 (0.16), EN1 (0.13), EIG121 (0.12), CD31 (0.11),
+Proteins that add to the pathway model: CD31 (0.16), p70S6Kp389 (0.15), JNKp183.5 (0.13),
+
+
+CPT.11
+Model R2 (no subtype): 0.5426
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	4.5899	0.3847	11.9302	0
+`akt_75_gene_list/adap_adap_single/akt`	1.3194	0.541	2.4388	0.0205
+`bad_200_gene_list/adap_adap_single/bad`	5.2349	0.9313	5.6212	0
+`erk_250_gene_list/adap_adap_single/erk`	-4.2781	1.1403	-3.7517	7e-04
+`raf_100_gene_list/adap_adap_single/raf`	-4.3524	1.6048	-2.7122	0.0107
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	2.644	1.3557	1.9503	0.0599
+Important genes: ZNF141 (0.22), ATP4A (0.15),
+Genes that add to the pathway model: SLC9B1P4 (0.17), XIRP2 (0.16), GRAMD1A (0.16), ZNF141 (0.14), SYNE1 (0.14), ATP4A (0.13), PIK3CA (0.13), ARHGAP39 (0.13), NBPF10 (0.13), CFTR (0.13), PLEKHS1 (0.13), PRB3 (0.13), NID2 (0.13), TP53 (0.13), EPHA10 (0.13), SYNE2 (0.13), TTN (0.13), COL5A2 (0.13), FAT2 (0.12), PCDHB11 (0.12), RIF1 (0.12),
+Important proteins: GSK3 (0.32), p70S6Kp389 (0.25), CD31 (0.18), srcp416 (0.17), AR (0.17), GSK3p21.9 (0.16), PKCalpha (0.13), HER2p1248 (0.12), HER2 (0.11), stat3 (0.11), p21 (0.1), E.cadherin (0.1),
+Proteins that add to the pathway model: p38p (0.18), p53 (0.18), PAI1 (0.17), p70S6Kp389 (0.15), TSC2 (0.15), VEGFR2 (0.15), srcp416 (0.14), X1 (0.14), GSK3 (0.14), PDK1 (0.13), cJUN (0.13), MEK1 (0.12), Aktp473 (0.12), CD31 (0.12), PR (0.12), JNKp183.5 (0.12), p21 (0.12), HER2p1248 (0.12), AcCoAp (0.12), AMPKp (0.12), S6p235.236 (0.12), Telomerase (0.12), mTor (0.12), YB1 (0.12), GSK3p21.9 (0.11), stat3 (0.11), S6p240.244 (0.11), NOTCH3 (0.11), PTEN (0.11), ER (0.11), CCND1 (0.11), HER2 (0.11), CCNE1 (0.11), GATA3 (0.11), ERK2 (0.11), AR (0.11), MAPKp (0.11), src (0.11), stat3p705 (0.11), Akt (0.11), PKCalpha (0.11), cleaved.caspase.7 (0.11), COMT (0.1), Collagen.VI (0.1), JNK (0.1), Rab25 (0.1), Aktp308 (0.1), E.cadherin (0.1), PKCalphap657 (0.1), srcp527 (0.1), B.Catenin (0.1), CCNB1 (0.1), Rb (0.1),
+
+Model R2 (+subtype): 0.5426
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	4.5899	0.3847	11.9302	0
+`akt_75_gene_list/adap_adap_single/akt`	1.3194	0.541	2.4388	0.0205
+`bad_200_gene_list/adap_adap_single/bad`	5.2349	0.9313	5.6212	0
+`erk_250_gene_list/adap_adap_single/erk`	-4.2781	1.1403	-3.7517	7e-04
+`raf_100_gene_list/adap_adap_single/raf`	-4.3524	1.6048	-2.7122	0.0107
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	2.644	1.3557	1.9503	0.0599
+Important genes: ZNF141 (0.22), ATP4A (0.15),
+Genes that add to the pathway model: SLC9B1P4 (0.17), XIRP2 (0.16), GRAMD1A (0.16), ZNF141 (0.14), SYNE1 (0.14), ATP4A (0.13), PIK3CA (0.13), ARHGAP39 (0.13), NBPF10 (0.13), CFTR (0.13), PLEKHS1 (0.13), PRB3 (0.13), NID2 (0.13), TP53 (0.13), EPHA10 (0.13), SYNE2 (0.13), TTN (0.13), COL5A2 (0.13), FAT2 (0.12), PCDHB11 (0.12), RIF1 (0.12),
+Important proteins: GSK3 (0.32), p70S6Kp389 (0.25), CD31 (0.18), srcp416 (0.17), AR (0.17), GSK3p21.9 (0.16), PKCalpha (0.13), HER2p1248 (0.12), HER2 (0.11), stat3 (0.11), p21 (0.1), E.cadherin (0.1),
+Proteins that add to the pathway model: p38p (0.18), p53 (0.18), PAI1 (0.17), p70S6Kp389 (0.15), TSC2 (0.15), VEGFR2 (0.15), srcp416 (0.14), X1 (0.14), GSK3 (0.14), PDK1 (0.13), cJUN (0.13), MEK1 (0.12), Aktp473 (0.12), CD31 (0.12), PR (0.12), JNKp183.5 (0.12), p21 (0.12), HER2p1248 (0.12), AcCoAp (0.12), AMPKp (0.12), S6p235.236 (0.12), Telomerase (0.12), mTor (0.12), YB1 (0.12), GSK3p21.9 (0.11), stat3 (0.11), S6p240.244 (0.11), NOTCH3 (0.11), PTEN (0.11), ER (0.11), CCND1 (0.11), HER2 (0.11), CCNE1 (0.11), GATA3 (0.11), ERK2 (0.11), AR (0.11), MAPKp (0.11), src (0.11), stat3p705 (0.11), Akt (0.11), PKCalpha (0.11), cleaved.caspase.7 (0.11), COMT (0.1), Collagen.VI (0.1), JNK (0.1), Rab25 (0.1), Aktp308 (0.1), E.cadherin (0.1), PKCalphap657 (0.1), srcp527 (0.1), B.Catenin (0.1), CCNB1 (0.1), Rb (0.1),
+
+
+Carboplatin
+Model R2 (no subtype): 0.2852
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	4.0019	0.472	8.4783	0
+`akt_75_gene_list/adap_adap_single/akt`	1.3973	0.7074	1.9753	0.0566
+`bad_200_gene_list/adap_adap_single/bad`	2.5876	1.0602	2.4408	0.0202
+`egfr_25_gene_list/adap_adap_single/egfr`	1.2576	0.6334	1.9854	0.0555
+`erk_250_gene_list/adap_adap_single/erk`	-3.8033	1.3899	-2.7365	0.0099
+`raf_100_gene_list/adap_adap_single/raf`	-1.7725	1.052	-1.6849	0.1014
+Important genes: COL5A2 (0.29), FAT2 (0.18), TTN (0.16),
+Genes that add to the pathway model: COL5A2 (0.15),
+Important proteins: Caveolin (0.2), JNKp183.5 (0.14), PTEN (0.12), ERK2 (0.11),
+Proteins that add to the pathway model: MAPKp (0.16), E.cadherin (0.14), COMT (0.14), Caveolin (0.13), PDK1 (0.11), X1 (0.1),
+
+Model R2 (+subtype): 0.5062
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	3.8272	0.6491	5.8964	0
+`akt_75_gene_list/adap_adap_single/akt`	2.6967	0.9471	2.8472	0.0082
+`bad_200_gene_list/adap_adap_single/bad`	2.465	1.252	1.9688	0.059
+`egfr_25_gene_list/adap_adap_single/egfr`	2.0174	0.6387	3.1586	0.0038
+`erk_250_gene_list/adap_adap_single/erk`	-5.9439	1.4465	-4.1091	3e-04
+`her2_15_gene_list/adap_adap_single/her2`	1.5985	0.8771	1.8226	0.0791
+`raf_100_gene_list/adap_adap_single/raf`	-3.5455	1.3182	-2.6896	0.0119
+model_subsubtype_ERBB2Claudin-low	1.0699	0.4527	2.3633	0.0253
+model_subsubtype_ERBB2ERBB2	-0.7793	0.3813	-2.0439	0.0505
+model_subsubtype_ERBB2LUMINAL	-1.0466	0.3992	-2.6215	0.014
+model_subsubtype_ERBB2NORMAL	0.5528	0.4013	1.3776	0.1792
+Important genes: COL5A2 (0.29), FAT2 (0.18), TTN (0.16),
+Genes that add to the pathway model:  (),
+Important proteins: Caveolin (0.2), JNKp183.5 (0.14), PTEN (0.12), ERK2 (0.11),
+Proteins that add to the pathway model: Stathmin (0.11),
+
+
+Cisplatin
+Model R2 (no subtype): 0.3885
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	3.1522	0.7232	4.3587	1e-04
+`akt_75_gene_list/adap_adap_single/akt`	-1.7395	0.715	-2.4328	0.0204
+`bad_200_gene_list/adap_adap_single/bad`	2.6255	0.8531	3.0775	0.0041
+`her2_15_gene_list/adap_adap_single/her2`	1.5284	0.66	2.3159	0.0267
+`igf1r_75_gene_list/adap_adap_single/igf1r`	2.4431	0.9319	2.6216	0.013
+Important genes:  (),
+Genes that add to the pathway model:  (),
+Important proteins: IGFBP2 (0.27), ER (0.24), ERp118 (0.24), PTEN (0.2), CCND1 (0.16), GSK3 (0.15), YB1 (0.13), X1 (0.12), S6p240.244 (0.11), p70S6.Kinase (0.11), S6p235.236 (0.1),
+Proteins that add to the pathway model:  (),
+
+Model R2 (+subtype): 0.3885
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	3.1522	0.7232	4.3587	1e-04
+`akt_75_gene_list/adap_adap_single/akt`	-1.7395	0.715	-2.4328	0.0204
+`bad_200_gene_list/adap_adap_single/bad`	2.6255	0.8531	3.0775	0.0041
+`her2_15_gene_list/adap_adap_single/her2`	1.5284	0.66	2.3159	0.0267
+`igf1r_75_gene_list/adap_adap_single/igf1r`	2.4431	0.9319	2.6216	0.013
+Important genes:  (),
+Genes that add to the pathway model:  (),
+Important proteins: IGFBP2 (0.27), ER (0.24), ERp118 (0.24), PTEN (0.2), CCND1 (0.16), GSK3 (0.15), YB1 (0.13), X1 (0.12), S6p240.244 (0.11), p70S6.Kinase (0.11), S6p235.236 (0.1),
+Proteins that add to the pathway model:  (),
+
+
+Disulfiram
+Model R2 (no subtype): 0.2649
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	7.1031	0.8007	8.871	0
+`akt_75_gene_list/adap_adap_single/akt`	-2.6598	1.3591	-1.9571	0.0588
+`raf_100_gene_list/adap_adap_single/raf`	-10.5014	3.3712	-3.1151	0.0038
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	7.8239	3.1903	2.4525	0.0196
+Important genes: NBPF10 (0.18), SYNE1 (0.17),
+Genes that add to the pathway model: SYNE1 (0.11),
+Important proteins: p21 (0.18), Bcl2 (0.12), TSC2 (0.12), GSK3 (0.11), PKCalphap657 (0.1),
+Proteins that add to the pathway model: PKCalphap657 (0.16), GSK3 (0.13), PKCalpha (0.13), TSC2 (0.11), PDK1 (0.11),
+
+Model R2 (+subtype): 0.4773
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	7.1372	1.0092	7.0722	0
+`egfr_25_gene_list/adap_adap_single/egfr`	-1.9974	1.252	-1.5953	0.1219
+`her2_15_gene_list/adap_adap_single/her2`	-3.11	1.8387	-1.6914	0.1019
+`raf_100_gene_list/adap_adap_single/raf`	-16.3546	3.8443	-4.2543	2e-04
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	18.5553	4.6693	3.9739	5e-04
+model_subsubtype_ERBB2Claudin-low	0.9927	0.721	1.3768	0.1795
+model_subsubtype_ERBB2ERBB2	0.2425	0.6323	0.3835	0.7043
+model_subsubtype_ERBB2LUMINAL	-0.495	0.6461	-0.7661	0.4501
+model_subsubtype_ERBB2NORMAL	-1.6705	0.858	-1.947	0.0616
+Important genes: NBPF10 (0.18), SYNE1 (0.17),
+Genes that add to the pathway model: SYNE1 (0.19),
+Important proteins: p21 (0.18), Bcl2 (0.12), TSC2 (0.12), GSK3 (0.11), PKCalphap657 (0.1),
+Proteins that add to the pathway model: JNKp183.5 (0.16), Telomerase (0.14), Caveolin (0.11), EGFRp1068 (0.1),
+
+
+Docetaxel
+Model R2 (no subtype): 0.2379
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	7.7945	0.3056	25.504	0
+`bad_200_gene_list/adap_adap_single/bad`	-1.6445	1.0398	-1.5816	0.1236
+`erk_250_gene_list/adap_adap_single/erk`	2.0651	1.273	1.6222	0.1146
+`raf_100_gene_list/adap_adap_single/raf`	4.9103	1.7512	2.804	0.0085
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-3.5383	1.5084	-2.3458	0.0253
+Important genes: EPHA10 (0.16), GRAMD1A (0.14),
+Genes that add to the pathway model: GRAMD1A (0.17), PLEKHS1 (0.17), EPHA10 (0.16), FAT2 (0.14), TTN (0.13), SYNE2 (0.11), NBPF10 (0.1),
+Important proteins: IGFBP2 (0.48), X1 (0.36), GSK3 (0.33), ER (0.31), ERp118 (0.27), TSC2 (0.24), PAI1 (0.23), Telomerase (0.22), COMT (0.21), CCNB1 (0.2), YB1 (0.2), EGFR (0.19), MAPKp (0.17), Aktp308 (0.17), cJUN (0.17), IGFR1 (0.13), p53 (0.13), p70S6.Kinase (0.12), PDK1 (0.12), GSK3p21.9 (0.12), PDK1p241 (0.12), PKCalphap657 (0.11), AcCoAp (0.11), CCND1 (0.1),
+Proteins that add to the pathway model: EGFR (0.38), AR (0.34), IGFBP2 (0.32), IGFR1 (0.32), AcCoAp (0.3), GSK3 (0.3), Akt (0.3), JNKp183.5 (0.29), CCNE1 (0.29), GSK3p21.9 (0.28), VEGFR2 (0.28), stat3 (0.28), MAPKp (0.27), EIG121 (0.27), NOTCH3 (0.27), YB1 (0.27), src (0.27), X4EBP1p37 (0.27), HER2p1248 (0.26), GATA3 (0.26), p21 (0.26), EGFRp1068 (0.26), Aktp473 (0.26), HER2 (0.26), srcp527 (0.26), PDK1 (0.26), CCND1 (0.26), S6p235.236 (0.26), p53 (0.25), stat3p705 (0.25), S6p240.244 (0.25), B.Catenin (0.25), FGFR1 (0.25), EN1 (0.25), ERp118 (0.25), PDK1p241 (0.24), p38 (0.24), Fortilin (0.24), p70S6Kp389 (0.24), TSC2 (0.24), COMT (0.24), PR (0.24), Rab25 (0.24), ER (0.24), Caveolin (0.24), PAI1 (0.24), srcp416 (0.24), Stathmin (0.24), X1 (0.24), mTor (0.24), ERK2 (0.24), Rb (0.24), E.cadherin (0.23), Aktp308 (0.23), Bcl2 (0.23), Telomerase (0.23), p38p (0.23), PKCalphap657 (0.23), CD31 (0.23), MEK1 (0.23), AMPKp (0.23), p70S6.Kinase (0.23), p110alpha (0.23), JNK (0.23), PTEN (0.23), cleaved.caspase.7 (0.23), Collagen.VI (0.23), cJUN (0.23), PKCalpha (0.23), CCNB1 (0.23),
+
+Model R2 (+subtype): 0.4062
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	6.3486	1.0365	6.1253	0
+`bad_200_gene_list/adap_adap_single/bad`	-1.938	1.2595	-1.5387	0.1355
+`erk_250_gene_list/adap_adap_single/erk`	2.9251	1.3767	2.1247	0.0429
+`her2_15_gene_list/adap_adap_single/her2`	-1.9689	0.9174	-2.1463	0.041
+`raf_100_gene_list/adap_adap_single/raf`	4.1605	1.2089	3.4416	0.0019
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	2.1828	1.5287	1.4279	0.1648
+model_subsubtype_ERBB2Claudin-low	0.6438	0.519	1.2405	0.2255
+model_subsubtype_ERBB2ERBB2	0.957	0.4323	2.2136	0.0355
+model_subsubtype_ERBB2LUMINAL	0.8617	0.452	1.9064	0.0673
+model_subsubtype_ERBB2NORMAL	-1.0308	0.4085	-2.5237	0.0178
+Important genes: EPHA10 (0.16), GRAMD1A (0.14),
+Genes that add to the pathway model: FAT2 (0.11), SLC9B1P4 (0.11), GRAMD1A (0.1), EPHA10 (0.1),
+Important proteins: IGFBP2 (0.48), X1 (0.36), GSK3 (0.33), ER (0.31), ERp118 (0.27), TSC2 (0.24), PAI1 (0.23), Telomerase (0.22), COMT (0.21), CCNB1 (0.2), YB1 (0.2), EGFR (0.19), MAPKp (0.17), Aktp308 (0.17), cJUN (0.17), IGFR1 (0.13), p53 (0.13), p70S6.Kinase (0.12), PDK1 (0.12), GSK3p21.9 (0.12), PDK1p241 (0.12), PKCalphap657 (0.11), AcCoAp (0.11), CCND1 (0.1),
+Proteins that add to the pathway model: Akt (0.42), GATA3 (0.37), EGFR (0.34), Aktp473 (0.28), stat3p705 (0.28), AcCoAp (0.27), Rab25 (0.27), JNKp183.5 (0.26), AR (0.26), CCNE1 (0.26), FGFR1 (0.25), B.Catenin (0.24), NOTCH3 (0.24), GSK3p21.9 (0.24), p70S6.Kinase (0.23), src (0.23), EIG121 (0.23), IGFBP2 (0.23), PDK1 (0.23), IGFR1 (0.22), EGFRp1068 (0.22), S6p235.236 (0.22), VEGFR2 (0.21), S6p240.244 (0.21), stat3 (0.21), X4EBP1p37 (0.21), srcp527 (0.21), GSK3 (0.21), YB1 (0.21), p53 (0.21), PDK1p241 (0.2), ERp118 (0.2), p38p (0.2), cJUN (0.2), cleaved.caspase.7 (0.2), PTEN (0.2), Aktp308 (0.2), ER (0.2), MAPKp (0.2), CCND1 (0.2), TSC2 (0.2), EN1 (0.19), p38 (0.19), ERK2 (0.19), CD31 (0.19), AMPKp (0.19), mTor (0.19), p70S6Kp389 (0.19), HER2p1248 (0.19), PR (0.19), CCNB1 (0.19), PKCalphap657 (0.19), X1 (0.19), Rb (0.19), E.cadherin (0.19), p110alpha (0.19), Caveolin (0.19), HER2 (0.19), PKCalpha (0.19), MEK1 (0.19), Stathmin (0.19), Bcl2 (0.19), Telomerase (0.19), srcp416 (0.19), Fortilin (0.19), JNK (0.19), PAI1 (0.19), COMT (0.19), p21 (0.19), Collagen.VI (0.19),
+
+
+Doxorubicin
+Model R2 (no subtype): 0.4868
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	7.3345	0.7083	10.3556	0
+`bad_200_gene_list/adap_adap_single/bad`	2.957	1.0256	2.883	0.0073
+`erk_250_gene_list/adap_adap_single/erk`	-2.7193	1.3109	-2.0743	0.047
+`her2_15_gene_list/adap_adap_single/her2`	1.3816	0.5333	2.5906	0.0148
+`igf1r_75_gene_list/adap_adap_single/igf1r`	-1.2707	0.7858	-1.6171	0.1167
+`raf_100_gene_list/adap_adap_single/raf`	-6.8718	1.6734	-4.1066	3e-04
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	5.5162	1.5894	3.4707	0.0016
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	-2.1691	1.0964	-1.9785	0.0574
+Important genes:  (),
+Genes that add to the pathway model: PLEKHS1 (0.12), EPHA10 (0.12), XIRP2 (0.12),
+Important proteins: GSK3 (0.18), EIG121 (0.12), PKCalpha (0.12), GSK3p21.9 (0.12),
+Proteins that add to the pathway model: S6p235.236 (0.2), S6p240.244 (0.19), Stathmin (0.19), EGFR (0.18), Rb (0.17), p70S6Kp389 (0.16), AcCoAp (0.16), HER2p1248 (0.16), MEK1 (0.15), E.cadherin (0.15), Akt (0.15), PR (0.15), Caveolin (0.15), EIG121 (0.15), PAI1 (0.15), PKCalpha (0.15), COMT (0.14), HER2 (0.14), PKCalphap657 (0.14), GSK3 (0.14), MAPKp (0.14), GATA3 (0.14), AR (0.14), CCNB1 (0.14), JNKp183.5 (0.14), EN1 (0.13), p21 (0.13), ERK2 (0.13), stat3 (0.13), X4EBP1p37 (0.13), stat3p705 (0.13), NOTCH3 (0.13), PDK1p241 (0.13), ERp118 (0.13), CCND1 (0.13), Aktp473 (0.12), FGFR1 (0.12), p53 (0.12), srcp527 (0.12), IGFR1 (0.12), B.Catenin (0.12), cleaved.caspase.7 (0.12), cJUN (0.12), VEGFR2 (0.12), p70S6.Kinase (0.12), GSK3p21.9 (0.12), Aktp308 (0.12), EGFRp1068 (0.12), PDK1 (0.12), p38 (0.12), IGFBP2 (0.12), p38p (0.12), Telomerase (0.12), Fortilin (0.12), srcp416 (0.12), ER (0.12), Bcl2 (0.12), AMPKp (0.12), TSC2 (0.12), CCNE1 (0.12), Rab25 (0.12), src (0.12), CD31 (0.12), p110alpha (0.12), X1 (0.12), JNK (0.12), PTEN (0.12), YB1 (0.12), Collagen.VI (0.12), mTor (0.12),
+
+Model R2 (+subtype): 0.4868
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	7.3345	0.7083	10.3556	0
+`bad_200_gene_list/adap_adap_single/bad`	2.957	1.0256	2.883	0.0073
+`erk_250_gene_list/adap_adap_single/erk`	-2.7193	1.3109	-2.0743	0.047
+`her2_15_gene_list/adap_adap_single/her2`	1.3816	0.5333	2.5906	0.0148
+`igf1r_75_gene_list/adap_adap_single/igf1r`	-1.2707	0.7858	-1.6171	0.1167
+`raf_100_gene_list/adap_adap_single/raf`	-6.8718	1.6734	-4.1066	3e-04
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	5.5162	1.5894	3.4707	0.0016
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	-2.1691	1.0964	-1.9785	0.0574
+Important genes:  (),
+Genes that add to the pathway model: PLEKHS1 (0.12), EPHA10 (0.12), XIRP2 (0.12),
+Important proteins: GSK3 (0.18), EIG121 (0.12), PKCalpha (0.12), GSK3p21.9 (0.12),
+Proteins that add to the pathway model: S6p235.236 (0.2), S6p240.244 (0.19), Stathmin (0.19), EGFR (0.18), Rb (0.17), p70S6Kp389 (0.16), AcCoAp (0.16), HER2p1248 (0.16), MEK1 (0.15), E.cadherin (0.15), Akt (0.15), PR (0.15), Caveolin (0.15), EIG121 (0.15), PAI1 (0.15), PKCalpha (0.15), COMT (0.14), HER2 (0.14), PKCalphap657 (0.14), GSK3 (0.14), MAPKp (0.14), GATA3 (0.14), AR (0.14), CCNB1 (0.14), JNKp183.5 (0.14), EN1 (0.13), p21 (0.13), ERK2 (0.13), stat3 (0.13), X4EBP1p37 (0.13), stat3p705 (0.13), NOTCH3 (0.13), PDK1p241 (0.13), ERp118 (0.13), CCND1 (0.13), Aktp473 (0.12), FGFR1 (0.12), p53 (0.12), srcp527 (0.12), IGFR1 (0.12), B.Catenin (0.12), cleaved.caspase.7 (0.12), cJUN (0.12), VEGFR2 (0.12), p70S6.Kinase (0.12), GSK3p21.9 (0.12), Aktp308 (0.12), EGFRp1068 (0.12), PDK1 (0.12), p38 (0.12), IGFBP2 (0.12), p38p (0.12), Telomerase (0.12), Fortilin (0.12), srcp416 (0.12), ER (0.12), Bcl2 (0.12), AMPKp (0.12), TSC2 (0.12), CCNE1 (0.12), Rab25 (0.12), src (0.12), CD31 (0.12), p110alpha (0.12), X1 (0.12), JNK (0.12), PTEN (0.12), YB1 (0.12), Collagen.VI (0.12), mTor (0.12),
+
+
+ERKi.II..FR180304.
+Model R2 (no subtype): 0.2207
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	3.6857	0.3336	11.0492	0
+`bad_200_gene_list/adap_adap_single/bad`	0.8278	0.4813	1.72	0.0954
+`egfr_25_gene_list/adap_adap_single/egfr`	-0.3153	0.2212	-1.4256	0.164
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	1.4381	0.5313	2.7066	0.011
+Important genes: SLC9B1P4 (0.25), ARHGAP39 (0.22), ATP4A (0.18),
+Genes that add to the pathway model: ATP4A (0.18), SLC9B1P4 (0.15), ARHGAP39 (0.12),
+Important proteins: CCNB1 (0.32), p38p (0.17), EGFRp1068 (0.16), Aktp308 (0.15), Telomerase (0.12), CCNE1 (0.11), PDK1 (0.1),
+Proteins that add to the pathway model: Bcl2 (0.23), CCNB1 (0.19), EGFRp1068 (0.12),
+
+Model R2 (+subtype): 0.2207
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	3.6857	0.3336	11.0492	0
+`bad_200_gene_list/adap_adap_single/bad`	0.8278	0.4813	1.72	0.0954
+`egfr_25_gene_list/adap_adap_single/egfr`	-0.3153	0.2212	-1.4256	0.164
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	1.4381	0.5313	2.7066	0.011
+Important genes: SLC9B1P4 (0.25), ARHGAP39 (0.22), ATP4A (0.18),
+Genes that add to the pathway model: ATP4A (0.18), SLC9B1P4 (0.15), ARHGAP39 (0.12),
+Important proteins: CCNB1 (0.32), p38p (0.17), EGFRp1068 (0.16), Aktp308 (0.15), Telomerase (0.12), CCNE1 (0.11), PDK1 (0.1),
+Proteins that add to the pathway model: Bcl2 (0.23), CCNB1 (0.19), EGFRp1068 (0.12),
+
+
+Epirubicin
+Model R2 (no subtype): 0.4829
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	5.2892	0.4016	13.1714	0
+`akt_75_gene_list/adap_adap_single/akt`	2.7963	0.6402	4.3678	1e-04
+`egfr_25_gene_list/adap_adap_single/egfr`	1.4196	0.3589	3.9559	5e-04
+`her2_15_gene_list/adap_adap_single/her2`	-0.9533	0.3858	-2.4711	0.0196
+Important genes: SYNE1 (0.38),
+Genes that add to the pathway model:  (),
+Important proteins: Fortilin (0.29), GSK3 (0.28), HER2 (0.17), X1 (0.15), PR (0.15), CCNB1 (0.15), HER2p1248 (0.12), srcp416 (0.12), GSK3p21.9 (0.11), AR (0.11), PKCalpha (0.11), stat3 (0.1), TSC2 (0.1),
+Proteins that add to the pathway model:  (),
+
+Model R2 (+subtype): 0.5791
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	3.8197	0.6727	5.6779	0
+`akt_75_gene_list/adap_adap_single/akt`	3.8361	0.9049	4.2393	3e-04
+`egfr_25_gene_list/adap_adap_single/egfr`	1.8166	0.4696	3.8683	7e-04
+`igf1r_75_gene_list/adap_adap_single/igf1r`	1.2884	0.7822	1.6472	0.112
+model_subsubtype_ERBB2Claudin-low	0.7463	0.2833	2.6345	0.0143
+model_subsubtype_ERBB2ERBB2	-0.4846	0.2735	-1.772	0.0886
+model_subsubtype_ERBB2LUMINAL	-0.3191	0.3181	-1.0032	0.3254
+model_subsubtype_ERBB2NORMAL	0.3813	0.2604	1.4642	0.1556
+Important genes: SYNE1 (0.38),
+Genes that add to the pathway model:  (),
+Important proteins: Fortilin (0.29), GSK3 (0.28), HER2 (0.17), X1 (0.15), PR (0.15), CCNB1 (0.15), HER2p1248 (0.12), srcp416 (0.12), GSK3p21.9 (0.11), AR (0.11), PKCalpha (0.11), stat3 (0.1), TSC2 (0.1),
+Proteins that add to the pathway model:  (),
+
+
+Erlotinib
+Model R2 (no subtype): 0.6291
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	2.7325	0.4156	6.5753	0
+`akt_75_gene_list/adap_adap_single/akt`	1.2798	0.7504	1.7055	0.0972
+`her2_15_gene_list/adap_adap_single/her2`	-1.2709	0.5093	-2.4954	0.0176
+`raf_100_gene_list/adap_adap_single/raf`	3.3821	0.5926	5.7073	0
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	2.908	0.9452	3.0765	0.0041
+Important genes: ZNF804B (0.17), EPHA10 (0.12),
+Genes that add to the pathway model:  (),
+Important proteins: EGFR (0.24), stat3p705 (0.19), FGFR1 (0.17), S6p240.244 (0.16), CCNB1 (0.13), Telomerase (0.13), ER (0.13), MAPKp (0.12), stat3 (0.12), cleaved.caspase.7 (0.12), IGFBP2 (0.12), S6p235.236 (0.12), MEK1 (0.11), VEGFR2 (0.11),
+Proteins that add to the pathway model: HER2 (0.11), p38p (0.1),
+
+Model R2 (+subtype): 0.8142
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	4.6304	0.4919	9.4138	0
+`akt_75_gene_list/adap_adap_single/akt`	1.4924	0.7177	2.0796	0.0462
+`egfr_25_gene_list/adap_adap_single/egfr`	1.1842	0.4055	2.9203	0.0066
+`erk_250_gene_list/adap_adap_single/erk`	-2.1498	0.8986	-2.3924	0.0232
+`igf1r_75_gene_list/adap_adap_single/igf1r`	-0.902	0.7006	-1.2874	0.2078
+model_subsubtype_ERBB2Claudin-low	-0.135	0.2954	-0.4569	0.6511
+model_subsubtype_ERBB2ERBB2	0.2048	0.2331	0.8785	0.3867
+model_subsubtype_ERBB2LUMINAL	-0.395	0.2451	-1.6118	0.1175
+model_subsubtype_ERBB2NORMAL	1.1266	0.2437	4.623	1e-04
+Important genes: ZNF804B (0.17), EPHA10 (0.12),
+Genes that add to the pathway model:  (),
+Important proteins: EGFR (0.24), stat3p705 (0.19), FGFR1 (0.17), S6p240.244 (0.16), CCNB1 (0.13), Telomerase (0.13), ER (0.13), MAPKp (0.12), stat3 (0.12), cleaved.caspase.7 (0.12), IGFBP2 (0.12), S6p235.236 (0.12), MEK1 (0.11), VEGFR2 (0.11),
+Proteins that add to the pathway model:  (),
+
+
+Etoposide
+Model R2 (no subtype): 0.1435
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	5.3649	0.2967	18.0798	0
+`bad_200_gene_list/adap_adap_single/bad`	1.9565	0.8139	2.4037	0.0217
+`erk_250_gene_list/adap_adap_single/erk`	-2.1824	1.4076	-1.5505	0.13
+Important genes: PIK3CA (0.12),
+Genes that add to the pathway model:  (),
+Important proteins: GSK3 (0.34), stat3 (0.25), GSK3p21.9 (0.17), E.cadherin (0.15), PKCalpha (0.15), PDK1p241 (0.15), TSC2 (0.15), IGFBP2 (0.14), p70S6.Kinase (0.14), ER (0.14), X1 (0.13), PDK1 (0.12), PKCalphap657 (0.12), p38 (0.12), Fortilin (0.11), p70S6Kp389 (0.1),
+Proteins that add to the pathway model: GSK3 (0.24), stat3 (0.23), Bcl2 (0.19), E.cadherin (0.19), GSK3p21.9 (0.18), CCNE1 (0.18), p38 (0.17), EIG121 (0.17), cleaved.caspase.7 (0.16), PKCalpha (0.15), JNK (0.15), Collagen.VI (0.15), srcp527 (0.14), Stathmin (0.14), S6p235.236 (0.13), AR (0.13), p110alpha (0.12), PKCalphap657 (0.12), PDK1p241 (0.12), Caveolin (0.12), X4EBP1p37 (0.12), Rab25 (0.11), HER2p1248 (0.11), p70S6.Kinase (0.11), EGFRp1068 (0.11), p53 (0.11), Fortilin (0.11), CCNB1 (0.11), Aktp308 (0.11), CCND1 (0.11), srcp416 (0.11), stat3p705 (0.11), FGFR1 (0.11), MAPKp (0.11), COMT (0.1), S6p240.244 (0.1), EN1 (0.1), PR (0.1), TSC2 (0.1),
+
+Model R2 (+subtype): 0.1435
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	5.3649	0.2967	18.0798	0
+`bad_200_gene_list/adap_adap_single/bad`	1.9565	0.8139	2.4037	0.0217
+`erk_250_gene_list/adap_adap_single/erk`	-2.1824	1.4076	-1.5505	0.13
+Important genes: PIK3CA (0.12),
+Genes that add to the pathway model:  (),
+Important proteins: GSK3 (0.34), stat3 (0.25), GSK3p21.9 (0.17), E.cadherin (0.15), PKCalpha (0.15), PDK1p241 (0.15), TSC2 (0.15), IGFBP2 (0.14), p70S6.Kinase (0.14), ER (0.14), X1 (0.13), PDK1 (0.12), PKCalphap657 (0.12), p38 (0.12), Fortilin (0.11), p70S6Kp389 (0.1),
+Proteins that add to the pathway model: GSK3 (0.24), stat3 (0.23), Bcl2 (0.19), E.cadherin (0.19), GSK3p21.9 (0.18), CCNE1 (0.18), p38 (0.17), EIG121 (0.17), cleaved.caspase.7 (0.16), PKCalpha (0.15), JNK (0.15), Collagen.VI (0.15), srcp527 (0.14), Stathmin (0.14), S6p235.236 (0.13), AR (0.13), p110alpha (0.12), PKCalphap657 (0.12), PDK1p241 (0.12), Caveolin (0.12), X4EBP1p37 (0.12), Rab25 (0.11), HER2p1248 (0.11), p70S6.Kinase (0.11), EGFRp1068 (0.11), p53 (0.11), Fortilin (0.11), CCNB1 (0.11), Aktp308 (0.11), CCND1 (0.11), srcp416 (0.11), stat3p705 (0.11), FGFR1 (0.11), MAPKp (0.11), COMT (0.1), S6p240.244 (0.1), EN1 (0.1), PR (0.1), TSC2 (0.1),
+
+
+Everolimus
+Model R2 (no subtype): 0.3154
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	6.5359	0.553	11.8184	0
+`bad_200_gene_list/adap_adap_single/bad`	-4.9134	1.3155	-3.7351	8e-04
+`erk_250_gene_list/adap_adap_single/erk`	5.0244	2.4399	2.0592	0.048
+Important genes: ARHGAP39 (0.2), NBPF10 (0.12),
+Genes that add to the pathway model: NID2 (0.24), SLC9B1P4 (0.22), PRB3 (0.22), PCDHB11 (0.22), ARHGAP39 (0.2), ZNF804B (0.2), SYNE2 (0.2), RIF1 (0.19), TP53 (0.19), TTN (0.19), COL5A2 (0.19), NBPF10 (0.19), CFTR (0.18), FAM86B2 (0.18), XIRP2 (0.18), PIK3CA (0.18), SYNE1 (0.17),
+Important proteins: AR (0.5), p21 (0.42), HER2 (0.35), HER2p1248 (0.31), X1 (0.3), EGFRp1068 (0.29), cJUN (0.29), stat3 (0.28), EN1 (0.27), p38p (0.27), PDK1 (0.24), COMT (0.23), Telomerase (0.21), IGFBP2 (0.21), CCNE1 (0.17), cleaved.caspase.7 (0.16), ER (0.16), Akt (0.14), PDK1p241 (0.14), TSC2 (0.13), CCNB1 (0.13), VEGFR2 (0.13), PKCalpha (0.12), PAI1 (0.12), YB1 (0.12), MAPKp (0.12), EIG121 (0.11), Fortilin (0.11),
+Proteins that add to the pathway model: p21 (0.24), cleaved.caspase.7 (0.23), EN1 (0.22), AR (0.2), p38 (0.19), EGFRp1068 (0.17), EGFR (0.16), HER2 (0.14), HER2p1248 (0.13), stat3 (0.12), AMPKp (0.12), JNKp183.5 (0.12), p38p (0.11), COMT (0.11), cJUN (0.11), CCNE1 (0.1),
+
+Model R2 (+subtype): 0.3154
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	6.5359	0.553	11.8184	0
+`bad_200_gene_list/adap_adap_single/bad`	-4.9134	1.3155	-3.7351	8e-04
+`erk_250_gene_list/adap_adap_single/erk`	5.0244	2.4399	2.0592	0.048
+Important genes: ARHGAP39 (0.2), NBPF10 (0.12),
+Genes that add to the pathway model: NID2 (0.24), SLC9B1P4 (0.22), PRB3 (0.22), PCDHB11 (0.22), ARHGAP39 (0.2), ZNF804B (0.2), SYNE2 (0.2), RIF1 (0.19), TP53 (0.19), TTN (0.19), COL5A2 (0.19), NBPF10 (0.19), CFTR (0.18), FAM86B2 (0.18), XIRP2 (0.18), PIK3CA (0.18), SYNE1 (0.17),
+Important proteins: AR (0.5), p21 (0.42), HER2 (0.35), HER2p1248 (0.31), X1 (0.3), EGFRp1068 (0.29), cJUN (0.29), stat3 (0.28), EN1 (0.27), p38p (0.27), PDK1 (0.24), COMT (0.23), Telomerase (0.21), IGFBP2 (0.21), CCNE1 (0.17), cleaved.caspase.7 (0.16), ER (0.16), Akt (0.14), PDK1p241 (0.14), TSC2 (0.13), CCNB1 (0.13), VEGFR2 (0.13), PKCalpha (0.12), PAI1 (0.12), YB1 (0.12), MAPKp (0.12), EIG121 (0.11), Fortilin (0.11),
+Proteins that add to the pathway model: p21 (0.24), cleaved.caspase.7 (0.23), EN1 (0.22), AR (0.2), p38 (0.19), EGFRp1068 (0.17), EGFR (0.16), HER2 (0.14), HER2p1248 (0.13), stat3 (0.12), AMPKp (0.12), JNKp183.5 (0.12), p38p (0.11), COMT (0.11), cJUN (0.11), CCNE1 (0.1),
+
+
+FTase.inhibitor.I
+Model R2 (no subtype): 0.1437
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	4.1304	0.1185	34.8581	0
+`egfr_25_gene_list/adap_adap_single/egfr`	0.2035	0.1128	1.8046	0.0798
+`her2_15_gene_list/adap_adap_single/her2`	0.3389	0.1425	2.3783	0.023
+Important genes: TTN (0.14), SYNE1 (0.12),
+Genes that add to the pathway model: ZNF804B (0.12),
+Important proteins: FGFR1 (0.13), Rab25 (0.12), JNKp183.5 (0.12),
+Proteins that add to the pathway model: HER2p1248 (0.13), HER2 (0.11),
+
+Model R2 (+subtype): 0.5746
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	4.1367	0.2363	17.5066	0
+`akt_75_gene_list/adap_adap_single/akt`	0.3603	0.2515	1.4327	0.1634
+`egfr_25_gene_list/adap_adap_single/egfr`	0.2307	0.1773	1.3012	0.2042
+`her2_15_gene_list/adap_adap_single/her2`	-0.5321	0.3061	-1.7383	0.0935
+`igf1r_75_gene_list/adap_adap_single/igf1r`	-0.3499	0.2456	-1.4248	0.1657
+`raf_100_gene_list/adap_adap_single/raf`	-0.8383	0.5503	-1.5234	0.1393
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	1.7867	0.7096	2.518	0.018
+model_subsubtype_ERBB2Claudin-low	-0.062	0.1231	-0.5041	0.6183
+model_subsubtype_ERBB2ERBB2	0.2393	0.1332	1.797	0.0835
+model_subsubtype_ERBB2LUMINAL	0.3729	0.1213	3.0736	0.0048
+model_subsubtype_ERBB2NORMAL	-0.5648	0.1544	-3.6571	0.0011
+Important genes: TTN (0.14), SYNE1 (0.12),
+Genes that add to the pathway model: XIRP2 (0.13),
+Important proteins: FGFR1 (0.13), Rab25 (0.12), JNKp183.5 (0.12),
+Proteins that add to the pathway model:  (),
+
+
+Fascaplysin
+Model R2 (no subtype): 0.4121
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	6.3361	0.3056	20.7355	0
+`akt_75_gene_list/adap_adap_single/akt`	0.6831	0.4272	1.5992	0.1193
+`bad_200_gene_list/adap_adap_single/bad`	-2.0524	0.7709	-2.6622	0.0119
+`erk_250_gene_list/adap_adap_single/erk`	1.664	0.99	1.6809	0.1022
+`raf_100_gene_list/adap_adap_single/raf`	1.0037	0.5258	1.9089	0.065
+Important genes: PIK3CA (0.41),
+Genes that add to the pathway model: PIK3CA (0.22),
+Important proteins: PDK1 (0.37), PDK1p241 (0.29), Rab25 (0.27), p70S6.Kinase (0.27), cJUN (0.23), p38 (0.22), ERp118 (0.22), X1 (0.2), AR (0.2), GATA3 (0.19), IGFBP2 (0.18), AMPKp (0.18), E.cadherin (0.17), p70S6Kp389 (0.17), EIG121 (0.16), TSC2 (0.16), EN1 (0.16), p38p (0.16), Aktp473 (0.16), ER (0.15), PAI1 (0.15), GSK3 (0.14), COMT (0.13), NOTCH3 (0.13), Aktp308 (0.13), PKCalpha (0.12), PTEN (0.12), mTor (0.11), JNKp183.5 (0.11), CCNB1 (0.1),
+Proteins that add to the pathway model: X4EBP1p37 (0.12), AMPKp (0.11), p38 (0.11), PDK1 (0.1), EN1 (0.1), JNKp183.5 (0.1),
+
+Model R2 (+subtype): 0.4121
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	6.3361	0.3056	20.7355	0
+`akt_75_gene_list/adap_adap_single/akt`	0.6831	0.4272	1.5992	0.1193
+`bad_200_gene_list/adap_adap_single/bad`	-2.0524	0.7709	-2.6622	0.0119
+`erk_250_gene_list/adap_adap_single/erk`	1.664	0.99	1.6809	0.1022
+`raf_100_gene_list/adap_adap_single/raf`	1.0037	0.5258	1.9089	0.065
+Important genes: PIK3CA (0.41),
+Genes that add to the pathway model: PIK3CA (0.22),
+Important proteins: PDK1 (0.37), PDK1p241 (0.29), Rab25 (0.27), p70S6.Kinase (0.27), cJUN (0.23), p38 (0.22), ERp118 (0.22), X1 (0.2), AR (0.2), GATA3 (0.19), IGFBP2 (0.18), AMPKp (0.18), E.cadherin (0.17), p70S6Kp389 (0.17), EIG121 (0.16), TSC2 (0.16), EN1 (0.16), p38p (0.16), Aktp473 (0.16), ER (0.15), PAI1 (0.15), GSK3 (0.14), COMT (0.13), NOTCH3 (0.13), Aktp308 (0.13), PKCalpha (0.12), PTEN (0.12), mTor (0.11), JNKp183.5 (0.11), CCNB1 (0.1),
+Proteins that add to the pathway model: X4EBP1p37 (0.12), AMPKp (0.11), p38 (0.11), PDK1 (0.1), EN1 (0.1), JNKp183.5 (0.1),
+
+
+GSK923295
+Model R2 (no subtype): 0.1413
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	4.9488	0.8176	6.0528	0
+`erk_250_gene_list/adap_adap_single/erk`	3.1884	1.5927	2.0019	0.0531
+`igf1r_75_gene_list/adap_adap_single/igf1r`	2.9467	1.3035	2.2606	0.0301
+Important genes:  (),
+Genes that add to the pathway model:  (),
+Important proteins: p38p (0.15), p70S6.Kinase (0.15), p21 (0.15), NOTCH3 (0.11), stat3p705 (0.1),
+Proteins that add to the pathway model:  (),
+
+Model R2 (+subtype): 0.2582
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	7.31	0.3	24.367	0
+model_subsubtype_ERBB2Claudin-low	-0.27	0.4648	-0.581	0.5652
+model_subsubtype_ERBB2ERBB2	-0.1427	0.3838	-0.3719	0.7123
+model_subsubtype_ERBB2LUMINAL	-0.739	0.3911	-1.8893	0.0677
+model_subsubtype_ERBB2NORMAL	-1.32	0.4648	-2.8402	0.0077
+Important genes:  (),
+Genes that add to the pathway model:  (),
+Important proteins: p38p (0.15), p70S6.Kinase (0.15), p21 (0.15), NOTCH3 (0.11), stat3p705 (0.1),
+Proteins that add to the pathway model:  (),
+
+
+GSK1070916
+Model R2 (no subtype): 0.5013
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	5.6596	0.3971	14.251	0
+`akt_75_gene_list/adap_adap_single/akt`	1.0957	0.617	1.7759	0.0853
+`egfr_25_gene_list/adap_adap_single/egfr`	2.284	0.5466	4.1783	2e-04
+`erk_250_gene_list/adap_adap_single/erk`	-1.7973	0.7093	-2.5339	0.0164
+`her2_15_gene_list/adap_adap_single/her2`	-0.55	0.4047	-1.3592	0.1836
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-2.1474	0.7391	-2.9052	0.0066
+Important genes:  (),
+Genes that add to the pathway model:  (),
+Important proteins: IGFBP2 (0.21), S6p240.244 (0.19), S6p235.236 (0.17), ER (0.17), p70S6.Kinase (0.15), CCND1 (0.14), Telomerase (0.12), PR (0.11), Aktp308 (0.11), CD31 (0.1), COMT (0.1),
+Proteins that add to the pathway model: Fortilin (0.1),
+
+Model R2 (+subtype): 0.5013
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	5.6596	0.3971	14.251	0
+`akt_75_gene_list/adap_adap_single/akt`	1.0957	0.617	1.7759	0.0853
+`egfr_25_gene_list/adap_adap_single/egfr`	2.284	0.5466	4.1783	2e-04
+`erk_250_gene_list/adap_adap_single/erk`	-1.7973	0.7093	-2.5339	0.0164
+`her2_15_gene_list/adap_adap_single/her2`	-0.55	0.4047	-1.3592	0.1836
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-2.1474	0.7391	-2.9052	0.0066
+Important genes:  (),
+Genes that add to the pathway model:  (),
+Important proteins: IGFBP2 (0.21), S6p240.244 (0.19), S6p235.236 (0.17), ER (0.17), p70S6.Kinase (0.15), CCND1 (0.14), Telomerase (0.12), PR (0.11), Aktp308 (0.11), CD31 (0.1), COMT (0.1),
+Proteins that add to the pathway model: Fortilin (0.1),
+
+
+GSK1120212
+Model R2 (no subtype): 0.4885
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	8.7777	1.3311	6.5943	0
+`egfr_25_gene_list/adap_adap_single/egfr`	2.1297	0.6936	3.0704	0.0042
+`erk_250_gene_list/adap_adap_single/erk`	-5.6222	2.1484	-2.6169	0.0131
+`igf1r_75_gene_list/adap_adap_single/igf1r`	-5.9302	2.0716	-2.8626	0.0071
+Important genes: ZNF804B (0.33), CFTR (0.26), COL5A2 (0.15), NID2 (0.15), RIF1 (0.14), FAM86B2 (0.12),
+Genes that add to the pathway model: EPHA10 (0.12), CFTR (0.12), ZNF804B (0.11),
+Important proteins: PAI1 (0.38), IGFBP2 (0.38), X1 (0.35), ER (0.26), p70S6Kp389 (0.2), MAPKp (0.19), COMT (0.18), CCNB1 (0.17), PR (0.17), MEK1 (0.16), Aktp308 (0.16), B.Catenin (0.15), TSC2 (0.14), p70S6.Kinase (0.14), cJUN (0.13), Caveolin (0.12), Telomerase (0.12),
+Proteins that add to the pathway model: PKCalpha (0.14), PKCalphap657 (0.1),
+
+Model R2 (+subtype): 0.4885
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	8.7777	1.3311	6.5943	0
+`egfr_25_gene_list/adap_adap_single/egfr`	2.1297	0.6936	3.0704	0.0042
+`erk_250_gene_list/adap_adap_single/erk`	-5.6222	2.1484	-2.6169	0.0131
+`igf1r_75_gene_list/adap_adap_single/igf1r`	-5.9302	2.0716	-2.8626	0.0071
+Important genes: ZNF804B (0.33), CFTR (0.26), COL5A2 (0.15), NID2 (0.15), RIF1 (0.14), FAM86B2 (0.12),
+Genes that add to the pathway model: EPHA10 (0.12), CFTR (0.12), ZNF804B (0.11),
+Important proteins: PAI1 (0.38), IGFBP2 (0.38), X1 (0.35), ER (0.26), p70S6Kp389 (0.2), MAPKp (0.19), COMT (0.18), CCNB1 (0.17), PR (0.17), MEK1 (0.16), Aktp308 (0.16), B.Catenin (0.15), TSC2 (0.14), p70S6.Kinase (0.14), cJUN (0.13), Caveolin (0.12), Telomerase (0.12),
+Proteins that add to the pathway model: PKCalpha (0.14), PKCalphap657 (0.1),
+
+
+GSK1059868
+Model R2 (no subtype): 0.5867
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	3.9536	0.4727	8.3637	0
+`akt_75_gene_list/adap_adap_single/akt`	-1.3795	0.5576	-2.4741	0.0195
+`bad_200_gene_list/adap_adap_single/bad`	1.7787	0.648	2.745	0.0103
+`egfr_25_gene_list/adap_adap_single/egfr`	-0.9233	0.4153	-2.2234	0.0341
+`her2_15_gene_list/adap_adap_single/her2`	-0.4847	0.3477	-1.3942	0.1739
+`igf1r_75_gene_list/adap_adap_single/igf1r`	1.5984	0.4773	3.3488	0.0023
+`raf_100_gene_list/adap_adap_single/raf`	-0.8375	0.5311	-1.5768	0.1257
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	2.9195	0.775	3.7669	8e-04
+Important genes: ZNF141 (0.11),
+Genes that add to the pathway model:  (),
+Important proteins: PDK1 (0.34), ERp118 (0.32), X1 (0.27), EIG121 (0.25), p38p (0.25), CCNB1 (0.22), PAI1 (0.19), Telomerase (0.16), NOTCH3 (0.15), PDK1p241 (0.15), IGFBP2 (0.15), PR (0.15), TSC2 (0.15), Rab25 (0.12), ER (0.12), MAPKp (0.11), YB1 (0.1),
+Proteins that add to the pathway model: PDK1 (0.22), p53 (0.16), p38p (0.15), CCNE1 (0.15), ERp118 (0.15), EIG121 (0.14), AMPKp (0.14), MEK1 (0.14), GSK3p21.9 (0.13), EN1 (0.13), X1 (0.13), NOTCH3 (0.13), EGFR (0.13), Rab25 (0.12), ERK2 (0.12), MAPKp (0.12), Aktp473 (0.12), PKCalpha (0.12), Rb (0.12), B.Catenin (0.12), PKCalphap657 (0.11), VEGFR2 (0.11), p21 (0.11), p70S6Kp389 (0.11), srcp416 (0.11), S6p240.244 (0.11), mTor (0.11), S6p235.236 (0.1), GATA3 (0.1), PDK1p241 (0.1), CCND1 (0.1), GSK3 (0.1),
+
+Model R2 (+subtype): 0.7206
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	2.9291	0.6183	4.7376	1e-04
+`akt_75_gene_list/adap_adap_single/akt`	-1.3572	0.5587	-2.4294	0.0226
+`bad_200_gene_list/adap_adap_single/bad`	1.6214	0.6328	2.5623	0.0168
+`egfr_25_gene_list/adap_adap_single/egfr`	-0.6855	0.3816	-1.7963	0.0845
+`her2_15_gene_list/adap_adap_single/her2`	0.9429	0.6135	1.537	0.1369
+`igf1r_75_gene_list/adap_adap_single/igf1r`	2.4973	0.5182	4.819	1e-04
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-1.6293	0.8355	-1.9501	0.0625
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	3.5417	0.8799	4.0251	5e-04
+model_subsubtype_ERBB2Claudin-low	0.668	0.3059	2.1834	0.0386
+model_subsubtype_ERBB2ERBB2	-0.6331	0.261	-2.4262	0.0228
+model_subsubtype_ERBB2LUMINAL	-0.4062	0.253	-1.6059	0.1209
+model_subsubtype_ERBB2NORMAL	0.7425	0.2946	2.5205	0.0185
+Important genes: ZNF141 (0.11),
+Genes that add to the pathway model: FAM86B2 (0.14),
+Important proteins: PDK1 (0.34), ERp118 (0.32), X1 (0.27), EIG121 (0.25), p38p (0.25), CCNB1 (0.22), PAI1 (0.19), Telomerase (0.16), NOTCH3 (0.15), PDK1p241 (0.15), IGFBP2 (0.15), PR (0.15), TSC2 (0.15), Rab25 (0.12), ER (0.12), MAPKp (0.11), YB1 (0.1),
+Proteins that add to the pathway model: PDK1 (0.17), EGFR (0.16), Rb (0.15), Telomerase (0.14), p38p (0.14), p53 (0.14), Stathmin (0.14), PDK1p241 (0.13), ERK2 (0.13), MEK1 (0.13), cJUN (0.13), Akt (0.12), YB1 (0.12), mTor (0.12), S6p235.236 (0.12), X1 (0.12), Aktp473 (0.12), TSC2 (0.12), GATA3 (0.12), stat3 (0.12), AcCoAp (0.12), p110alpha (0.12), ERp118 (0.12), NOTCH3 (0.12), JNK (0.12), S6p240.244 (0.11), B.Catenin (0.11), AMPKp (0.11), Rab25 (0.11), srcp416 (0.11), p21 (0.11), VEGFR2 (0.11), PR (0.11), GSK3 (0.11), CCNB1 (0.11), PTEN (0.11), FGFR1 (0.11), X4EBP1p37 (0.11), JNKp183.5 (0.11), IGFBP2 (0.11), Collagen.VI (0.11), PKCalphap657 (0.1), cleaved.caspase.7 (0.1), GSK3p21.9 (0.1), p70S6Kp389 (0.1), Bcl2 (0.1), EIG121 (0.1), p70S6.Kinase (0.1), HER2 (0.1), src (0.1), ER (0.1), MAPKp (0.1), EN1 (0.1), p38 (0.1), srcp527 (0.1), PAI1 (0.1), PKCalpha (0.1), Aktp308 (0.1), CD31 (0.1), E.cadherin (0.1), CCND1 (0.1), Caveolin (0.1), EGFRp1068 (0.1), IGFR1 (0.1), COMT (0.1), stat3p705 (0.1), CCNE1 (0.1), AR (0.1), HER2p1248 (0.1), Fortilin (0.1),
+
+
+GSK1838705
+Model R2 (no subtype): 0.4459
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	6.846	0.5281	12.9623	0
+`bad_200_gene_list/adap_adap_single/bad`	-1.3324	0.6948	-1.9179	0.0638
+`her2_15_gene_list/adap_adap_single/her2`	-1.0366	0.4691	-2.21	0.0342
+`igf1r_75_gene_list/adap_adap_single/igf1r`	-1.8569	0.6599	-2.8138	0.0082
+`raf_100_gene_list/adap_adap_single/raf`	-4.4576	1.4797	-3.0124	0.0049
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	4.8517	1.4514	3.3428	0.0021
+Important genes: RIF1 (0.17),
+Genes that add to the pathway model:  (),
+Important proteins: VEGFR2 (0.18), ERK2 (0.15), p70S6.Kinase (0.14), GSK3p21.9 (0.13), Aktp473 (0.12),
+Proteins that add to the pathway model:  (),
+
+Model R2 (+subtype): 0.4459
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	6.846	0.5281	12.9623	0
+`bad_200_gene_list/adap_adap_single/bad`	-1.3324	0.6948	-1.9179	0.0638
+`her2_15_gene_list/adap_adap_single/her2`	-1.0366	0.4691	-2.21	0.0342
+`igf1r_75_gene_list/adap_adap_single/igf1r`	-1.8569	0.6599	-2.8138	0.0082
+`raf_100_gene_list/adap_adap_single/raf`	-4.4576	1.4797	-3.0124	0.0049
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	4.8517	1.4514	3.3428	0.0021
+Important genes: RIF1 (0.17),
+Genes that add to the pathway model:  (),
+Important proteins: VEGFR2 (0.18), ERK2 (0.15), p70S6.Kinase (0.14), GSK3p21.9 (0.13), Aktp473 (0.12),
+Proteins that add to the pathway model:  (),
+
+
+GSK461364
+Model R2 (no subtype): 0.1762
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	5.0725	0.8502	5.966	0
+`igf1r_75_gene_list/adap_adap_single/igf1r`	2.3798	1.7231	1.3811	0.176
+`raf_100_gene_list/adap_adap_single/raf`	3.31	1.2099	2.7357	0.0097
+Important genes: ARHGAP39 (0.13),
+Genes that add to the pathway model: PCDHB11 (0.14),
+Important proteins: ER (0.42), IGFBP2 (0.28), PR (0.27), Akt (0.26), p38p (0.25), TSC2 (0.24), Aktp473 (0.23), GATA3 (0.22), YB1 (0.21), X1 (0.19), GSK3 (0.18), Telomerase (0.17), PKCalphap657 (0.17), PDK1 (0.16), stat3p705 (0.15), PTEN (0.14), cJUN (0.14), PDK1p241 (0.13), Fortilin (0.12), AMPKp (0.12), p70S6.Kinase (0.11),
+Proteins that add to the pathway model: ER (0.3), Aktp473 (0.26), TSC2 (0.25), PKCalphap657 (0.24), PR (0.23), IGFBP2 (0.23), Akt (0.22), X1 (0.19), cJUN (0.19), PKCalpha (0.18), PDK1 (0.18), p38 (0.18), S6p235.236 (0.17), GATA3 (0.17), GSK3 (0.16), AMPKp (0.16), E.cadherin (0.16), p38p (0.16), PDK1p241 (0.16), PTEN (0.15), S6p240.244 (0.14), YB1 (0.14), cleaved.caspase.7 (0.14), srcp416 (0.13), stat3p705 (0.13), IGFR1 (0.13), Fortilin (0.12), ERK2 (0.11), Caveolin (0.11), X4EBP1p37 (0.11), p70S6.Kinase (0.11), Rab25 (0.11), Collagen.VI (0.1), ERp118 (0.1),
+
+Model R2 (+subtype): 0.3925
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	6.8364	1.2024	5.6855	0
+`her2_15_gene_list/adap_adap_single/her2`	-3.2927	1.8401	-1.7894	0.0833
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	5.1676	2.1977	2.3514	0.0252
+model_subsubtype_ERBB2Claudin-low	0.042	0.9265	0.0453	0.9641
+model_subsubtype_ERBB2ERBB2	1.3004	0.9469	1.3734	0.1795
+model_subsubtype_ERBB2LUMINAL	0.3985	0.943	0.4226	0.6755
+model_subsubtype_ERBB2NORMAL	-2.7423	0.9313	-2.9445	0.0061
+Important genes: ARHGAP39 (0.13),
+Genes that add to the pathway model:  (),
+Important proteins: ER (0.42), IGFBP2 (0.28), PR (0.27), Akt (0.26), p38p (0.25), TSC2 (0.24), Aktp473 (0.23), GATA3 (0.22), YB1 (0.21), X1 (0.19), GSK3 (0.18), Telomerase (0.17), PKCalphap657 (0.17), PDK1 (0.16), stat3p705 (0.15), PTEN (0.14), cJUN (0.14), PDK1p241 (0.13), Fortilin (0.12), AMPKp (0.12), p70S6.Kinase (0.11),
+Proteins that add to the pathway model: cleaved.caspase.7 (0.17), HER2 (0.15), Aktp473 (0.12), MAPKp (0.12), PR (0.11), Stathmin (0.11), ER (0.11), EIG121 (0.1),
+
+
+GSK2119563
+Model R2 (no subtype): 0.5033
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	5.672	0.6041	9.3886	0
+`akt_75_gene_list/adap_adap_single/akt`	2.3331	0.9232	2.5273	0.0165
+`egfr_25_gene_list/adap_adap_single/egfr`	1.3256	0.7886	1.681	0.1022
+`erk_250_gene_list/adap_adap_single/erk`	-3.6537	1.0443	-3.4986	0.0014
+`raf_100_gene_list/adap_adap_single/raf`	-4.3739	2.0836	-2.0992	0.0435
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	4.3552	2	2.1776	0.0367
+Important genes: PIK3CA (0.22),
+Genes that add to the pathway model:  (),
+Important proteins: EIG121 (0.42), ERp118 (0.32), cJUN (0.3), PDK1 (0.28), IGFR1 (0.27), HER2p1248 (0.26), E.cadherin (0.22), X1 (0.22), COMT (0.22), AR (0.19), IGFBP2 (0.19), HER2 (0.18), p38p (0.17), PKCalphap657 (0.17), Rab25 (0.16), Aktp473 (0.16), EN1 (0.16), PTEN (0.15), PR (0.15), PKCalpha (0.15), Akt (0.13), PDK1p241 (0.12), Aktp308 (0.11),
+Proteins that add to the pathway model: GSK3p21.9 (0.23), EIG121 (0.22), p38p (0.19), CCNE1 (0.15), EN1 (0.15), IGFR1 (0.14), mTor (0.14), Fortilin (0.13), PDK1p241 (0.13), Aktp473 (0.12), ERK2 (0.12), Telomerase (0.12), EGFR (0.12), GSK3 (0.12), Rab25 (0.12), X4EBP1p37 (0.12), CCND1 (0.11), PKCalpha (0.11), JNKp183.5 (0.11), p70S6Kp389 (0.11), GATA3 (0.11), HER2p1248 (0.11), PTEN (0.11), CD31 (0.1), AMPKp (0.1),
+
+Model R2 (+subtype): 0.6194
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	5.2968	0.8129	6.5161	0
+`akt_75_gene_list/adap_adap_single/akt`	3.139	1.1641	2.6965	0.0115
+`egfr_25_gene_list/adap_adap_single/egfr`	1.6006	0.7561	2.1168	0.043
+`erk_250_gene_list/adap_adap_single/erk`	-5.1612	1.3463	-3.8336	6e-04
+`raf_100_gene_list/adap_adap_single/raf`	-5.9529	2.3299	-2.555	0.0161
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	5.8681	2.3411	2.5065	0.0181
+model_subsubtype_ERBB2Claudin-low	1.0616	0.571	1.8593	0.0732
+model_subsubtype_ERBB2ERBB2	0.4815	0.3875	1.2427	0.2239
+model_subsubtype_ERBB2LUMINAL	0.0784	0.4554	0.1722	0.8645
+model_subsubtype_ERBB2NORMAL	0.7058	0.3679	1.9186	0.0649
+Important genes: PIK3CA (0.22),
+Genes that add to the pathway model:  (),
+Important proteins: EIG121 (0.42), ERp118 (0.32), cJUN (0.3), PDK1 (0.28), IGFR1 (0.27), HER2p1248 (0.26), E.cadherin (0.22), X1 (0.22), COMT (0.22), AR (0.19), IGFBP2 (0.19), HER2 (0.18), p38p (0.17), PKCalphap657 (0.17), Rab25 (0.16), Aktp473 (0.16), EN1 (0.16), PTEN (0.15), PR (0.15), PKCalpha (0.15), Akt (0.13), PDK1p241 (0.12), Aktp308 (0.11),
+Proteins that add to the pathway model: EIG121 (0.22), Bcl2 (0.2), Fortilin (0.18), B.Catenin (0.18), GSK3p21.9 (0.17), IGFR1 (0.17), PDK1p241 (0.17), EN1 (0.17), EGFR (0.17), FGFR1 (0.17), Telomerase (0.17), PKCalpha (0.16), p70S6.Kinase (0.16), CD31 (0.16), Rb (0.16), TSC2 (0.16), p38p (0.16), p53 (0.16), JNK (0.16), PR (0.16), CCNE1 (0.16), p70S6Kp389 (0.16), HER2 (0.16), AcCoAp (0.16), cleaved.caspase.7 (0.16), Stathmin (0.16), EGFRp1068 (0.16), mTor (0.16), PKCalphap657 (0.16), p21 (0.15), JNKp183.5 (0.15), PTEN (0.15), ER (0.15), NOTCH3 (0.15), VEGFR2 (0.15), PAI1 (0.15), YB1 (0.15), Akt (0.15), CCND1 (0.15), IGFBP2 (0.15), S6p240.244 (0.15), S6p235.236 (0.15), E.cadherin (0.15), MEK1 (0.15), COMT (0.15), X4EBP1p37 (0.15), p38 (0.15), ERp118 (0.15), CCNB1 (0.15), GSK3 (0.15), GATA3 (0.15), AMPKp (0.15), srcp416 (0.15), Aktp308 (0.14), srcp527 (0.14), MAPKp (0.14), stat3 (0.14), ERK2 (0.14), Aktp473 (0.14), stat3p705 (0.14), p110alpha (0.14), cJUN (0.14), src (0.14), X1 (0.14), PDK1 (0.14), Caveolin (0.14), Collagen.VI (0.14), HER2p1248 (0.14), AR (0.14), Rab25 (0.14),
+
+
+GSK2126458
+Model R2 (no subtype): 0.448
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	7.7689	0.4781	16.249	0
+`akt_75_gene_list/adap_adap_single/akt`	1.5043	0.662	2.2726	0.0295
+`erk_250_gene_list/adap_adap_single/erk`	-2.1272	0.7646	-2.7822	0.0087
+`raf_100_gene_list/adap_adap_single/raf`	-2.4123	1.649	-1.4629	0.1527
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	3.3386	1.56	2.1401	0.0396
+Important genes: PIK3CA (0.16),
+Genes that add to the pathway model: XIRP2 (0.15), PIK3CA (0.14), PRB3 (0.13), TTN (0.13), SYNE2 (0.12), GRAMD1A (0.12), NBPF10 (0.12), SLC9B1P4 (0.12), NID2 (0.12), EPHA10 (0.11), CFTR (0.11), TP53 (0.11), FAT2 (0.11), ZNF141 (0.11), PCDHB11 (0.11), ARHGAP39 (0.11), ZNF804B (0.11), FAM86B2 (0.11), RIF1 (0.11), ATP4A (0.11), COL5A2 (0.11), SYNE1 (0.1),
+Important proteins: HER2 (0.38), HER2p1248 (0.37), cJUN (0.37), COMT (0.31), PKCalphap657 (0.3), PDK1 (0.3), X1 (0.3), PKCalpha (0.29), ERp118 (0.28), EIG121 (0.28), p38p (0.25), AR (0.25), E.cadherin (0.22), EN1 (0.21), IGFBP2 (0.19), PTEN (0.17), PDK1p241 (0.16), YB1 (0.15), p53 (0.15), TSC2 (0.14), Rab25 (0.14), cleaved.caspase.7 (0.13), Akt (0.12), CCNE1 (0.12), Aktp308 (0.11), Telomerase (0.11), ER (0.1),
+Proteins that add to the pathway model: Telomerase (0.19), p38p (0.18), HER2 (0.15), EN1 (0.15), Stathmin (0.15), EGFRp1068 (0.14), HER2p1248 (0.14), CCNE1 (0.14), GATA3 (0.13), cleaved.caspase.7 (0.13), YB1 (0.13), Rb (0.11), Fortilin (0.11), GSK3p21.9 (0.11), EIG121 (0.11), Rab25 (0.11), p70S6Kp389 (0.1),
+
+Model R2 (+subtype): 0.6231
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	7.8696	0.6391	12.3137	0
+`akt_75_gene_list/adap_adap_single/akt`	1.3677	0.8937	1.5303	0.1368
+`egfr_25_gene_list/adap_adap_single/egfr`	0.8949	0.6064	1.4758	0.1508
+`erk_250_gene_list/adap_adap_single/erk`	-3.1011	1.0584	-2.93	0.0065
+`her2_15_gene_list/adap_adap_single/her2`	1.3851	0.7616	1.8187	0.0793
+`raf_100_gene_list/adap_adap_single/raf`	-1.9089	1.132	-1.6863	0.1025
+model_subsubtype_ERBB2Claudin-low	0.3018	0.4428	0.6815	0.5009
+model_subsubtype_ERBB2ERBB2	-0.0493	0.3782	-0.1305	0.8971
+model_subsubtype_ERBB2LUMINAL	-0.4897	0.3952	-1.2391	0.2252
+model_subsubtype_ERBB2NORMAL	1.1966	0.3784	3.1621	0.0037
+Important genes: PIK3CA (0.16),
+Genes that add to the pathway model: FAM86B2 (0.15), PIK3CA (0.13), XIRP2 (0.13), SYNE2 (0.12), TTN (0.12), ATP4A (0.12), COL5A2 (0.12), GRAMD1A (0.12), NID2 (0.12), CFTR (0.12), RIF1 (0.12), ARHGAP39 (0.11), SYNE1 (0.11), NBPF10 (0.11), FAT2 (0.11), ZNF141 (0.11), ZNF804B (0.11), PCDHB11 (0.11), PRB3 (0.11), EPHA10 (0.11), TP53 (0.11), SLC9B1P4 (0.11),
+Important proteins: HER2 (0.38), HER2p1248 (0.37), cJUN (0.37), COMT (0.31), PKCalphap657 (0.3), PDK1 (0.3), X1 (0.3), PKCalpha (0.29), ERp118 (0.28), EIG121 (0.28), p38p (0.25), AR (0.25), E.cadherin (0.22), EN1 (0.21), IGFBP2 (0.19), PTEN (0.17), PDK1p241 (0.16), YB1 (0.15), p53 (0.15), TSC2 (0.14), Rab25 (0.14), cleaved.caspase.7 (0.13), Akt (0.12), CCNE1 (0.12), Aktp308 (0.11), Telomerase (0.11), ER (0.1),
+Proteins that add to the pathway model: Rb (0.21), Bcl2 (0.2), Stathmin (0.19), EGFRp1068 (0.19), AMPKp (0.18), Telomerase (0.16), Aktp473 (0.16), YB1 (0.16), p70S6Kp389 (0.15), CD31 (0.15), EN1 (0.15), Collagen.VI (0.15), Caveolin (0.14), CCNE1 (0.14), GATA3 (0.14), EIG121 (0.14), Fortilin (0.14), PKCalphap657 (0.14), S6p240.244 (0.13), p38p (0.13), p38 (0.13), E.cadherin (0.13), CCNB1 (0.13), X4EBP1p37 (0.13), PR (0.13), stat3 (0.13), MAPKp (0.13), srcp527 (0.13), HER2 (0.13), PDK1p241 (0.13), S6p235.236 (0.13), src (0.12), PKCalpha (0.12), cleaved.caspase.7 (0.12), srcp416 (0.12), mTor (0.12), AR (0.12), TSC2 (0.12), IGFR1 (0.12), p110alpha (0.12), EGFR (0.12), GSK3p21.9 (0.12), NOTCH3 (0.12), MEK1 (0.12), p21 (0.12), Aktp308 (0.12), Rab25 (0.12), ER (0.12), X1 (0.12), Akt (0.12), JNK (0.12), CCND1 (0.12), stat3p705 (0.12), PDK1 (0.12), p70S6.Kinase (0.12), JNKp183.5 (0.12), p53 (0.12), ERK2 (0.12), COMT (0.12), HER2p1248 (0.12), GSK3 (0.12), PAI1 (0.12), IGFBP2 (0.12), AcCoAp (0.12), ERp118 (0.12), VEGFR2 (0.12), cJUN (0.12), B.Catenin (0.12), PTEN (0.12), FGFR1 (0.12),
+
+
+GSK2141795
+Model R2 (no subtype): 0.5317
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	3.0639	1.2639	2.4241	0.0214
+`bad_200_gene_list/adap_adap_single/bad`	2.4333	1.6041	1.5169	0.1394
+`igf1r_75_gene_list/adap_adap_single/igf1r`	3.5197	1.1676	3.0144	0.0051
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-1.8295	0.8925	-2.0499	0.0489
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	4.3381	1.5144	2.8646	0.0074
+Important genes: SLC9B1P4 (0.13), NID2 (0.13), FAM86B2 (0.11),
+Genes that add to the pathway model:  (),
+Important proteins: PDK1 (0.47), PDK1p241 (0.33), X1 (0.32), PKCalphap657 (0.29), PKCalpha (0.28), PAI1 (0.25), Rab25 (0.24), EGFRp1068 (0.23), HER2 (0.22), AMPKp (0.19), HER2p1248 (0.18), E.cadherin (0.17), COMT (0.17), cJUN (0.17), Telomerase (0.17), TSC2 (0.16), AR (0.16), p38p (0.16), stat3 (0.16), EIG121 (0.16), NOTCH3 (0.14), ERp118 (0.13), mTor (0.12), GATA3 (0.12), S6p235.236 (0.12), MAPKp (0.12), GSK3 (0.11), Akt (0.1),
+Proteins that add to the pathway model:  (),
+
+Model R2 (+subtype): 0.5317
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	3.0639	1.2639	2.4241	0.0214
+`bad_200_gene_list/adap_adap_single/bad`	2.4333	1.6041	1.5169	0.1394
+`igf1r_75_gene_list/adap_adap_single/igf1r`	3.5197	1.1676	3.0144	0.0051
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-1.8295	0.8925	-2.0499	0.0489
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	4.3381	1.5144	2.8646	0.0074
+Important genes: SLC9B1P4 (0.13), NID2 (0.13), FAM86B2 (0.11),
+Genes that add to the pathway model:  (),
+Important proteins: PDK1 (0.47), PDK1p241 (0.33), X1 (0.32), PKCalphap657 (0.29), PKCalpha (0.28), PAI1 (0.25), Rab25 (0.24), EGFRp1068 (0.23), HER2 (0.22), AMPKp (0.19), HER2p1248 (0.18), E.cadherin (0.17), COMT (0.17), cJUN (0.17), Telomerase (0.17), TSC2 (0.16), AR (0.16), p38p (0.16), stat3 (0.16), EIG121 (0.16), NOTCH3 (0.14), ERp118 (0.13), mTor (0.12), GATA3 (0.12), S6p235.236 (0.12), MAPKp (0.12), GSK3 (0.11), Akt (0.1),
+Proteins that add to the pathway model:  (),
+
+
+GSK1059615
+Model R2 (no subtype): 0.2961
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	5.0477	0.3747	13.4711	0
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	2.5532	0.6681	3.8217	5e-04
+`egfr_25_gene_list/adap_adap_single/egfr`	0.4165	0.2878	1.4472	0.1567
+Important genes: PLEKHS1 (0.15),
+Genes that add to the pathway model: PLEKHS1 (0.21), XIRP2 (0.17), GRAMD1A (0.15), FAT2 (0.12), SLC9B1P4 (0.12), CFTR (0.1),
+Important proteins: HER2p1248 (0.34), HER2 (0.3), cleaved.caspase.7 (0.24), ERp118 (0.23), EIG121 (0.2), YB1 (0.19), PKCalphap657 (0.19), PKCalpha (0.19), FGFR1 (0.17), EN1 (0.17), X1 (0.16), Rab25 (0.16), AR (0.16), Fortilin (0.14), cJUN (0.14), CCNE1 (0.14), E.cadherin (0.12), p21 (0.11), PTEN (0.1), S6p240.244 (0.1),
+Proteins that add to the pathway model: p70S6Kp389 (0.22), cleaved.caspase.7 (0.2), Fortilin (0.19), HER2p1248 (0.19), GATA3 (0.17), EN1 (0.17), HER2 (0.17), EGFR (0.17), p70S6.Kinase (0.16), CCNE1 (0.16), S6p240.244 (0.16), YB1 (0.16), p38 (0.15), JNKp183.5 (0.14), S6p235.236 (0.14), EIG121 (0.14), Akt (0.14), IGFBP2 (0.13), p21 (0.13), ER (0.13), PAI1 (0.13), X4EBP1p37 (0.13), GSK3p21.9 (0.12), AR (0.12), MAPKp (0.12), Collagen.VI (0.12), PTEN (0.11), GSK3 (0.11), ERp118 (0.11), CCNB1 (0.11), cJUN (0.11), Rab25 (0.11), AMPKp (0.11), PDK1p241 (0.11), p38p (0.11), Stathmin (0.11), VEGFR2 (0.1), stat3 (0.1), CCND1 (0.1), PKCalphap657 (0.1), IGFR1 (0.1), B.Catenin (0.1), ERK2 (0.1),
+
+Model R2 (+subtype): 0.5129
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	4.8189	0.532	9.0586	0
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	2.8748	1.1384	2.5253	0.0167
+model_subsubtype_ERBB2Claudin-low	0.4218	0.4131	1.021	0.3149
+model_subsubtype_ERBB2ERBB2	0.3708	0.211	1.7577	0.0884
+model_subsubtype_ERBB2LUMINAL	0.0473	0.2077	0.2279	0.8212
+model_subsubtype_ERBB2NORMAL	0.9792	0.274	3.5739	0.0011
+Important genes: PLEKHS1 (0.15),
+Genes that add to the pathway model:  (),
+Important proteins: HER2p1248 (0.34), HER2 (0.3), cleaved.caspase.7 (0.24), ERp118 (0.23), EIG121 (0.2), YB1 (0.19), PKCalphap657 (0.19), PKCalpha (0.19), FGFR1 (0.17), EN1 (0.17), X1 (0.16), Rab25 (0.16), AR (0.16), Fortilin (0.14), cJUN (0.14), CCNE1 (0.14), E.cadherin (0.12), p21 (0.11), PTEN (0.1), S6p240.244 (0.1),
+Proteins that add to the pathway model: p70S6Kp389 (0.17), Fortilin (0.13), S6p240.244 (0.12), Collagen.VI (0.12), p70S6.Kinase (0.1),
+
+
+GSK650394
+Model R2 (no subtype): 0.7024
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	4.0902	0.6456	6.3359	0
+`akt_75_gene_list/adap_adap_single/akt`	1.4646	0.6531	2.2425	0.0333
+`bad_200_gene_list/adap_adap_single/bad`	1.8629	1.0392	1.7926	0.0843
+`egfr_25_gene_list/adap_adap_single/egfr`	1.0051	0.5112	1.966	0.0597
+`erk_250_gene_list/adap_adap_single/erk`	-2.1821	1.4369	-1.5186	0.1405
+`her2_15_gene_list/adap_adap_single/her2`	-0.6006	0.4425	-1.3573	0.1859
+`igf1r_75_gene_list/adap_adap_single/igf1r`	-2.0846	0.697	-2.9909	0.0059
+`raf_100_gene_list/adap_adap_single/raf`	-1.1884	0.8864	-1.3407	0.1912
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	1.7377	0.9062	1.9175	0.0658
+Important genes: RIF1 (0.29), PIK3CA (0.13),
+Genes that add to the pathway model:  (),
+Important proteins: PAI1 (0.39), CCNB1 (0.15), COMT (0.15), EGFRp1068 (0.13), PDK1p241 (0.11), VEGFR2 (0.11), GSK3p21.9 (0.11),
+Proteins that add to the pathway model:  (),
+
+Model R2 (+subtype): 0.7024
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	4.0902	0.6456	6.3359	0
+`akt_75_gene_list/adap_adap_single/akt`	1.4646	0.6531	2.2425	0.0333
+`bad_200_gene_list/adap_adap_single/bad`	1.8629	1.0392	1.7926	0.0843
+`egfr_25_gene_list/adap_adap_single/egfr`	1.0051	0.5112	1.966	0.0597
+`erk_250_gene_list/adap_adap_single/erk`	-2.1821	1.4369	-1.5186	0.1405
+`her2_15_gene_list/adap_adap_single/her2`	-0.6006	0.4425	-1.3573	0.1859
+`igf1r_75_gene_list/adap_adap_single/igf1r`	-2.0846	0.697	-2.9909	0.0059
+`raf_100_gene_list/adap_adap_single/raf`	-1.1884	0.8864	-1.3407	0.1912
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	1.7377	0.9062	1.9175	0.0658
+Important genes: RIF1 (0.29), PIK3CA (0.13),
+Genes that add to the pathway model:  (),
+Important proteins: PAI1 (0.39), CCNB1 (0.15), COMT (0.15), EGFRp1068 (0.13), PDK1p241 (0.11), VEGFR2 (0.11), GSK3p21.9 (0.11),
+Proteins that add to the pathway model:  (),
+
+
+Lapatinib
+Model R2 (no subtype): 0.2039
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	4.6124	0.227	20.3179	0
+`her2_15_gene_list/adap_adap_single/her2`	1.1553	0.3915	2.951	0.0057
+Important genes:  (),
+Genes that add to the pathway model: SYNE1 (0.16), ATP4A (0.15), EPHA10 (0.15), PRB3 (0.14), ZNF141 (0.14), COL5A2 (0.12), TP53 (0.12), SLC9B1P4 (0.12), FAT2 (0.12), GRAMD1A (0.12), NBPF10 (0.11), RIF1 (0.1),
+Important proteins: HER2 (0.87), HER2p1248 (0.84), PDK1 (0.28), X1 (0.28), COMT (0.26), Telomerase (0.22), p21 (0.2), PDK1p241 (0.18), CD31 (0.16), p38p (0.16), Stathmin (0.15), VEGFR2 (0.15), cJUN (0.14), AR (0.14), EIG121 (0.13), EGFR (0.13), PKCalpha (0.12),
+Proteins that add to the pathway model: HER2 (0.67), HER2p1248 (0.64), GATA3 (0.39), ER (0.34), EGFR (0.31), p21 (0.29), CCND1 (0.28), Telomerase (0.25), IGFBP2 (0.24), p70S6.Kinase (0.24), E.cadherin (0.23), AMPKp (0.23), cleaved.caspase.7 (0.22), p38 (0.22), MAPKp (0.22), Rab25 (0.21), S6p235.236 (0.21), Stathmin (0.21), stat3p705 (0.21), p38p (0.21), VEGFR2 (0.21), ERp118 (0.2), JNKp183.5 (0.2), MEK1 (0.2), PR (0.2), EGFRp1068 (0.19), S6p240.244 (0.19), COMT (0.19), PDK1 (0.19), Bcl2 (0.19), AcCoAp (0.19), EIG121 (0.19), ERK2 (0.19), GSK3p21.9 (0.19), CD31 (0.18), Aktp473 (0.18), src (0.18), X1 (0.18), JNK (0.18), p70S6Kp389 (0.18), FGFR1 (0.18), NOTCH3 (0.18), X4EBP1p37 (0.18), PKCalphap657 (0.17), stat3 (0.17), PAI1 (0.17), B.Catenin (0.17), Caveolin (0.17), Fortilin (0.17), CCNE1 (0.17), CCNB1 (0.17), cJUN (0.17), EN1 (0.17), srcp527 (0.17), srcp416 (0.17), AR (0.17), PTEN (0.17), YB1 (0.17), Aktp308 (0.17), GSK3 (0.17), Collagen.VI (0.17), p110alpha (0.17), Rb (0.17), mTor (0.17), IGFR1 (0.17), PKCalpha (0.17), TSC2 (0.17), PDK1p241 (0.17), p53 (0.17), Akt (0.17),
+
+Model R2 (+subtype): 0.8561
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	5.3514	0.2826	18.9338	0
+`her2_15_gene_list/adap_adap_single/her2`	0.8113	0.4068	1.9944	0.0556
+`raf_100_gene_list/adap_adap_single/raf`	-1.7065	0.4794	-3.5598	0.0013
+model_subsubtype_ERBB2Claudin-low	-0.0941	0.1997	-0.4712	0.641
+model_subsubtype_ERBB2ERBB2	0.5386	0.2096	2.5704	0.0156
+model_subsubtype_ERBB2LUMINAL	-0.8387	0.2192	-3.8269	6e-04
+model_subsubtype_ERBB2NORMAL	0.6999	0.2161	3.238	0.003
+Important genes:  (),
+Genes that add to the pathway model:  (),
+Important proteins: HER2 (0.87), HER2p1248 (0.84), PDK1 (0.28), X1 (0.28), COMT (0.26), Telomerase (0.22), p21 (0.2), PDK1p241 (0.18), CD31 (0.16), p38p (0.16), Stathmin (0.15), VEGFR2 (0.15), cJUN (0.14), AR (0.14), EIG121 (0.13), EGFR (0.13), PKCalpha (0.12),
+Proteins that add to the pathway model:  (),
+
+
+Geldanamycin
+Model R2 (no subtype): 0.1132
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	8.0243	0.1906	42.105	0
+`igf1r_75_gene_list/adap_adap_single/igf1r`	-1.1723	0.5394	-2.1734	0.0362
+Important genes: PLEKHS1 (0.26), GRAMD1A (0.17), ZNF804B (0.15), SLC9B1P4 (0.15),
+Genes that add to the pathway model: PLEKHS1 (0.2), SLC9B1P4 (0.12),
+Important proteins: EGFR (0.27), HER2p1248 (0.14), MAPKp (0.11), CCND1 (0.11), HER2 (0.1),
+Proteins that add to the pathway model: HER2p1248 (0.22), EGFR (0.18), HER2 (0.16),
+
+Model R2 (+subtype): 0.6061
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	8.9199	0.6449	13.8307	0
+`erk_250_gene_list/adap_adap_single/erk`	-1.5565	0.7734	-2.0126	0.0535
+`her2_15_gene_list/adap_adap_single/her2`	-1.5631	0.6293	-2.4838	0.019
+`igf1r_75_gene_list/adap_adap_single/igf1r`	-2.4964	0.7609	-3.2809	0.0027
+`raf_100_gene_list/adap_adap_single/raf`	-2.497	1.3515	-1.8475	0.0749
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	3.5557	1.491	2.3847	0.0239
+model_subsubtype_ERBB2Claudin-low	0.1341	0.303	0.4424	0.6615
+model_subsubtype_ERBB2ERBB2	1.2138	0.3103	3.9111	5e-04
+model_subsubtype_ERBB2LUMINAL	0.4602	0.3012	1.5281	0.1373
+model_subsubtype_ERBB2NORMAL	-0.2934	0.3428	-0.856	0.399
+Important genes: PLEKHS1 (0.26), GRAMD1A (0.17), ZNF804B (0.15), SLC9B1P4 (0.15),
+Genes that add to the pathway model: COL5A2 (0.12), PCDHB11 (0.11), ZNF141 (0.1), FAM86B2 (0.1),
+Important proteins: EGFR (0.27), HER2p1248 (0.14), MAPKp (0.11), CCND1 (0.11), HER2 (0.1),
+Proteins that add to the pathway model: PR (0.25), X4EBP1p37 (0.25), CCND1 (0.24), src (0.23), IGFR1 (0.23), E.cadherin (0.23), srcp527 (0.23), Bcl2 (0.22), HER2 (0.22), TSC2 (0.22), ERK2 (0.22), COMT (0.21), mTor (0.21), ER (0.21), stat3 (0.21), JNK (0.21), p70S6Kp389 (0.21), EIG121 (0.21), p53 (0.21), EN1 (0.21), Rab25 (0.2), PAI1 (0.2), S6p240.244 (0.2), Aktp308 (0.2), srcp416 (0.2), AcCoAp (0.2), p38 (0.2), Fortilin (0.2), CCNE1 (0.2), cleaved.caspase.7 (0.2), S6p235.236 (0.2), ERp118 (0.2), PDK1p241 (0.2), PDK1 (0.2), AMPKp (0.2), JNKp183.5 (0.2), GATA3 (0.2), HER2p1248 (0.2), CCNB1 (0.2), GSK3 (0.2), EGFRp1068 (0.2), Aktp473 (0.2), Stathmin (0.2), IGFBP2 (0.2), PKCalpha (0.2), MAPKp (0.2), CD31 (0.2), PKCalphap657 (0.2), PTEN (0.2), B.Catenin (0.2), NOTCH3 (0.2), Collagen.VI (0.2), p21 (0.2), MEK1 (0.2), p110alpha (0.2), p70S6.Kinase (0.2), EGFR (0.2), FGFR1 (0.2), Caveolin (0.2), Akt (0.2), p38p (0.2), YB1 (0.2), AR (0.2), VEGFR2 (0.2), cJUN (0.2), stat3p705 (0.2), Rb (0.2), X1 (0.2), GSK3p21.9 (0.2), Telomerase (0.2),
+
+
+Gemcitabine
+Model R2 (no subtype): 0.3844
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	1.6326	1.2561	1.2998	0.2027
+`bad_200_gene_list/adap_adap_single/bad`	6.8101	1.8113	3.7597	7e-04
+`igf1r_75_gene_list/adap_adap_single/igf1r`	6.4237	2.162	2.9712	0.0055
+`raf_100_gene_list/adap_adap_single/raf`	-11.2457	4.1175	-2.7312	0.0101
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	11.8823	3.9901	2.9779	0.0054
+Important genes: COL5A2 (0.12),
+Genes that add to the pathway model: XIRP2 (0.16), PIK3CA (0.14), TP53 (0.14), RIF1 (0.13), COL5A2 (0.13), PRB3 (0.12), EPHA10 (0.12), CFTR (0.11), SLC9B1P4 (0.11), FAM86B2 (0.1),
+Important proteins: Fortilin (0.23), GSK3 (0.2), AR (0.16), VEGFR2 (0.14), CCNE1 (0.14), IGFR1 (0.13), PKCalpha (0.11), CD31 (0.11), E.cadherin (0.11),
+Proteins that add to the pathway model: COMT (0.18), X4EBP1p37 (0.15), Aktp473 (0.14), PAI1 (0.13), AcCoAp (0.13), IGFBP2 (0.12), cJUN (0.12), HER2p1248 (0.11), TSC2 (0.11), Aktp308 (0.11), ERK2 (0.11),
+
+Model R2 (+subtype): 0.3844
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	1.6326	1.2561	1.2998	0.2027
+`bad_200_gene_list/adap_adap_single/bad`	6.8101	1.8113	3.7597	7e-04
+`igf1r_75_gene_list/adap_adap_single/igf1r`	6.4237	2.162	2.9712	0.0055
+`raf_100_gene_list/adap_adap_single/raf`	-11.2457	4.1175	-2.7312	0.0101
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	11.8823	3.9901	2.9779	0.0054
+Important genes: COL5A2 (0.12),
+Genes that add to the pathway model: XIRP2 (0.16), PIK3CA (0.14), TP53 (0.14), RIF1 (0.13), COL5A2 (0.13), PRB3 (0.12), EPHA10 (0.12), CFTR (0.11), SLC9B1P4 (0.11), FAM86B2 (0.1),
+Important proteins: Fortilin (0.23), GSK3 (0.2), AR (0.16), VEGFR2 (0.14), CCNE1 (0.14), IGFR1 (0.13), PKCalpha (0.11), CD31 (0.11), E.cadherin (0.11),
+Proteins that add to the pathway model: COMT (0.18), X4EBP1p37 (0.15), Aktp473 (0.14), PAI1 (0.13), AcCoAp (0.13), IGFBP2 (0.12), cJUN (0.12), HER2p1248 (0.11), TSC2 (0.11), Aktp308 (0.11), ERK2 (0.11),
+
+
+Glycyl.H1152
+Model R2 (no subtype): 0.226
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	5.0388	0.208	24.2251	0
+`egfr_25_gene_list/adap_adap_single/egfr`	1.6091	0.5401	2.9794	0.0053
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-2.916	0.9616	-3.0324	0.0046
+Important genes:  (),
+Genes that add to the pathway model:  (),
+Important proteins: E.cadherin (0.13), COMT (0.12), HER2 (0.1), Collagen.VI (0.1),
+Proteins that add to the pathway model: VEGFR2 (0.15),
+
+Model R2 (+subtype): 0.226
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	5.0388	0.208	24.2251	0
+`egfr_25_gene_list/adap_adap_single/egfr`	1.6091	0.5401	2.9794	0.0053
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-2.916	0.9616	-3.0324	0.0046
+Important genes:  (),
+Genes that add to the pathway model:  (),
+Important proteins: E.cadherin (0.13), COMT (0.12), HER2 (0.1), Collagen.VI (0.1),
+Proteins that add to the pathway model: VEGFR2 (0.15),
+
+
+ICRF.193
+Model R2 (no subtype): 0.2986
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	5.0173	0.8654	5.7979	0
+`akt_75_gene_list/adap_adap_single/akt`	2.8463	1.3634	2.0876	0.0451
+`egfr_25_gene_list/adap_adap_single/egfr`	2.3267	0.9629	2.4165	0.0218
+`raf_100_gene_list/adap_adap_single/raf`	-7.4424	3.2044	-2.3226	0.0269
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	5.9089	3.1622	1.8686	0.0711
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	-4.2596	1.7603	-2.4199	0.0216
+Important genes: FAT2 (0.15),
+Genes that add to the pathway model: FAT2 (0.23), NBPF10 (0.19), PRB3 (0.16), TP53 (0.16), XIRP2 (0.13), TTN (0.12), RIF1 (0.12), EPHA10 (0.11),
+Important proteins: GSK3p21.9 (0.24), EGFRp1068 (0.14), E.cadherin (0.14), PAI1 (0.13), PKCalpha (0.13), GSK3 (0.11), PR (0.11), Rb (0.11), PKCalphap657 (0.11),
+Proteins that add to the pathway model: Rb (0.32), cleaved.caspase.7 (0.26), cJUN (0.24), p21 (0.23), p38p (0.22), JNK (0.22), p110alpha (0.22), GSK3p21.9 (0.22), Akt (0.21), Stathmin (0.21), PR (0.2), MEK1 (0.2), Caveolin (0.2), VEGFR2 (0.19), Aktp308 (0.19), p70S6.Kinase (0.19), E.cadherin (0.19), AcCoAp (0.18), IGFBP2 (0.18), TSC2 (0.18), GATA3 (0.18), CD31 (0.17), ERK2 (0.17), X1 (0.17), COMT (0.17), mTor (0.17), PKCalpha (0.17), YB1 (0.17), HER2p1248 (0.17), p38 (0.17), HER2 (0.17), X4EBP1p37 (0.17), PAI1 (0.17), PKCalphap657 (0.17), PDK1p241 (0.17), CCNE1 (0.17), EGFRp1068 (0.17), EN1 (0.16), Aktp473 (0.16), srcp416 (0.16), Collagen.VI (0.16), AMPKp (0.16), CCNB1 (0.16), PDK1 (0.16), Rab25 (0.16), Telomerase (0.16), CCND1 (0.16), AR (0.16), Fortilin (0.16), IGFR1 (0.16), JNKp183.5 (0.16), PTEN (0.16), ER (0.16), src (0.16), MAPKp (0.15), EGFR (0.15), p70S6Kp389 (0.15), stat3 (0.15), B.Catenin (0.15), GSK3 (0.15), p53 (0.15), S6p235.236 (0.15), EIG121 (0.15), NOTCH3 (0.15), Bcl2 (0.15), srcp527 (0.15), stat3p705 (0.15), ERp118 (0.15), FGFR1 (0.15), S6p240.244 (0.15),
+
+Model R2 (+subtype): 0.2986
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	5.0173	0.8654	5.7979	0
+`akt_75_gene_list/adap_adap_single/akt`	2.8463	1.3634	2.0876	0.0451
+`egfr_25_gene_list/adap_adap_single/egfr`	2.3267	0.9629	2.4165	0.0218
+`raf_100_gene_list/adap_adap_single/raf`	-7.4424	3.2044	-2.3226	0.0269
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	5.9089	3.1622	1.8686	0.0711
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	-4.2596	1.7603	-2.4199	0.0216
+Important genes: FAT2 (0.15),
+Genes that add to the pathway model: FAT2 (0.23), NBPF10 (0.19), PRB3 (0.16), TP53 (0.16), XIRP2 (0.13), TTN (0.12), RIF1 (0.12), EPHA10 (0.11),
+Important proteins: GSK3p21.9 (0.24), EGFRp1068 (0.14), E.cadherin (0.14), PAI1 (0.13), PKCalpha (0.13), GSK3 (0.11), PR (0.11), Rb (0.11), PKCalphap657 (0.11),
+Proteins that add to the pathway model: Rb (0.32), cleaved.caspase.7 (0.26), cJUN (0.24), p21 (0.23), p38p (0.22), JNK (0.22), p110alpha (0.22), GSK3p21.9 (0.22), Akt (0.21), Stathmin (0.21), PR (0.2), MEK1 (0.2), Caveolin (0.2), VEGFR2 (0.19), Aktp308 (0.19), p70S6.Kinase (0.19), E.cadherin (0.19), AcCoAp (0.18), IGFBP2 (0.18), TSC2 (0.18), GATA3 (0.18), CD31 (0.17), ERK2 (0.17), X1 (0.17), COMT (0.17), mTor (0.17), PKCalpha (0.17), YB1 (0.17), HER2p1248 (0.17), p38 (0.17), HER2 (0.17), X4EBP1p37 (0.17), PAI1 (0.17), PKCalphap657 (0.17), PDK1p241 (0.17), CCNE1 (0.17), EGFRp1068 (0.17), EN1 (0.16), Aktp473 (0.16), srcp416 (0.16), Collagen.VI (0.16), AMPKp (0.16), CCNB1 (0.16), PDK1 (0.16), Rab25 (0.16), Telomerase (0.16), CCND1 (0.16), AR (0.16), Fortilin (0.16), IGFR1 (0.16), JNKp183.5 (0.16), PTEN (0.16), ER (0.16), src (0.16), MAPKp (0.15), EGFR (0.15), p70S6Kp389 (0.15), stat3 (0.15), B.Catenin (0.15), GSK3 (0.15), p53 (0.15), S6p235.236 (0.15), EIG121 (0.15), NOTCH3 (0.15), Bcl2 (0.15), srcp527 (0.15), stat3p705 (0.15), ERp118 (0.15), FGFR1 (0.15), S6p240.244 (0.15),
+
+
+IKK.16
+Model R2 (no subtype): 0.6279
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	4.75	0.1928	24.6331	0
+`akt_75_gene_list/adap_adap_single/akt`	0.8944	0.2809	3.1839	0.0035
+`bad_200_gene_list/adap_adap_single/bad`	1.9263	0.486	3.9634	5e-04
+`egfr_25_gene_list/adap_adap_single/egfr`	0.7236	0.2415	2.9959	0.0057
+`erk_250_gene_list/adap_adap_single/erk`	-1.7711	0.55	-3.2201	0.0032
+`her2_15_gene_list/adap_adap_single/her2`	0.3526	0.2314	1.5238	0.1388
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-0.8609	0.3672	-2.3446	0.0264
+Important genes: FAM86B2 (0.13), PIK3CA (0.12),
+Genes that add to the pathway model:  (),
+Important proteins: Aktp473 (0.28), Aktp308 (0.26), B.Catenin (0.25), Akt (0.23), IGFBP2 (0.22), AR (0.2), CCNE1 (0.19), X1 (0.19), Telomerase (0.17), p70S6.Kinase (0.17), mTor (0.16), PTEN (0.15), p21 (0.14), p70S6Kp389 (0.14), Collagen.VI (0.13), ER (0.12), p110alpha (0.12), Fortilin (0.11), cJUN (0.11), stat3p705 (0.11),
+Proteins that add to the pathway model:  (),
+
+Model R2 (+subtype): 0.6958
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	4.9364	0.2363	20.8903	0
+`akt_75_gene_list/adap_adap_single/akt`	0.8312	0.3507	2.3705	0.0258
+`bad_200_gene_list/adap_adap_single/bad`	1.9731	0.4574	4.3136	2e-04
+`egfr_25_gene_list/adap_adap_single/egfr`	0.591	0.2374	2.49	0.0198
+`erk_250_gene_list/adap_adap_single/erk`	-1.4653	0.4977	-2.9442	0.0069
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-0.6767	0.4168	-1.6234	0.1171
+model_subsubtype_ERBB2Claudin-low	-0.2858	0.1724	-1.658	0.1098
+model_subsubtype_ERBB2ERBB2	-0.0588	0.1218	-0.4827	0.6335
+model_subsubtype_ERBB2LUMINAL	0.0355	0.14	0.2534	0.802
+model_subsubtype_ERBB2NORMAL	-0.2608	0.1106	-2.3589	0.0265
+Important genes: FAM86B2 (0.13), PIK3CA (0.12),
+Genes that add to the pathway model:  (),
+Important proteins: Aktp473 (0.28), Aktp308 (0.26), B.Catenin (0.25), Akt (0.23), IGFBP2 (0.22), AR (0.2), CCNE1 (0.19), X1 (0.19), Telomerase (0.17), p70S6.Kinase (0.17), mTor (0.16), PTEN (0.15), p21 (0.14), p70S6Kp389 (0.14), Collagen.VI (0.13), ER (0.12), p110alpha (0.12), Fortilin (0.11), cJUN (0.11), stat3p705 (0.11),
+Proteins that add to the pathway model:  (),
+
+
+Ibandronate.sodium.salt
+Model R2 (no subtype): 0.3514
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	4.1443	0.3994	10.3773	0
+`akt_75_gene_list/adap_adap_single/akt`	-1.1017	0.5321	-2.0704	0.0466
+`bad_200_gene_list/adap_adap_single/bad`	1.0002	0.5579	1.7927	0.0825
+`her2_15_gene_list/adap_adap_single/her2`	1.0313	0.4353	2.3693	0.024
+`raf_100_gene_list/adap_adap_single/raf`	2.0272	1.3237	1.5315	0.1355
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-3.3821	1.2282	-2.7538	0.0096
+Important genes: ZNF804B (0.13), PCDHB11 (0.12), FAT2 (0.12),
+Genes that add to the pathway model:  (),
+Important proteins: EGFRp1068 (0.26), Stathmin (0.17), Rab25 (0.17), Collagen.VI (0.13), S6p240.244 (0.11), FGFR1 (0.11),
+Proteins that add to the pathway model:  (),
+
+Model R2 (+subtype): 0.3514
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	4.1443	0.3994	10.3773	0
+`akt_75_gene_list/adap_adap_single/akt`	-1.1017	0.5321	-2.0704	0.0466
+`bad_200_gene_list/adap_adap_single/bad`	1.0002	0.5579	1.7927	0.0825
+`her2_15_gene_list/adap_adap_single/her2`	1.0313	0.4353	2.3693	0.024
+`raf_100_gene_list/adap_adap_single/raf`	2.0272	1.3237	1.5315	0.1355
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-3.3821	1.2282	-2.7538	0.0096
+Important genes: ZNF804B (0.13), PCDHB11 (0.12), FAT2 (0.12),
+Genes that add to the pathway model:  (),
+Important proteins: EGFRp1068 (0.26), Stathmin (0.17), Rab25 (0.17), Collagen.VI (0.13), S6p240.244 (0.11), FGFR1 (0.11),
+Proteins that add to the pathway model:  (),
+
+
+Imatinib
+Model R2 (no subtype): 0.1764
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	4.1633	0.1972	21.1149	0
+`her2_15_gene_list/adap_adap_single/her2`	0.6003	0.2294	2.6172	0.0129
+`raf_100_gene_list/adap_adap_single/raf`	0.6582	0.3078	2.1386	0.0393
+Important genes: XIRP2 (0.18),
+Genes that add to the pathway model: XIRP2 (0.2), SYNE1 (0.14),
+Important proteins: mTor (0.18), YB1 (0.15), HER2 (0.13), PDK1p241 (0.13), E.cadherin (0.13), HER2p1248 (0.12), AR (0.12), PKCalpha (0.1), Rab25 (0.1),
+Proteins that add to the pathway model: YB1 (0.17), IGFBP2 (0.14),
+
+Model R2 (+subtype): 0.3104
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	3.9441	0.3595	10.9697	0
+`akt_75_gene_list/adap_adap_single/akt`	0.7006	0.4693	1.4927	0.1453
+`raf_100_gene_list/adap_adap_single/raf`	1.3409	0.5584	2.4014	0.0223
+model_subsubtype_ERBB2Claudin-low	-0.014	0.1951	-0.0715	0.9434
+model_subsubtype_ERBB2ERBB2	0.262	0.183	1.4314	0.162
+model_subsubtype_ERBB2LUMINAL	0.0735	0.2141	0.3431	0.7337
+model_subsubtype_ERBB2NORMAL	-0.3342	0.1725	-1.9376	0.0615
+Important genes: XIRP2 (0.18),
+Genes that add to the pathway model: XIRP2 (0.21), COL5A2 (0.18), SYNE1 (0.18), RIF1 (0.15), FAM86B2 (0.13), TTN (0.13), ATP4A (0.11), EPHA10 (0.1), SLC9B1P4 (0.1), CFTR (0.1), TP53 (0.1),
+Important proteins: mTor (0.18), YB1 (0.15), HER2 (0.13), PDK1p241 (0.13), E.cadherin (0.13), HER2p1248 (0.12), AR (0.12), PKCalpha (0.1), Rab25 (0.1),
+Proteins that add to the pathway model: IGFBP2 (0.17), AR (0.15), GATA3 (0.15), YB1 (0.13), B.Catenin (0.13), PKCalpha (0.1),
+
+
+Gefitinib
+Model R2 (no subtype): 0.2762
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	3.5883	0.4951	7.2482	0
+`akt_75_gene_list/adap_adap_single/akt`	2.2408	0.7409	3.0243	0.0047
+`raf_100_gene_list/adap_adap_single/raf`	2.606	0.7463	3.4921	0.0013
+Important genes: TP53 (0.2), GRAMD1A (0.16), PRB3 (0.14), EPHA10 (0.13),
+Genes that add to the pathway model: SYNE1 (0.13),
+Important proteins: HER2p1248 (0.33), HER2 (0.3), EGFR (0.27), cleaved.caspase.7 (0.16), PKCalpha (0.11), AR (0.1),
+Proteins that add to the pathway model: HER2p1248 (0.38), HER2 (0.35), p21 (0.17), EGFR (0.16), GATA3 (0.15), ER (0.13), AR (0.13), cleaved.caspase.7 (0.12),
+
+Model R2 (+subtype): 0.7978
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	4.039	1.0599	3.8108	8e-04
+`akt_75_gene_list/adap_adap_single/akt`	2.1827	0.6841	3.1907	0.0037
+`bad_200_gene_list/adap_adap_single/bad`	-1.9911	0.7676	-2.5939	0.0154
+`her2_15_gene_list/adap_adap_single/her2`	-2.5716	0.7289	-3.528	0.0016
+`igf1r_75_gene_list/adap_adap_single/igf1r`	-1.7119	0.7855	-2.1794	0.0385
+`raf_100_gene_list/adap_adap_single/raf`	3.7186	0.8792	4.2296	3e-04
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	3.0468	1.2724	2.3945	0.0241
+model_subsubtype_ERBB2Claudin-low	0.6981	0.4619	1.5112	0.1428
+model_subsubtype_ERBB2ERBB2	1.4037	0.3444	4.0762	4e-04
+model_subsubtype_ERBB2LUMINAL	0.3037	0.3551	0.8551	0.4003
+model_subsubtype_ERBB2NORMAL	-0.0245	0.3634	-0.0674	0.9468
+Important genes: TP53 (0.2), GRAMD1A (0.16), PRB3 (0.14), EPHA10 (0.13),
+Genes that add to the pathway model:  (),
+Important proteins: HER2p1248 (0.33), HER2 (0.3), EGFR (0.27), cleaved.caspase.7 (0.16), PKCalpha (0.11), AR (0.1),
+Proteins that add to the pathway model:  (),
+
+
+Ixabepilone
+Model R2 (no subtype): 0.1155
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	8.7097	0.4373	19.9186	0
+`akt_75_gene_list/adap_adap_single/akt`	-2.267	1.0313	-2.1982	0.0343
+Important genes: NBPF10 (0.15),
+Genes that add to the pathway model: NBPF10 (0.11), PCDHB11 (0.1),
+Important proteins: HER2 (0.3), PKCalphap657 (0.21), PKCalpha (0.21), HER2p1248 (0.19), TSC2 (0.18), AcCoAp (0.18), COMT (0.17), Stathmin (0.16), p53 (0.16), YB1 (0.14), PDK1p241 (0.13), X1 (0.13), PDK1 (0.13), E.cadherin (0.12), IGFBP2 (0.12), X4EBP1p37 (0.11), Caveolin (0.11),
+Proteins that add to the pathway model: p70S6.Kinase (0.2), HER2 (0.19), Caveolin (0.18), AcCoAp (0.15), PKCalphap657 (0.13), Stathmin (0.13), PKCalpha (0.12), GATA3 (0.12), X4EBP1p37 (0.11), HER2p1248 (0.1),
+
+Model R2 (+subtype): 0.2955
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	10.0364	0.9206	10.9016	0
+`akt_75_gene_list/adap_adap_single/akt`	-3.3187	1.6296	-2.0364	0.0501
+`igf1r_75_gene_list/adap_adap_single/igf1r`	-2.604	1.8216	-1.4295	0.1625
+model_subsubtype_ERBB2Claudin-low	-0.38	0.6915	-0.5496	0.5864
+model_subsubtype_ERBB2ERBB2	-0.1367	0.6591	-0.2074	0.837
+model_subsubtype_ERBB2LUMINAL	0.7336	0.6591	1.1131	0.274
+model_subsubtype_ERBB2NORMAL	-1.1722	0.7142	-1.6413	0.1105
+Important genes: NBPF10 (0.15),
+Genes that add to the pathway model:  (),
+Important proteins: HER2 (0.3), PKCalphap657 (0.21), PKCalpha (0.21), HER2p1248 (0.19), TSC2 (0.18), AcCoAp (0.18), COMT (0.17), Stathmin (0.16), p53 (0.16), YB1 (0.14), PDK1p241 (0.13), X1 (0.13), PDK1 (0.13), E.cadherin (0.12), IGFBP2 (0.12), X4EBP1p37 (0.11), Caveolin (0.11),
+Proteins that add to the pathway model: AcCoAp (0.24), HER2 (0.23), X4EBP1p37 (0.19), NOTCH3 (0.12), p70S6.Kinase (0.11), PKCalphap657 (0.11),
+
+
+LBH589
+Model R2 (no subtype): 0.4567
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	7.3922	0.1035	71.4369	0
+`bad_200_gene_list/adap_adap_single/bad`	-0.4348	0.276	-1.5753	0.1244
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-0.994	0.2943	-3.3778	0.0018
+Important genes:  (),
+Genes that add to the pathway model:  (),
+Important proteins: COMT (0.34), TSC2 (0.3), X1 (0.29), cJUN (0.29), CCNB1 (0.29), PDK1 (0.26), PAI1 (0.26), Telomerase (0.25), p38p (0.23), MAPKp (0.23), Aktp308 (0.22), Akt (0.21), AR (0.21), ER (0.21), IGFBP2 (0.21), Fortilin (0.2), stat3 (0.19), EGFRp1068 (0.18), PDK1p241 (0.17), GSK3 (0.16), p70S6.Kinase (0.16), AcCoAp (0.13), p21 (0.12), ERp118 (0.12), NOTCH3 (0.12), GATA3 (0.11), VEGFR2 (0.11), EN1 (0.11), stat3p705 (0.11),
+Proteins that add to the pathway model: COMT (0.19), X1 (0.17), p53 (0.15), NOTCH3 (0.15), EGFR (0.15), ERK2 (0.14), JNKp183.5 (0.14), Aktp473 (0.13), cJUN (0.13), Aktp308 (0.13), Akt (0.13), AMPKp (0.12), S6p235.236 (0.12), EN1 (0.12), PKCalphap657 (0.12), PR (0.11), EGFRp1068 (0.11), E.cadherin (0.11), p38 (0.11), PKCalpha (0.11), IGFBP2 (0.11), srcp527 (0.1), ERp118 (0.1), ER (0.1), S6p240.244 (0.1), p70S6.Kinase (0.1), IGFR1 (0.1), p21 (0.1), PAI1 (0.1), CCNB1 (0.1),
+
+Model R2 (+subtype): 0.6651
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	8.4287	0.4255	19.8098	0
+`akt_75_gene_list/adap_adap_single/akt`	0.6141	0.4099	1.4982	0.1453
+`bad_200_gene_list/adap_adap_single/bad`	-1.2376	0.4605	-2.6872	0.012
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-1.6573	0.482	-3.4388	0.0018
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	-0.9969	0.6538	-1.5248	0.1385
+model_subsubtype_ERBB2Claudin-low	-0.3121	0.2525	-1.2359	0.2268
+model_subsubtype_ERBB2ERBB2	-0.416	0.1485	-2.8018	0.0091
+model_subsubtype_ERBB2LUMINAL	-0.6993	0.1723	-4.0574	4e-04
+model_subsubtype_ERBB2NORMAL	0.0536	0.1446	0.371	0.7134
+Important genes:  (),
+Genes that add to the pathway model:  (),
+Important proteins: COMT (0.34), TSC2 (0.3), X1 (0.29), cJUN (0.29), CCNB1 (0.29), PDK1 (0.26), PAI1 (0.26), Telomerase (0.25), p38p (0.23), MAPKp (0.23), Aktp308 (0.22), Akt (0.21), AR (0.21), ER (0.21), IGFBP2 (0.21), Fortilin (0.2), stat3 (0.19), EGFRp1068 (0.18), PDK1p241 (0.17), GSK3 (0.16), p70S6.Kinase (0.16), AcCoAp (0.13), p21 (0.12), ERp118 (0.12), NOTCH3 (0.12), GATA3 (0.11), VEGFR2 (0.11), EN1 (0.11), stat3p705 (0.11),
+Proteins that add to the pathway model: Aktp473 (0.11),
+
+
+Lestaurtinib.CEP.701.
+Model R2 (no subtype): 0.2279
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	6.9525	0.6015	11.5592	0
+`akt_75_gene_list/adap_adap_single/akt`	1.9244	0.8996	2.1391	0.0402
+`bad_200_gene_list/adap_adap_single/bad`	-1.6118	0.9324	-1.7286	0.0935
+`egfr_25_gene_list/adap_adap_single/egfr`	1.0656	0.5529	1.9272	0.0629
+`her2_15_gene_list/adap_adap_single/her2`	-0.744	0.564	-1.3193	0.1964
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	-2.3996	1.2427	-1.931	0.0624
+Important genes:  (),
+Genes that add to the pathway model:  (),
+Important proteins: Collagen.VI (0.21), S6p235.236 (0.14), AR (0.14), X1 (0.13), PR (0.1), NOTCH3 (0.1), p53 (0.1), EGFR (0.1),
+Proteins that add to the pathway model: X1 (0.16),
+
+Model R2 (+subtype): 0.3894
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	6.3718	0.5936	10.7334	0
+`akt_75_gene_list/adap_adap_single/akt`	2.618	0.8977	2.9164	0.0068
+`bad_200_gene_list/adap_adap_single/bad`	-1.5282	0.9107	-1.6781	0.1041
+`her2_15_gene_list/adap_adap_single/her2`	-2.3166	0.8854	-2.6165	0.014
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	2.3943	1.2684	1.8877	0.0691
+model_subsubtype_ERBB2Claudin-low	0.3555	0.4498	0.7903	0.4358
+model_subsubtype_ERBB2ERBB2	-0.1121	0.4004	-0.28	0.7815
+model_subsubtype_ERBB2LUMINAL	-0.3422	0.3984	-0.8589	0.3975
+model_subsubtype_ERBB2NORMAL	-1.0586	0.4194	-2.524	0.0173
+Important genes:  (),
+Genes that add to the pathway model: PIK3CA (0.1),
+Important proteins: Collagen.VI (0.21), S6p235.236 (0.14), AR (0.14), X1 (0.13), PR (0.1), NOTCH3 (0.1), p53 (0.1), EGFR (0.1),
+Proteins that add to the pathway model: X1 (0.21), p38p (0.19), cJUN (0.13), PDK1 (0.13),
+
+
+MG.132
+Model R2 (no subtype): 0.6502
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	6.0042	0.2054	29.2345	0
+`akt_75_gene_list/adap_adap_single/akt`	0.7723	0.3685	2.0956	0.0441
+`egfr_25_gene_list/adap_adap_single/egfr`	0.7945	0.193	4.1178	3e-04
+`her2_15_gene_list/adap_adap_single/her2`	-0.9295	0.2669	-3.4818	0.0015
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	1.4368	0.449	3.2003	0.0031
+Important genes: EPHA10 (0.25), GRAMD1A (0.16),
+Genes that add to the pathway model:  (),
+Important proteins: p70S6Kp389 (0.32), stat3p705 (0.26), stat3 (0.22), cleaved.caspase.7 (0.21), p70S6.Kinase (0.18), ER (0.18), MAPKp (0.17), FGFR1 (0.16), GSK3 (0.15), GATA3 (0.14), VEGFR2 (0.13), EGFR (0.13), PDK1p241 (0.12), CCND1 (0.12), S6p240.244 (0.12),
+Proteins that add to the pathway model:  (),
+
+Model R2 (+subtype): 0.8009
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	6.1293	0.3281	18.6804	0
+`akt_75_gene_list/adap_adap_single/akt`	0.4007	0.3158	1.2686	0.215
+`egfr_25_gene_list/adap_adap_single/egfr`	0.9534	0.2205	4.3231	2e-04
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-1.244	0.4139	-3.0053	0.0055
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	1.1913	0.4829	2.4668	0.02
+model_subsubtype_ERBB2Claudin-low	0.0813	0.1951	0.4168	0.68
+model_subsubtype_ERBB2ERBB2	-0.1208	0.1286	-0.9392	0.3557
+model_subsubtype_ERBB2LUMINAL	-0.2802	0.1371	-2.0445	0.0504
+model_subsubtype_ERBB2NORMAL	0.6442	0.1111	5.798	0
+Important genes: EPHA10 (0.25), GRAMD1A (0.16),
+Genes that add to the pathway model:  (),
+Important proteins: p70S6Kp389 (0.32), stat3p705 (0.26), stat3 (0.22), cleaved.caspase.7 (0.21), p70S6.Kinase (0.18), ER (0.18), MAPKp (0.17), FGFR1 (0.16), GSK3 (0.15), GATA3 (0.14), VEGFR2 (0.13), EGFR (0.13), PDK1p241 (0.12), CCND1 (0.12), S6p240.244 (0.12),
+Proteins that add to the pathway model:  (),
+
+
+MLN4924
+Model R2 (no subtype): 0.3873
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	8.0005	0.3449	23.1938	0
+`egfr_25_gene_list/adap_adap_single/egfr`	-1.0716	0.3226	-3.322	0.0021
+`igf1r_75_gene_list/adap_adap_single/igf1r`	-3.0708	0.6935	-4.4278	1e-04
+Important genes: TTN (0.13), NBPF10 (0.13),
+Genes that add to the pathway model:  (),
+Important proteins: AMPKp (0.18), Aktp473 (0.14), HER2 (0.12), GATA3 (0.12), p70S6.Kinase (0.12), HER2p1248 (0.11), stat3p705 (0.11),
+Proteins that add to the pathway model:  (),
+
+Model R2 (+subtype): 0.3873
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	8.0005	0.3449	23.1938	0
+`egfr_25_gene_list/adap_adap_single/egfr`	-1.0716	0.3226	-3.322	0.0021
+`igf1r_75_gene_list/adap_adap_single/igf1r`	-3.0708	0.6935	-4.4278	1e-04
+Important genes: TTN (0.13), NBPF10 (0.13),
+Genes that add to the pathway model:  (),
+Important proteins: AMPKp (0.18), Aktp473 (0.14), HER2 (0.12), GATA3 (0.12), p70S6.Kinase (0.12), HER2p1248 (0.11), stat3p705 (0.11),
+Proteins that add to the pathway model:  (),
+
+
+Mebendazole
+Model R2 (no subtype): 0.2733
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	4.9162	1.059	4.6422	0
+`akt_75_gene_list/adap_adap_single/akt`	-1.8729	1.0328	-1.8134	0.0786
+`bad_200_gene_list/adap_adap_single/bad`	2.4524	1.2312	1.9919	0.0545
+`her2_15_gene_list/adap_adap_single/her2`	1.6259	0.8484	1.9166	0.0637
+`igf1r_75_gene_list/adap_adap_single/igf1r`	2.1575	1.215	1.7756	0.0847
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-2.0554	0.9328	-2.2035	0.0344
+Important genes: PCDHB11 (0.16),
+Genes that add to the pathway model:  (),
+Important proteins: srcp527 (0.27), NOTCH3 (0.19), srcp416 (0.17), PKCalphap657 (0.16), PKCalpha (0.15), src (0.14), p53 (0.13), p38 (0.12), E.cadherin (0.11), PR (0.1), AMPKp (0.1),
+Proteins that add to the pathway model: NOTCH3 (0.18), Rab25 (0.15), srcp527 (0.14), EIG121 (0.13),
+
+Model R2 (+subtype): 0.2733
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	4.9162	1.059	4.6422	0
+`akt_75_gene_list/adap_adap_single/akt`	-1.8729	1.0328	-1.8134	0.0786
+`bad_200_gene_list/adap_adap_single/bad`	2.4524	1.2312	1.9919	0.0545
+`her2_15_gene_list/adap_adap_single/her2`	1.6259	0.8484	1.9166	0.0637
+`igf1r_75_gene_list/adap_adap_single/igf1r`	2.1575	1.215	1.7756	0.0847
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-2.0554	0.9328	-2.2035	0.0344
+Important genes: PCDHB11 (0.16),
+Genes that add to the pathway model:  (),
+Important proteins: srcp527 (0.27), NOTCH3 (0.19), srcp416 (0.17), PKCalphap657 (0.16), PKCalpha (0.15), src (0.14), p53 (0.13), p38 (0.12), E.cadherin (0.11), PR (0.1), AMPKp (0.1),
+Proteins that add to the pathway model: NOTCH3 (0.18), Rab25 (0.15), srcp527 (0.14), EIG121 (0.13),
+
+
+Methotrexate
+Model R2 (no subtype): 0.195
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	4.5168	0.6162	7.3305	0
+`egfr_25_gene_list/adap_adap_single/egfr`	-4.2445	1.5946	-2.6618	0.0117
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	8.1185	2.8413	2.8573	0.0071
+Important genes: TP53 (0.18), PIK3CA (0.14), FAM86B2 (0.11),
+Genes that add to the pathway model: FAM86B2 (0.12),
+Important proteins: PTEN (0.21), AR (0.2), Aktp473 (0.19), MEK1 (0.13), Aktp308 (0.13), p70S6Kp389 (0.12), CCND1 (0.1),
+Proteins that add to the pathway model: AR (0.23), Stathmin (0.17), PR (0.15), p70S6Kp389 (0.14), PTEN (0.14), Aktp473 (0.13), S6p240.244 (0.13), MEK1 (0.12), cleaved.caspase.7 (0.11), srcp416 (0.11), ERp118 (0.11), PAI1 (0.11), CCNB1 (0.1), Telomerase (0.1),
+
+Model R2 (+subtype): 0.195
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	4.5168	0.6162	7.3305	0
+`egfr_25_gene_list/adap_adap_single/egfr`	-4.2445	1.5946	-2.6618	0.0117
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	8.1185	2.8413	2.8573	0.0071
+Important genes: TP53 (0.18), PIK3CA (0.14), FAM86B2 (0.11),
+Genes that add to the pathway model: FAM86B2 (0.12),
+Important proteins: PTEN (0.21), AR (0.2), Aktp473 (0.19), MEK1 (0.13), Aktp308 (0.13), p70S6Kp389 (0.12), CCND1 (0.1),
+Proteins that add to the pathway model: AR (0.23), Stathmin (0.17), PR (0.15), p70S6Kp389 (0.14), PTEN (0.14), Aktp473 (0.13), S6p240.244 (0.13), MEK1 (0.12), cleaved.caspase.7 (0.11), srcp416 (0.11), ERp118 (0.11), PAI1 (0.11), CCNB1 (0.1), Telomerase (0.1),
+
+
+NSC663284
+Model R2 (no subtype): 0
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	5.6274	0.0471	119.5412	0
+Important genes: PRB3 (0.18), TP53 (0.14),
+Genes that add to the pathway model: PRB3 (0.18), TP53 (0.14),
+Important proteins: JNKp183.5 (0.22), p21 (0.1),
+Proteins that add to the pathway model: JNKp183.5 (0.22), p21 (0.1),
+
+Model R2 (+subtype): 0.2114
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	5.2092	0.2397	21.7281	0
+`akt_75_gene_list/adap_adap_single/akt`	0.994	0.4248	2.3399	0.0259
+`igf1r_75_gene_list/adap_adap_single/igf1r`	0.6391	0.4746	1.3468	0.1878
+model_subsubtype_ERBB2Claudin-low	0.1775	0.1801	0.9857	0.3319
+model_subsubtype_ERBB2ERBB2	-0.4186	0.1745	-2.3984	0.0227
+model_subsubtype_ERBB2LUMINAL	-0.408	0.1717	-2.3764	0.0238
+model_subsubtype_ERBB2NORMAL	0.0966	0.186	0.5194	0.6071
+Important genes: PRB3 (0.18), TP53 (0.14),
+Genes that add to the pathway model: FAM86B2 (0.2), TP53 (0.17), PIK3CA (0.17), ARHGAP39 (0.16), PRB3 (0.15), FAT2 (0.15), XIRP2 (0.14), TTN (0.14), SYNE1 (0.13), COL5A2 (0.13), NID2 (0.13), GRAMD1A (0.12), EPHA10 (0.12), SLC9B1P4 (0.1), PCDHB11 (0.1), ZNF141 (0.1),
+Important proteins: JNKp183.5 (0.22), p21 (0.1),
+Proteins that add to the pathway model: JNKp183.5 (0.25), p21 (0.13), Caveolin (0.11),
+
+
+NU6102
+Model R2 (no subtype): 0.5151
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	5.2366	0.3045	17.1972	0
+`akt_75_gene_list/adap_adap_single/akt`	0.6823	0.3778	1.8058	0.0813
+`erk_250_gene_list/adap_adap_single/erk`	-0.6308	0.4735	-1.3321	0.1932
+`her2_15_gene_list/adap_adap_single/her2`	-1.2254	0.2503	-4.8949	0
+`raf_100_gene_list/adap_adap_single/raf`	-1.3256	0.948	-1.3984	0.1726
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	1.6673	0.8588	1.9413	0.062
+Important genes: RIF1 (0.12), ZNF804B (0.12),
+Genes that add to the pathway model:  (),
+Important proteins: VEGFR2 (0.35), HER2p1248 (0.31), HER2 (0.31), Stathmin (0.24), CD31 (0.22), X1 (0.17), Rab25 (0.16), COMT (0.14), p70S6Kp389 (0.12), CCND1 (0.12), ERp118 (0.12), S6p240.244 (0.12), S6p235.236 (0.11), p21 (0.11),
+Proteins that add to the pathway model:  (),
+
+Model R2 (+subtype): 0.5151
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	5.2366	0.3045	17.1972	0
+`akt_75_gene_list/adap_adap_single/akt`	0.6823	0.3778	1.8058	0.0813
+`erk_250_gene_list/adap_adap_single/erk`	-0.6308	0.4735	-1.3321	0.1932
+`her2_15_gene_list/adap_adap_single/her2`	-1.2254	0.2503	-4.8949	0
+`raf_100_gene_list/adap_adap_single/raf`	-1.3256	0.948	-1.3984	0.1726
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	1.6673	0.8588	1.9413	0.062
+Important genes: RIF1 (0.12), ZNF804B (0.12),
+Genes that add to the pathway model:  (),
+Important proteins: VEGFR2 (0.35), HER2p1248 (0.31), HER2 (0.31), Stathmin (0.24), CD31 (0.22), X1 (0.17), Rab25 (0.16), COMT (0.14), p70S6Kp389 (0.12), CCND1 (0.12), ERp118 (0.12), S6p240.244 (0.12), S6p235.236 (0.11), p21 (0.11),
+Proteins that add to the pathway model:  (),
+
+
+Nelfinavir
+Model R2 (no subtype): 0.1493
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	5.7505	0.3145	18.2845	0
+`egfr_25_gene_list/adap_adap_single/egfr`	-0.3095	0.1664	-1.8603	0.0708
+`erk_250_gene_list/adap_adap_single/erk`	-0.938	0.5372	-1.7461	0.0891
+`igf1r_75_gene_list/adap_adap_single/igf1r`	-0.9966	0.4747	-2.0994	0.0427
+Important genes: PLEKHS1 (0.16),
+Genes that add to the pathway model: TUBB2B (0.16), ZNF141 (0.13), PLEKHS1 (0.12), CFTR (0.1),
+Important proteins: GSK3 (0.34), YB1 (0.17), EN1 (0.16), COMT (0.15), CD31 (0.14), GSK3p21.9 (0.13), AR (0.13), stat3p705 (0.13), CCNB1 (0.12), CCNE1 (0.1),
+Proteins that add to the pathway model: GSK3 (0.31), p38p (0.29), ERK2 (0.19), EIG121 (0.19), COMT (0.18), PR (0.18), YB1 (0.17), IGFR1 (0.14), GSK3p21.9 (0.14), CD31 (0.14), EGFR (0.13), CCNB1 (0.12), p21 (0.11), VEGFR2 (0.1),
+
+Model R2 (+subtype): 0.324
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	6.9565	0.6812	10.2115	0
+`erk_250_gene_list/adap_adap_single/erk`	-1.4215	0.6333	-2.2445	0.0321
+`her2_15_gene_list/adap_adap_single/her2`	0.6229	0.4902	1.2707	0.2133
+`igf1r_75_gene_list/adap_adap_single/igf1r`	-1.5	0.6036	-2.485	0.0186
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-1.631	0.4973	-3.2797	0.0026
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	-1.2438	0.8377	-1.4848	0.1477
+model_subsubtype_ERBB2Claudin-low	-0.6006	0.3174	-1.892	0.0679
+model_subsubtype_ERBB2ERBB2	-0.3415	0.1889	-1.8082	0.0803
+model_subsubtype_ERBB2LUMINAL	-0.466	0.2033	-2.2922	0.0288
+model_subsubtype_ERBB2NORMAL	0.1528	0.2373	0.6438	0.5245
+Important genes: PLEKHS1 (0.16),
+Genes that add to the pathway model: PLEKHS1 (0.39), TUBB2B (0.11),
+Important proteins: GSK3 (0.34), YB1 (0.17), EN1 (0.16), COMT (0.15), CD31 (0.14), GSK3p21.9 (0.13), AR (0.13), stat3p705 (0.13), CCNB1 (0.12), CCNE1 (0.1),
+Proteins that add to the pathway model: YB1 (0.34), p38p (0.28), CCNE1 (0.23), cleaved.caspase.7 (0.22), PTEN (0.22), GSK3 (0.21), COMT (0.2), PAI1 (0.19), stat3p705 (0.18), CCNB1 (0.18), MAPKp (0.18), p21 (0.17), PR (0.17), JNKp183.5 (0.17), ERK2 (0.17), p38 (0.17), p110alpha (0.15), E.cadherin (0.15), p53 (0.15), EIG121 (0.15), CCND1 (0.15), EN1 (0.15), Aktp308 (0.15), srcp416 (0.14), X4EBP1p37 (0.14), EGFR (0.14), IGFR1 (0.14), Stathmin (0.14), PKCalphap657 (0.14), p70S6.Kinase (0.14), AR (0.14), Aktp473 (0.14), VEGFR2 (0.13), S6p240.244 (0.13), Bcl2 (0.13), Rab25 (0.13), mTor (0.13), srcp527 (0.13), p70S6Kp389 (0.13), S6p235.236 (0.13), PDK1 (0.13), stat3 (0.13), PKCalpha (0.13), AcCoAp (0.13), AMPKp (0.13), CD31 (0.13), JNK (0.13), cJUN (0.13), TSC2 (0.13), Rb (0.13), ERp118 (0.13), Caveolin (0.13), NOTCH3 (0.13), src (0.13), Collagen.VI (0.13), ER (0.12), Telomerase (0.12), GSK3p21.9 (0.12), X1 (0.12), MEK1 (0.12), GATA3 (0.12), HER2 (0.12), FGFR1 (0.12), EGFRp1068 (0.12), Akt (0.12), Fortilin (0.12), IGFBP2 (0.12), PDK1p241 (0.12), B.Catenin (0.12), HER2p1248 (0.12),
+
+
+Nutlin.3a
+Model R2 (no subtype): 0.4655
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	4.2777	0.3001	14.2546	0
+`akt_75_gene_list/adap_adap_single/akt`	1.6604	0.5012	3.3124	0.0022
+`her2_15_gene_list/adap_adap_single/her2`	-0.9912	0.3381	-2.9313	0.006
+`raf_100_gene_list/adap_adap_single/raf`	-3.3713	1.2271	-2.7474	0.0095
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	4.3939	1.1545	3.8059	6e-04
+Important genes: FAT2 (0.3), PCDHB11 (0.25), ARHGAP39 (0.22), ATP4A (0.11), PRB3 (0.1),
+Genes that add to the pathway model:  (),
+Important proteins: p70S6.Kinase (0.19), Akt (0.15), EIG121 (0.14), GSK3p21.9 (0.13), CD31 (0.12), VEGFR2 (0.12), MEK1 (0.12), p38p (0.11), Rab25 (0.11),
+Proteins that add to the pathway model: Akt (0.1),
+
+Model R2 (+subtype): 0.5651
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	4.0368	0.4255	9.4866	0
+`akt_75_gene_list/adap_adap_single/akt`	1.1553	0.5352	2.1586	0.0387
+`raf_100_gene_list/adap_adap_single/raf`	-2.218	1.2147	-1.8259	0.0775
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	2.6985	1.2542	2.1516	0.0393
+model_subsubtype_ERBB2Claudin-low	0.2424	0.2589	0.9363	0.3564
+model_subsubtype_ERBB2ERBB2	-0.1165	0.2079	-0.5602	0.5794
+model_subsubtype_ERBB2LUMINAL	0.0854	0.243	0.3513	0.7277
+model_subsubtype_ERBB2NORMAL	0.6868	0.202	3.4006	0.0019
+Important genes: FAT2 (0.3), PCDHB11 (0.25), ARHGAP39 (0.22), ATP4A (0.11), PRB3 (0.1),
+Genes that add to the pathway model:  (),
+Important proteins: p70S6.Kinase (0.19), Akt (0.15), EIG121 (0.14), GSK3p21.9 (0.13), CD31 (0.12), VEGFR2 (0.12), MEK1 (0.12), p38p (0.11), Rab25 (0.11),
+Proteins that add to the pathway model:  (),
+
+
+Olomoucine.II
+Model R2 (no subtype): 0.5085
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	5.3676	0.1533	35.0122	0
+`akt_75_gene_list/adap_adap_single/akt`	-0.3122	0.2345	-1.3317	0.1924
+`erk_250_gene_list/adap_adap_single/erk`	0.5864	0.2717	2.1584	0.0385
+`her2_15_gene_list/adap_adap_single/her2`	-0.6247	0.1504	-4.1545	2e-04
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-0.5406	0.1738	-3.1104	0.0039
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	0.8539	0.3248	2.6289	0.0131
+Important genes:  (),
+Genes that add to the pathway model: NBPF10 (0.13), SLC9B1P4 (0.12), XIRP2 (0.11), PIK3CA (0.11),
+Important proteins: PTEN (0.27), E.cadherin (0.2), ERp118 (0.16), HER2p1248 (0.14), CD31 (0.13), HER2 (0.1),
+Proteins that add to the pathway model: PAI1 (0.15),
+
+Model R2 (+subtype): 0.5085
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	5.3676	0.1533	35.0122	0
+`akt_75_gene_list/adap_adap_single/akt`	-0.3122	0.2345	-1.3317	0.1924
+`erk_250_gene_list/adap_adap_single/erk`	0.5864	0.2717	2.1584	0.0385
+`her2_15_gene_list/adap_adap_single/her2`	-0.6247	0.1504	-4.1545	2e-04
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-0.5406	0.1738	-3.1104	0.0039
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	0.8539	0.3248	2.6289	0.0131
+Important genes:  (),
+Genes that add to the pathway model: NBPF10 (0.13), SLC9B1P4 (0.12), XIRP2 (0.11), PIK3CA (0.11),
+Important proteins: PTEN (0.27), E.cadherin (0.2), ERp118 (0.16), HER2p1248 (0.14), CD31 (0.13), HER2 (0.1),
+Proteins that add to the pathway model: PAI1 (0.15),
+
+
+Oxaliplatin
+Model R2 (no subtype): 0.5847
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	3.0986	0.531	5.8358	0
+`bad_200_gene_list/adap_adap_single/bad`	6.8777	1.1659	5.899	0
+`erk_250_gene_list/adap_adap_single/erk`	-4.7194	1.2037	-3.9207	4e-04
+`her2_15_gene_list/adap_adap_single/her2`	1.1046	0.5171	2.136	0.0402
+`raf_100_gene_list/adap_adap_single/raf`	-1.9805	0.7056	-2.8069	0.0083
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	2.5907	0.8566	3.0246	0.0048
+Important genes:  (),
+Genes that add to the pathway model:  (),
+Important proteins: CCNB1 (0.26), YB1 (0.23), IGFR1 (0.17), EGFR (0.14), GSK3 (0.13), CD31 (0.11), srcp416 (0.11),
+Proteins that add to the pathway model: YB1 (0.14),
+
+Model R2 (+subtype): 0.5847
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	3.0986	0.531	5.8358	0
+`bad_200_gene_list/adap_adap_single/bad`	6.8777	1.1659	5.899	0
+`erk_250_gene_list/adap_adap_single/erk`	-4.7194	1.2037	-3.9207	4e-04
+`her2_15_gene_list/adap_adap_single/her2`	1.1046	0.5171	2.136	0.0402
+`raf_100_gene_list/adap_adap_single/raf`	-1.9805	0.7056	-2.8069	0.0083
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	2.5907	0.8566	3.0246	0.0048
+Important genes:  (),
+Genes that add to the pathway model:  (),
+Important proteins: CCNB1 (0.26), YB1 (0.23), IGFR1 (0.17), EGFR (0.14), GSK3 (0.13), CD31 (0.11), srcp416 (0.11),
+Proteins that add to the pathway model: YB1 (0.14),
+
+
+Oxamflatin
+Model R2 (no subtype): 0.0832
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	6.1795	0.1039	59.4525	0
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-0.499	0.276	-1.808	0.079
+Important genes: PCDHB11 (0.15),
+Genes that add to the pathway model: PCDHB11 (0.12),
+Important proteins: MAPKp (0.19), PAI1 (0.17), CCNB1 (0.16), cJUN (0.14), Fortilin (0.13), TSC2 (0.11), S6p235.236 (0.11), NOTCH3 (0.11), Akt (0.11),
+Proteins that add to the pathway model: S6p235.236 (0.16), S6p240.244 (0.15), ERK2 (0.14), MAPKp (0.12), PAI1 (0.1), NOTCH3 (0.1),
+
+Model R2 (+subtype): 0.0832
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	6.1795	0.1039	59.4525	0
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-0.499	0.276	-1.808	0.079
+Important genes: PCDHB11 (0.15),
+Genes that add to the pathway model: PCDHB11 (0.12),
+Important proteins: MAPKp (0.19), PAI1 (0.17), CCNB1 (0.16), cJUN (0.14), Fortilin (0.13), TSC2 (0.11), S6p235.236 (0.11), NOTCH3 (0.11), Akt (0.11),
+Proteins that add to the pathway model: S6p235.236 (0.16), S6p240.244 (0.15), ERK2 (0.14), MAPKp (0.12), PAI1 (0.1), NOTCH3 (0.1),
+
+
+PD98059
+Model R2 (no subtype): 0.3832
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	3.8389	0.2367	16.2205	0
+`akt_75_gene_list/adap_adap_single/akt`	1.0286	0.3614	2.8464	0.0078
+`egfr_25_gene_list/adap_adap_single/egfr`	0.6289	0.2526	2.4896	0.0184
+`raf_100_gene_list/adap_adap_single/raf`	-1.8849	0.8393	-2.2458	0.032
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	1.6759	0.8488	1.9745	0.0573
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	-0.7158	0.4743	-1.5093	0.1413
+`igf1r_75_gene_list/adap_adap_single/igf1r`	0.5157	0.2939	1.7546	0.0892
+Important genes: CFTR (0.15), ARHGAP39 (0.14), COL5A2 (0.12),
+Genes that add to the pathway model: EPHA10 (0.18), COL5A2 (0.15), GRAMD1A (0.13), ZNF141 (0.13), PRB3 (0.11), XIRP2 (0.11), CFTR (0.11), ATP4A (0.1), TP53 (0.1), PIK3CA (0.1),
+Important proteins: HER2p1248 (0.27), EIG121 (0.2), HER2 (0.18), PDK1 (0.18), Bcl2 (0.17), ERp118 (0.11), COMT (0.11),
+Proteins that add to the pathway model: cleaved.caspase.7 (0.15), srcp527 (0.14), p38 (0.12), GSK3 (0.12), B.Catenin (0.11), src (0.11), E.cadherin (0.11), EGFR (0.11),
+
+Model R2 (+subtype): 0.5171
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	3.5459	0.2788	12.7192	0
+`akt_75_gene_list/adap_adap_single/akt`	1.1986	0.3635	3.297	0.0027
+`egfr_25_gene_list/adap_adap_single/egfr`	0.4921	0.2578	1.909	0.0666
+`her2_15_gene_list/adap_adap_single/her2`	-0.612	0.4263	-1.4356	0.1622
+`raf_100_gene_list/adap_adap_single/raf`	-2.0611	0.8	-2.5763	0.0156
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	2.8593	1.0318	2.7712	0.0098
+model_subsubtype_ERBB2Claudin-low	0.2598	0.159	1.6343	0.1134
+model_subsubtype_ERBB2ERBB2	0.4084	0.1775	2.3005	0.0291
+model_subsubtype_ERBB2LUMINAL	0.2119	0.1715	1.2352	0.227
+model_subsubtype_ERBB2NORMAL	-0.4089	0.1983	-2.0618	0.0486
+Important genes: CFTR (0.15), ARHGAP39 (0.14), COL5A2 (0.12),
+Genes that add to the pathway model: EPHA10 (0.12), XIRP2 (0.11),
+Important proteins: HER2p1248 (0.27), EIG121 (0.2), HER2 (0.18), PDK1 (0.18), Bcl2 (0.17), ERp118 (0.11), COMT (0.11),
+Proteins that add to the pathway model: cleaved.caspase.7 (0.17), Stathmin (0.16), srcp527 (0.14), src (0.11),
+
+
+PF.2341066
+Model R2 (no subtype): 0.3338
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	6.5884	0.4035	16.3284	0
+`akt_75_gene_list/adap_adap_single/akt`	0.9163	0.5741	1.596	0.1206
+`egfr_25_gene_list/adap_adap_single/egfr`	0.9588	0.4092	2.3432	0.0257
+`erk_250_gene_list/adap_adap_single/erk`	-2.0375	0.7047	-2.8911	0.007
+`raf_100_gene_list/adap_adap_single/raf`	-3.715	1.2596	-2.9494	0.006
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	2.9383	1.2049	2.4386	0.0207
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	-2.4899	0.8052	-3.0924	0.0042
+Important genes: COL5A2 (0.13),
+Genes that add to the pathway model: PRB3 (0.17), COL5A2 (0.15), ATP4A (0.12), SYNE1 (0.1),
+Important proteins: TSC2 (0.34), HER2 (0.34), HER2p1248 (0.22), GSK3 (0.2), CCNB1 (0.19), VEGFR2 (0.19), X1 (0.16), YB1 (0.15), PR (0.15), Telomerase (0.14), p21 (0.14), PKCalpha (0.13), PKCalphap657 (0.13), Collagen.VI (0.12), AR (0.11), CD31 (0.11),
+Proteins that add to the pathway model: TSC2 (0.2), MAPKp (0.19), NOTCH3 (0.16), p70S6.Kinase (0.15), HER2 (0.14), VEGFR2 (0.13),
+
+Model R2 (+subtype): 0.546
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	5.11	0.5759	8.8728	0
+`egfr_25_gene_list/adap_adap_single/egfr`	0.4799	0.2981	1.61	0.1186
+`igf1r_75_gene_list/adap_adap_single/igf1r`	1.2009	0.4706	2.552	0.0165
+`raf_100_gene_list/adap_adap_single/raf`	-1.5199	1.0574	-1.4374	0.1617
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	1.9258	1.0784	1.7859	0.085
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	-1.0308	0.7978	-1.2919	0.2069
+model_subsubtype_ERBB2Claudin-low	0.0209	0.318	0.0656	0.9482
+model_subsubtype_ERBB2ERBB2	-0.1971	0.1339	-1.4721	0.1521
+model_subsubtype_ERBB2LUMINAL	0.3636	0.1713	2.1219	0.0428
+model_subsubtype_ERBB2NORMAL	-0.0058	0.1726	-0.0334	0.9736
+Important genes: COL5A2 (0.13),
+Genes that add to the pathway model:  (),
+Important proteins: TSC2 (0.34), HER2 (0.34), HER2p1248 (0.22), GSK3 (0.2), CCNB1 (0.19), VEGFR2 (0.19), X1 (0.16), YB1 (0.15), PR (0.15), Telomerase (0.14), p21 (0.14), PKCalpha (0.13), PKCalphap657 (0.13), Collagen.VI (0.12), AR (0.11), CD31 (0.11),
+Proteins that add to the pathway model: EIG121 (0.21), p70S6.Kinase (0.16), NOTCH3 (0.15), TSC2 (0.15), AcCoAp (0.14), p38p (0.14), HER2 (0.13), GSK3p21.9 (0.13), GSK3 (0.13), p38 (0.12), FGFR1 (0.12), EGFR (0.12), PKCalphap657 (0.11), MAPKp (0.11), EN1 (0.11),
+
+
+PF.3084014
+Model R2 (no subtype): 0.325
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	3.5816	0.5912	6.0584	0
+`bad_200_gene_list/adap_adap_single/bad`	3.07	1.2372	2.4814	0.0178
+`egfr_25_gene_list/adap_adap_single/egfr`	1.0839	0.5608	1.9329	0.0609
+`erk_250_gene_list/adap_adap_single/erk`	-3.3288	1.3558	-2.4552	0.0189
+`raf_100_gene_list/adap_adap_single/raf`	-2.3417	0.9555	-2.4507	0.0191
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	2.6731	0.8927	2.9945	0.0049
+Important genes: FAM86B2 (0.26), PEX13 (0.12),
+Genes that add to the pathway model: PEX13 (0.12),
+Important proteins: S6p240.244 (0.23), S6p235.236 (0.23), FGFR1 (0.18), PDK1 (0.16), stat3p705 (0.16), p53 (0.15), PDK1p241 (0.14), mTor (0.12), B.Catenin (0.11), JNKp183.5 (0.11), PKCalpha (0.1),
+Proteins that add to the pathway model: PDK1 (0.24), PDK1p241 (0.19), S6p235.236 (0.15), p53 (0.15), IGFBP2 (0.13), S6p240.244 (0.12), Collagen.VI (0.1),
+
+Model R2 (+subtype): 0.325
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	3.5816	0.5912	6.0584	0
+`bad_200_gene_list/adap_adap_single/bad`	3.07	1.2372	2.4814	0.0178
+`egfr_25_gene_list/adap_adap_single/egfr`	1.0839	0.5608	1.9329	0.0609
+`erk_250_gene_list/adap_adap_single/erk`	-3.3288	1.3558	-2.4552	0.0189
+`raf_100_gene_list/adap_adap_single/raf`	-2.3417	0.9555	-2.4507	0.0191
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	2.6731	0.8927	2.9945	0.0049
+Important genes: FAM86B2 (0.26), PEX13 (0.12),
+Genes that add to the pathway model: PEX13 (0.12),
+Important proteins: S6p240.244 (0.23), S6p235.236 (0.23), FGFR1 (0.18), PDK1 (0.16), stat3p705 (0.16), p53 (0.15), PDK1p241 (0.14), mTor (0.12), B.Catenin (0.11), JNKp183.5 (0.11), PKCalpha (0.1),
+Proteins that add to the pathway model: PDK1 (0.24), PDK1p241 (0.19), S6p235.236 (0.15), p53 (0.15), IGFBP2 (0.13), S6p240.244 (0.12), Collagen.VI (0.1),
+
+
+PF.3814735
+Model R2 (no subtype): 0.4464
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	7.2697	0.6047	12.023	0
+`akt_75_gene_list/adap_adap_single/akt`	1.117	0.7301	1.5299	0.1353
+`bad_200_gene_list/adap_adap_single/bad`	-2.2351	0.8612	-2.5952	0.0139
+`egfr_25_gene_list/adap_adap_single/egfr`	1.5447	0.5555	2.7808	0.0088
+`her2_15_gene_list/adap_adap_single/her2`	-1.1121	0.4528	-2.4559	0.0193
+`raf_100_gene_list/adap_adap_single/raf`	-4.5311	1.763	-2.5701	0.0147
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	4.1977	1.8247	2.3004	0.0277
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	-3.1394	1.2701	-2.4717	0.0186
+Important genes: IRS1 (0.14), MRPS9 (0.13), SVEP1 (0.11), BAG6 (0.1),
+Genes that add to the pathway model: ARHGAP39 (0.11), ATP4A (0.11),
+Important proteins: VEGFR2 (0.43), CD31 (0.33), ERp118 (0.28), GSK3p21.9 (0.26), HER2 (0.26), X1 (0.25), HER2p1248 (0.24), AR (0.22), Rab25 (0.22), COMT (0.2), PR (0.19), GSK3 (0.18), EN1 (0.18), E.cadherin (0.15), IGFBP2 (0.15), PDK1p241 (0.15), PDK1 (0.15), TSC2 (0.15), Telomerase (0.14), CCNB1 (0.13), S6p240.244 (0.12), S6p235.236 (0.11), CCNE1 (0.11), mTor (0.11), PAI1 (0.1),
+Proteins that add to the pathway model: cJUN (0.28), VEGFR2 (0.26), S6p235.236 (0.2), S6p240.244 (0.18), CD31 (0.17), GSK3p21.9 (0.16), Fortilin (0.16), Aktp308 (0.16), CCNE1 (0.15), EN1 (0.15), PR (0.14), ERp118 (0.13), stat3p705 (0.13), Collagen.VI (0.12), ERK2 (0.12), EGFR (0.12), MAPKp (0.12), p70S6.Kinase (0.12), Rab25 (0.12), p38p (0.12), X1 (0.11), COMT (0.11), Caveolin (0.11), FGFR1 (0.11), PDK1p241 (0.11), E.cadherin (0.11), p70S6Kp389 (0.11), stat3 (0.1), AR (0.1), p21 (0.1),
+
+Model R2 (+subtype): 0.5509
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	7.1711	0.8239	8.7043	0
+`akt_75_gene_list/adap_adap_single/akt`	1.138	0.7693	1.4791	0.1495
+`bad_200_gene_list/adap_adap_single/bad`	-1.2315	0.9566	-1.2874	0.2078
+`egfr_25_gene_list/adap_adap_single/egfr`	1.2907	0.596	2.1656	0.0384
+`her2_15_gene_list/adap_adap_single/her2`	-2.1272	0.9195	-2.3133	0.0277
+`raf_100_gene_list/adap_adap_single/raf`	-4.7431	1.9237	-2.4657	0.0196
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	5.0673	2.3627	2.1447	0.0402
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	-2.7384	1.4858	-1.8431	0.0752
+model_subsubtype_ERBB2Claudin-low	-0.4874	0.4609	-1.0574	0.2988
+model_subsubtype_ERBB2ERBB2	0.1594	0.308	0.5174	0.6086
+model_subsubtype_ERBB2LUMINAL	0.363	0.3138	1.1568	0.2565
+model_subsubtype_ERBB2NORMAL	-0.7848	0.4014	-1.9553	0.0599
+Important genes: IRS1 (0.14), MRPS9 (0.13), SVEP1 (0.11), BAG6 (0.1),
+Genes that add to the pathway model: ARHGAP39 (0.14), GPR98 (0.11), EPHA10 (0.11), TP53 (0.1), ATP4A (0.1),
+Important proteins: VEGFR2 (0.43), CD31 (0.33), ERp118 (0.28), GSK3p21.9 (0.26), HER2 (0.26), X1 (0.25), HER2p1248 (0.24), AR (0.22), Rab25 (0.22), COMT (0.2), PR (0.19), GSK3 (0.18), EN1 (0.18), E.cadherin (0.15), IGFBP2 (0.15), PDK1p241 (0.15), PDK1 (0.15), TSC2 (0.15), Telomerase (0.14), CCNB1 (0.13), S6p240.244 (0.12), S6p235.236 (0.11), CCNE1 (0.11), mTor (0.11), PAI1 (0.1),
+Proteins that add to the pathway model: cJUN (0.27), VEGFR2 (0.19), PR (0.18), S6p235.236 (0.17), GSK3p21.9 (0.17), CCNE1 (0.16), p38p (0.15), S6p240.244 (0.15), stat3p705 (0.13), ERp118 (0.13), CD31 (0.13), E.cadherin (0.13), Fortilin (0.13), Aktp308 (0.12),
+
+
+PF.4691502
+Model R2 (no subtype): 0.4411
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	7.1819	0.4177	17.1949	0
+`akt_75_gene_list/adap_adap_single/akt`	0.9135	0.5614	1.6272	0.1122
+`erk_250_gene_list/adap_adap_single/erk`	-1.8782	0.7468	-2.5151	0.0164
+`raf_100_gene_list/adap_adap_single/raf`	-3.0063	1.4688	-2.0468	0.0478
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	2.5364	1.4161	1.7911	0.0815
+Important genes: AHNAK (0.2), ARHGAP39 (0.16), TTN (0.1), SYNE2 (0.1),
+Genes that add to the pathway model: AHNAK (0.11),
+Important proteins: PDK1 (0.4), p38p (0.34), cJUN (0.33), PDK1p241 (0.28), PAI1 (0.26), Aktp308 (0.24), X1 (0.22), PKCalpha (0.2), HER2 (0.2), COMT (0.19), EIG121 (0.19), ERp118 (0.19), HER2p1248 (0.18), ER (0.16), PKCalphap657 (0.15), mTor (0.15), AR (0.13), Aktp473 (0.12), IGFBP2 (0.11), TSC2 (0.11), stat3 (0.11), Rab25 (0.11), IGFR1 (0.11),
+Proteins that add to the pathway model: GSK3 (0.18), p38p (0.12), JNKp183.5 (0.11),
+
+Model R2 (+subtype): 0.4411
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	7.1819	0.4177	17.1949	0
+`akt_75_gene_list/adap_adap_single/akt`	0.9135	0.5614	1.6272	0.1122
+`erk_250_gene_list/adap_adap_single/erk`	-1.8782	0.7468	-2.5151	0.0164
+`raf_100_gene_list/adap_adap_single/raf`	-3.0063	1.4688	-2.0468	0.0478
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	2.5364	1.4161	1.7911	0.0815
+Important genes: AHNAK (0.2), ARHGAP39 (0.16), TTN (0.1), SYNE2 (0.1),
+Genes that add to the pathway model: AHNAK (0.11),
+Important proteins: PDK1 (0.4), p38p (0.34), cJUN (0.33), PDK1p241 (0.28), PAI1 (0.26), Aktp308 (0.24), X1 (0.22), PKCalpha (0.2), HER2 (0.2), COMT (0.19), EIG121 (0.19), ERp118 (0.19), HER2p1248 (0.18), ER (0.16), PKCalphap657 (0.15), mTor (0.15), AR (0.13), Aktp473 (0.12), IGFBP2 (0.11), TSC2 (0.11), stat3 (0.11), Rab25 (0.11), IGFR1 (0.11),
+Proteins that add to the pathway model: GSK3 (0.18), p38p (0.12), JNKp183.5 (0.11),
+
+
+Paclitaxel
+Model R2 (no subtype): 0.181
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	7.0017	0.3998	17.5153	0
+`erk_250_gene_list/adap_adap_single/erk`	1.2305	0.5936	2.0729	0.0456
+`igf1r_75_gene_list/adap_adap_single/igf1r`	0.8376	0.574	1.4593	0.1534
+`raf_100_gene_list/adap_adap_single/raf`	0.7325	0.3217	2.2771	0.029
+Important genes: GRAMD1A (0.12), EPHA10 (0.1),
+Genes that add to the pathway model:  (),
+Important proteins: TSC2 (0.34), IGFBP2 (0.31), GSK3 (0.31), COMT (0.26), ER (0.25), PKCalphap657 (0.25), YB1 (0.19), cJUN (0.18), PKCalpha (0.18), CCNB1 (0.17), X1 (0.16), PDK1p241 (0.16), CCND1 (0.16), PDK1 (0.15), PAI1 (0.15), p38 (0.15), ERp118 (0.14), Aktp308 (0.13), p53 (0.13), EGFR (0.11), p38p (0.1),
+Proteins that add to the pathway model: AR (0.25), CCND1 (0.21), GSK3 (0.2), p38 (0.2), TSC2 (0.19), IGFBP2 (0.18), COMT (0.18), YB1 (0.18), p21 (0.17), NOTCH3 (0.17), EIG121 (0.16), PKCalphap657 (0.16), Stathmin (0.15), p53 (0.15), EGFR (0.15), JNKp183.5 (0.14), PR (0.14), stat3 (0.14), Rb (0.14), VEGFR2 (0.13), ERK2 (0.13), src (0.13), Fortilin (0.13), p70S6Kp389 (0.13), ER (0.13), mTor (0.13), PKCalpha (0.13), GATA3 (0.12), srcp416 (0.12), GSK3p21.9 (0.12), CD31 (0.12), srcp527 (0.12), CCNE1 (0.12), Aktp308 (0.12), HER2p1248 (0.12), B.Catenin (0.12), Aktp473 (0.12), CCNB1 (0.12), IGFR1 (0.11), Bcl2 (0.11), Caveolin (0.11), Akt (0.11), X1 (0.11), cJUN (0.11), PAI1 (0.11), stat3p705 (0.11), E.cadherin (0.11), cleaved.caspase.7 (0.11), AcCoAp (0.1), Telomerase (0.1), S6p235.236 (0.1), MAPKp (0.1), ERp118 (0.1), X4EBP1p37 (0.1), S6p240.244 (0.1), p38p (0.1), FGFR1 (0.1), Rab25 (0.1), p70S6.Kinase (0.1), EN1 (0.1), PDK1p241 (0.1), HER2 (0.1), p110alpha (0.1), PDK1 (0.1), Collagen.VI (0.1), MEK1 (0.1), EGFRp1068 (0.1),
+
+Model R2 (+subtype): 0.3447
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	7.2312	0.3653	19.7975	0
+`erk_250_gene_list/adap_adap_single/erk`	0.8464	0.5369	1.5765	0.1251
+`her2_15_gene_list/adap_adap_single/her2`	-0.5894	0.4574	-1.2887	0.207
+`raf_100_gene_list/adap_adap_single/raf`	1.4963	0.5272	2.8382	0.0079
+model_subsubtype_ERBB2Claudin-low	0.1147	0.2468	0.4647	0.6454
+model_subsubtype_ERBB2ERBB2	0.5357	0.2359	2.2706	0.0303
+model_subsubtype_ERBB2LUMINAL	0.4508	0.2453	1.8382	0.0756
+model_subsubtype_ERBB2NORMAL	-0.4229	0.2373	-1.7824	0.0845
+Important genes: GRAMD1A (0.12), EPHA10 (0.1),
+Genes that add to the pathway model:  (),
+Important proteins: TSC2 (0.34), IGFBP2 (0.31), GSK3 (0.31), COMT (0.26), ER (0.25), PKCalphap657 (0.25), YB1 (0.19), cJUN (0.18), PKCalpha (0.18), CCNB1 (0.17), X1 (0.16), PDK1p241 (0.16), CCND1 (0.16), PDK1 (0.15), PAI1 (0.15), p38 (0.15), ERp118 (0.14), Aktp308 (0.13), p53 (0.13), EGFR (0.11), p38p (0.1),
+Proteins that add to the pathway model: Rab25 (0.18), NOTCH3 (0.18), GATA3 (0.17), EIG121 (0.17), CCND1 (0.15), COMT (0.15), TSC2 (0.15), FGFR1 (0.13), GSK3 (0.13), AR (0.13), Stathmin (0.13), p53 (0.12), HER2 (0.11), p38 (0.11), PR (0.11),
+
+
+Pemetrexed
+Model R2 (no subtype): 0.26
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	0.5587	1.0145	0.5507	0.5854
+`akt_75_gene_list/adap_adap_single/akt`	5.6225	1.7636	3.188	0.003
+`bad_200_gene_list/adap_adap_single/bad`	7.586	2.3783	3.1897	0.003
+`erk_250_gene_list/adap_adap_single/erk`	-6.6702	3.324	-2.0067	0.0526
+Important genes: PIK3CA (0.13),
+Genes that add to the pathway model:  (),
+Important proteins: CD31 (0.11),
+Proteins that add to the pathway model:  (),
+
+Model R2 (+subtype): 0.26
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	0.5587	1.0145	0.5507	0.5854
+`akt_75_gene_list/adap_adap_single/akt`	5.6225	1.7636	3.188	0.003
+`bad_200_gene_list/adap_adap_single/bad`	7.586	2.3783	3.1897	0.003
+`erk_250_gene_list/adap_adap_single/erk`	-6.6702	3.324	-2.0067	0.0526
+Important genes: PIK3CA (0.13),
+Genes that add to the pathway model:  (),
+Important proteins: CD31 (0.11),
+Proteins that add to the pathway model:  (),
+
+
+Purvalanol.A
+Model R2 (no subtype): 0.6627
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	3.9009	0.3927	9.9345	0
+`akt_75_gene_list/adap_adap_single/akt`	2.6555	0.5171	5.1357	0
+`egfr_25_gene_list/adap_adap_single/egfr`	1.5703	0.2373	6.6165	0
+`erk_250_gene_list/adap_adap_single/erk`	-2.5773	0.6478	-3.9787	4e-04
+`igf1r_75_gene_list/adap_adap_single/igf1r`	-1.1243	0.4177	-2.6917	0.0114
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	-0.89	0.5794	-1.5361	0.1347
+Important genes: ZNF804B (0.19), RIF1 (0.12),
+Genes that add to the pathway model:  (),
+Important proteins: Telomerase (0.25), EGFRp1068 (0.24), S6p235.236 (0.23), S6p240.244 (0.22), B.Catenin (0.15), CCNE1 (0.14), JNKp183.5 (0.12), CCNB1 (0.12), E.cadherin (0.12), VEGFR2 (0.11), p38 (0.1),
+Proteins that add to the pathway model:  (),
+
+Model R2 (+subtype): 0.754
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	3.6361	0.5046	7.2063	0
+`akt_75_gene_list/adap_adap_single/akt`	2.73	0.5499	4.9648	0
+`egfr_25_gene_list/adap_adap_single/egfr`	1.3457	0.3852	3.4935	0.0018
+`erk_250_gene_list/adap_adap_single/erk`	-2.3762	0.7507	-3.1651	0.004
+`her2_15_gene_list/adap_adap_single/her2`	-1.5658	0.5916	-2.6467	0.0139
+`igf1r_75_gene_list/adap_adap_single/igf1r`	-1.4108	0.5571	-2.5323	0.018
+`raf_100_gene_list/adap_adap_single/raf`	-1.6685	1.1856	-1.4073	0.1717
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	3.1282	1.4702	2.1277	0.0434
+model_subsubtype_ERBB2Claudin-low	0.2378	0.2654	0.8961	0.3788
+model_subsubtype_ERBB2ERBB2	0.7243	0.2535	2.8577	0.0085
+model_subsubtype_ERBB2LUMINAL	0.5714	0.2387	2.3936	0.0245
+model_subsubtype_ERBB2NORMAL	-0.487	0.2994	-1.6265	0.1164
+Important genes: ZNF804B (0.19), RIF1 (0.12),
+Genes that add to the pathway model:  (),
+Important proteins: Telomerase (0.25), EGFRp1068 (0.24), S6p235.236 (0.23), S6p240.244 (0.22), B.Catenin (0.15), CCNE1 (0.14), JNKp183.5 (0.12), CCNB1 (0.12), E.cadherin (0.12), VEGFR2 (0.11), p38 (0.1),
+Proteins that add to the pathway model:  (),
+
+
+L.779450
+Model R2 (no subtype): 0.429
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	4.9558	0.2696	18.3801	0
+`akt_75_gene_list/adap_adap_single/akt`	1.3771	0.4039	3.4097	0.0019
+`bad_200_gene_list/adap_adap_single/bad`	-1.1891	0.4247	-2.8001	0.0089
+`egfr_25_gene_list/adap_adap_single/egfr`	0.4201	0.287	1.4638	0.1536
+`her2_15_gene_list/adap_adap_single/her2`	-0.6553	0.2526	-2.5942	0.0145
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	0.9067	0.397	2.2842	0.0296
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	-1.0405	0.5691	-1.8284	0.0775
+Important genes: ZNF804B (0.14),
+Genes that add to the pathway model: ZNF804B (0.13), RIF1 (0.12), TP53 (0.12), GRAMD1A (0.11), CFTR (0.11),
+Important proteins: srcp416 (0.24), srcp527 (0.19), p38 (0.17), NOTCH3 (0.11), MAPKp (0.1),
+Proteins that add to the pathway model: PDK1 (0.15), srcp527 (0.12), p38 (0.11),
+
+Model R2 (+subtype): 0.5747
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	4.9078	0.4644	10.5686	0
+`akt_75_gene_list/adap_adap_single/akt`	1.7109	0.4573	3.7414	0.001
+`bad_200_gene_list/adap_adap_single/bad`	-1.0033	0.6633	-1.5125	0.1435
+`egfr_25_gene_list/adap_adap_single/egfr`	0.55	0.322	1.7079	0.1006
+`erk_250_gene_list/adap_adap_single/erk`	-0.9944	0.8333	-1.1934	0.2444
+`her2_15_gene_list/adap_adap_single/her2`	-0.8	0.5411	-1.4785	0.1523
+`raf_100_gene_list/adap_adap_single/raf`	-1.6063	1.0016	-1.6036	0.1219
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	2.555	1.1125	2.2967	0.0307
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	-1.0292	0.775	-1.3279	0.1967
+model_subsubtype_ERBB2Claudin-low	0.4168	0.242	1.7227	0.0978
+model_subsubtype_ERBB2ERBB2	0.1828	0.2112	0.8657	0.3952
+model_subsubtype_ERBB2LUMINAL	0.0255	0.2162	0.1181	0.907
+model_subsubtype_ERBB2NORMAL	0.0766	0.227	0.3375	0.7387
+Important genes: ZNF804B (0.14),
+Genes that add to the pathway model: TP53 (0.15), ZNF804B (0.11), RIF1 (0.1), SLC9B1P4 (0.1),
+Important proteins: srcp416 (0.24), srcp527 (0.19), p38 (0.17), NOTCH3 (0.11), MAPKp (0.1),
+Proteins that add to the pathway model: GSK3 (0.23), p38 (0.13), E.cadherin (0.13), PKCalphap657 (0.12), PDK1p241 (0.12), PKCalpha (0.11), NOTCH3 (0.11),
+
+
+Rapamycin
+Model R2 (no subtype): 0.388
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	7.1607	1.1813	6.0619	0
+`egfr_25_gene_list/adap_adap_single/egfr`	2.6655	1.4916	1.787	0.0834
+`erk_250_gene_list/adap_adap_single/erk`	-3.3124	2.1633	-1.5312	0.1356
+`her2_15_gene_list/adap_adap_single/her2`	2.0289	1.0685	1.8988	0.0666
+`raf_100_gene_list/adap_adap_single/raf`	-6.0951	2.2654	-2.6905	0.0112
+Important genes: TTN (0.12),
+Genes that add to the pathway model: SLC9B1P4 (0.11), FAM86B2 (0.11), XIRP2 (0.1),
+Important proteins: TSC2 (0.45), PDK1 (0.34), X1 (0.34), p38p (0.3), HER2 (0.3), cJUN (0.27), PDK1p241 (0.27), HER2p1248 (0.19), AR (0.18), PKCalphap657 (0.18), PKCalpha (0.18), Aktp473 (0.18), COMT (0.17), IGFBP2 (0.15), GATA3 (0.15), Telomerase (0.14), Collagen.VI (0.13), Aktp308 (0.12), PTEN (0.12), Stathmin (0.11), IGFR1 (0.11), Rab25 (0.11), ERp118 (0.11), Bcl2 (0.1), ER (0.1),
+Proteins that add to the pathway model: Aktp473 (0.24), TSC2 (0.24), p38p (0.23), AMPKp (0.12), GSK3p21.9 (0.11), PTEN (0.11), Collagen.VI (0.11), Rb (0.1), cJUN (0.1),
+
+Model R2 (+subtype): 0.5741
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	7.7319	2.0797	3.7179	9e-04
+`egfr_25_gene_list/adap_adap_single/egfr`	5.131	1.6436	3.1217	0.0043
+`erk_250_gene_list/adap_adap_single/erk`	-6.2367	2.6	-2.3987	0.0236
+`her2_15_gene_list/adap_adap_single/her2`	8.5947	2.8474	3.0185	0.0055
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-12.7866	4.0142	-3.1853	0.0036
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	-5.1696	3.5136	-1.4713	0.1528
+model_subsubtype_ERBB2Claudin-low	0.1768	1.2462	0.1419	0.8882
+model_subsubtype_ERBB2ERBB2	-0.8459	1.1351	-0.7452	0.4626
+model_subsubtype_ERBB2LUMINAL	-0.3533	1.1201	-0.3155	0.7548
+model_subsubtype_ERBB2NORMAL	3.8879	1.2464	3.1193	0.0043
+Important genes: TTN (0.12),
+Genes that add to the pathway model:  (),
+Important proteins: TSC2 (0.45), PDK1 (0.34), X1 (0.34), p38p (0.3), HER2 (0.3), cJUN (0.27), PDK1p241 (0.27), HER2p1248 (0.19), AR (0.18), PKCalphap657 (0.18), PKCalpha (0.18), Aktp473 (0.18), COMT (0.17), IGFBP2 (0.15), GATA3 (0.15), Telomerase (0.14), Collagen.VI (0.13), Aktp308 (0.12), PTEN (0.12), Stathmin (0.11), IGFR1 (0.11), Rab25 (0.11), ERp118 (0.11), Bcl2 (0.1), ER (0.1),
+Proteins that add to the pathway model: ERp118 (0.16), TSC2 (0.14), ERK2 (0.14), Aktp473 (0.12), HER2 (0.11),
+
+
+Vorinostat
+Model R2 (no subtype): 0.4149
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	4.7355	0.1563	30.2889	0
+`egfr_25_gene_list/adap_adap_single/egfr`	0.465	0.3164	1.47	0.1505
+`erk_250_gene_list/adap_adap_single/erk`	-1.3264	0.4639	-2.859	0.0071
+`raf_100_gene_list/adap_adap_single/raf`	-1.6265	0.5153	-3.1565	0.0033
+Important genes: FAT2 (0.19), CFTR (0.16), SYNE2 (0.14), PCDHB11 (0.12), RIF1 (0.11),
+Genes that add to the pathway model:  (),
+Important proteins: PDK1p241 (0.32), X1 (0.3), PDK1 (0.29), TSC2 (0.25), AR (0.23), cJUN (0.23), VEGFR2 (0.21), GATA3 (0.21), COMT (0.2), CCNB1 (0.2), PKCalpha (0.19), PAI1 (0.19), Akt (0.17), HER2p1248 (0.16), PKCalphap657 (0.16), HER2 (0.16), AcCoAp (0.16), Telomerase (0.16), GSK3 (0.15), Fortilin (0.14), p70S6Kp389 (0.14), ERp118 (0.12), stat3 (0.12), mTor (0.11),
+Proteins that add to the pathway model: IGFBP2 (0.17), JNKp183.5 (0.13), AMPKp (0.12), Rb (0.12), VEGFR2 (0.11), Aktp473 (0.1), srcp527 (0.1),
+
+Model R2 (+subtype): 0.6091
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	6.0402	0.7614	7.9325	0
+`akt_75_gene_list/adap_adap_single/akt`	1.1932	0.5686	2.0984	0.0454
+`egfr_25_gene_list/adap_adap_single/egfr`	1.3688	0.4262	3.212	0.0034
+`erk_250_gene_list/adap_adap_single/erk`	-3.5012	0.8819	-3.9699	5e-04
+`her2_15_gene_list/adap_adap_single/her2`	0.7979	0.5518	1.4458	0.1597
+`igf1r_75_gene_list/adap_adap_single/igf1r`	-1.5267	0.5966	-2.559	0.0164
+`raf_100_gene_list/adap_adap_single/raf`	-3.2701	0.9145	-3.576	0.0013
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	-1.6765	1.0112	-1.658	0.1089
+model_subsubtype_ERBB2Claudin-low	-0.0224	0.3057	-0.0733	0.9421
+model_subsubtype_ERBB2ERBB2	-0.1929	0.2538	-0.7601	0.4538
+model_subsubtype_ERBB2LUMINAL	-0.491	0.2689	-1.8262	0.0789
+model_subsubtype_ERBB2NORMAL	-0.1174	0.2565	-0.4579	0.6507
+Important genes: FAT2 (0.19), CFTR (0.16), SYNE2 (0.14), PCDHB11 (0.12), RIF1 (0.11),
+Genes that add to the pathway model:  (),
+Important proteins: PDK1p241 (0.32), X1 (0.3), PDK1 (0.29), TSC2 (0.25), AR (0.23), cJUN (0.23), VEGFR2 (0.21), GATA3 (0.21), COMT (0.2), CCNB1 (0.2), PKCalpha (0.19), PAI1 (0.19), Akt (0.17), HER2p1248 (0.16), PKCalphap657 (0.16), HER2 (0.16), AcCoAp (0.16), Telomerase (0.16), GSK3 (0.15), Fortilin (0.14), p70S6Kp389 (0.14), ERp118 (0.12), stat3 (0.12), mTor (0.11),
+Proteins that add to the pathway model: Aktp473 (0.19), PTEN (0.17), AMPKp (0.17), Rb (0.15), GATA3 (0.14), COMT (0.13), JNKp183.5 (0.11),
+
+
+SB.3CT
+Model R2 (no subtype): 0.1375
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	4.6124	0.2298	20.0716	0
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-0.6012	0.3192	-1.8837	0.0679
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	-0.7184	0.4178	-1.7196	0.0943
+Important genes:  (),
+Genes that add to the pathway model:  (),
+Important proteins: p110alpha (0.29), p38 (0.22), Rb (0.22), mTor (0.16), Fortilin (0.15), Caveolin (0.14), MEK1 (0.12), X4EBP1p37 (0.11), JNK (0.11), FGFR1 (0.1),
+Proteins that add to the pathway model: p110alpha (0.21), Rb (0.2), p38 (0.13), mTor (0.13), Fortilin (0.12), JNK (0.11),
+
+Model R2 (+subtype): 0.1375
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	4.6124	0.2298	20.0716	0
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-0.6012	0.3192	-1.8837	0.0679
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	-0.7184	0.4178	-1.7196	0.0943
+Important genes:  (),
+Genes that add to the pathway model:  (),
+Important proteins: p110alpha (0.29), p38 (0.22), Rb (0.22), mTor (0.16), Fortilin (0.15), Caveolin (0.14), MEK1 (0.12), X4EBP1p37 (0.11), JNK (0.11), FGFR1 (0.1),
+Proteins that add to the pathway model: p110alpha (0.21), Rb (0.2), p38 (0.13), mTor (0.13), Fortilin (0.12), JNK (0.11),
+
+
+Ispinesib
+Model R2 (no subtype): 0.1841
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	7.2496	0.3101	23.3812	0
+`akt_75_gene_list/adap_adap_single/akt`	-1.6621	0.6374	-2.6075	0.0133
+`igf1r_75_gene_list/adap_adap_single/igf1r`	1.4339	0.7717	1.858	0.0716
+Important genes:  (),
+Genes that add to the pathway model:  (),
+Important proteins: GSK3 (0.3), TSC2 (0.26), EGFR (0.22), ER (0.2), Fortilin (0.15), IGFBP2 (0.14), p38 (0.13), YB1 (0.13), Stathmin (0.13), NOTCH3 (0.12), ERp118 (0.12), PDK1p241 (0.11), PKCalphap657 (0.1), stat3p705 (0.1), p53 (0.1), AcCoAp (0.1),
+Proteins that add to the pathway model: EIG121 (0.25), GSK3 (0.19), TSC2 (0.14),
+
+Model R2 (+subtype): 0.1841
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	7.2496	0.3101	23.3812	0
+`akt_75_gene_list/adap_adap_single/akt`	-1.6621	0.6374	-2.6075	0.0133
+`igf1r_75_gene_list/adap_adap_single/igf1r`	1.4339	0.7717	1.858	0.0716
+Important genes:  (),
+Genes that add to the pathway model:  (),
+Important proteins: GSK3 (0.3), TSC2 (0.26), EGFR (0.22), ER (0.2), Fortilin (0.15), IGFBP2 (0.14), p38 (0.13), YB1 (0.13), Stathmin (0.13), NOTCH3 (0.12), ERp118 (0.12), PDK1p241 (0.11), PKCalphap657 (0.1), stat3p705 (0.1), p53 (0.1), AcCoAp (0.1),
+Proteins that add to the pathway model: EIG121 (0.25), GSK3 (0.19), TSC2 (0.14),
+
+
+Bosutinib
+Model R2 (no subtype): 0.3884
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	4.1616	0.4971	8.3709	0
+`bad_200_gene_list/adap_adap_single/bad`	1.6746	0.6259	2.6758	0.0117
+`raf_100_gene_list/adap_adap_single/raf`	3.0004	1.4249	2.1058	0.0432
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-2.7588	1.4786	-1.8659	0.0712
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	2.0235	0.8966	2.2569	0.031
+Important genes: EPHA10 (0.32), TP53 (0.14), PRB3 (0.13), GRAMD1A (0.12),
+Genes that add to the pathway model: EPHA10 (0.13),
+Important proteins: EGFR (0.29), IGFBP2 (0.23), Aktp308 (0.2), ER (0.19), X1 (0.17), Bcl2 (0.14), PTEN (0.14), GATA3 (0.14), AcCoAp (0.13), YB1 (0.12), MAPKp (0.12), PR (0.11), CCND1 (0.1), Rab25 (0.1),
+Proteins that add to the pathway model:  (),
+
+Model R2 (+subtype): 0.514
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	4.8639	0.384	12.6651	0
+`akt_75_gene_list/adap_adap_single/akt`	1.3183	0.5782	2.2799	0.0299
+`egfr_25_gene_list/adap_adap_single/egfr`	0.8034	0.36	2.232	0.0332
+model_subsubtype_ERBB2Claudin-low	0.2907	0.2144	1.3559	0.1852
+model_subsubtype_ERBB2ERBB2	-0.0258	0.2065	-0.1251	0.9013
+model_subsubtype_ERBB2LUMINAL	-0.4923	0.2292	-2.1477	0.0399
+model_subsubtype_ERBB2NORMAL	0.0977	0.2004	0.4874	0.6295
+Important genes: EPHA10 (0.32), TP53 (0.14), PRB3 (0.13), GRAMD1A (0.12),
+Genes that add to the pathway model: TP53 (0.16), PIK3CA (0.1), PRB3 (0.1),
+Important proteins: EGFR (0.29), IGFBP2 (0.23), Aktp308 (0.2), ER (0.19), X1 (0.17), Bcl2 (0.14), PTEN (0.14), GATA3 (0.14), AcCoAp (0.13), YB1 (0.12), MAPKp (0.12), PR (0.11), CCND1 (0.1), Rab25 (0.1),
+Proteins that add to the pathway model:  (),
+
+
+Sorafenib
+Model R2 (no subtype): 0.5436
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	4.0149	0.4745	8.4608	0
+`akt_75_gene_list/adap_adap_single/akt`	2.4647	0.6582	3.7449	8e-04
+`egfr_25_gene_list/adap_adap_single/egfr`	1.9923	0.5574	3.5745	0.0013
+`erk_250_gene_list/adap_adap_single/erk`	-2.4141	0.8061	-2.9946	0.0056
+`her2_15_gene_list/adap_adap_single/her2`	-1.0132	0.4496	-2.2537	0.0319
+`raf_100_gene_list/adap_adap_single/raf`	-3.4305	1.4846	-2.3107	0.0282
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	2.3615	1.5041	1.57	0.1273
+Important genes: FAM86B2 (0.11),
+Genes that add to the pathway model:  (),
+Important proteins: S6p235.236 (0.22), IGFR1 (0.21), S6p240.244 (0.21), p38 (0.19), FGFR1 (0.15), src (0.14), stat3p705 (0.14), EIG121 (0.13), E.cadherin (0.12), PDK1 (0.12), PKCalpha (0.11), PKCalphap657 (0.11), VEGFR2 (0.1),
+Proteins that add to the pathway model:  (),
+
+Model R2 (+subtype): 0.5436
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	4.0149	0.4745	8.4608	0
+`akt_75_gene_list/adap_adap_single/akt`	2.4647	0.6582	3.7449	8e-04
+`egfr_25_gene_list/adap_adap_single/egfr`	1.9923	0.5574	3.5745	0.0013
+`erk_250_gene_list/adap_adap_single/erk`	-2.4141	0.8061	-2.9946	0.0056
+`her2_15_gene_list/adap_adap_single/her2`	-1.0132	0.4496	-2.2537	0.0319
+`raf_100_gene_list/adap_adap_single/raf`	-3.4305	1.4846	-2.3107	0.0282
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	2.3615	1.5041	1.57	0.1273
+Important genes: FAM86B2 (0.11),
+Genes that add to the pathway model:  (),
+Important proteins: S6p235.236 (0.22), IGFR1 (0.21), S6p240.244 (0.21), p38 (0.19), FGFR1 (0.15), src (0.14), stat3p705 (0.14), EIG121 (0.13), E.cadherin (0.12), PDK1 (0.12), PKCalpha (0.11), PKCalphap657 (0.11), VEGFR2 (0.1),
+Proteins that add to the pathway model:  (),
+
+
+Sunitinib.Malate
+Model R2 (no subtype): 0.3679
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	4.9611	0.0651	76.2193	0
+`egfr_25_gene_list/adap_adap_single/egfr`	0.5077	0.1125	4.5135	1e-04
+Important genes: PIK3CA (0.11),
+Genes that add to the pathway model:  (),
+Important proteins: IGFBP2 (0.47), TSC2 (0.36), X1 (0.32), Akt (0.3), ER (0.27), COMT (0.26), Telomerase (0.26), AR (0.26), stat3p705 (0.24), GSK3 (0.23), PR (0.2), YB1 (0.2), B.Catenin (0.2), HER2 (0.2), p53 (0.17), Aktp308 (0.16), CCNB1 (0.16), EGFRp1068 (0.15), HER2p1248 (0.15), cJUN (0.14), PKCalphap657 (0.14), PTEN (0.14), CD31 (0.13), Stathmin (0.13), ERp118 (0.12), GSK3p21.9 (0.12), S6p240.244 (0.11), VEGFR2 (0.11), AcCoAp (0.1),
+Proteins that add to the pathway model: IGFBP2 (0.14),
+
+Model R2 (+subtype): 0.59
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	4.0129	0.3464	11.583	0
+`her2_15_gene_list/adap_adap_single/her2`	-1.4863	0.3684	-4.0343	4e-04
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	2.1443	0.4278	5.0129	0
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	1.6355	0.5657	2.8909	0.0073
+model_subsubtype_ERBB2Claudin-low	0.2834	0.2054	1.3795	0.1787
+model_subsubtype_ERBB2ERBB2	0.515	0.174	2.9596	0.0062
+model_subsubtype_ERBB2LUMINAL	0.6202	0.1744	3.5563	0.0014
+model_subsubtype_ERBB2NORMAL	-0.6867	0.1736	-3.9562	5e-04
+`erk_250_gene_list/adap_adap_single/erk`	1.0247	0.3702	2.7681	0.0099
+Important genes: PIK3CA (0.11),
+Genes that add to the pathway model:  (),
+Important proteins: IGFBP2 (0.47), TSC2 (0.36), X1 (0.32), Akt (0.3), ER (0.27), COMT (0.26), Telomerase (0.26), AR (0.26), stat3p705 (0.24), GSK3 (0.23), PR (0.2), YB1 (0.2), B.Catenin (0.2), HER2 (0.2), p53 (0.17), Aktp308 (0.16), CCNB1 (0.16), EGFRp1068 (0.15), HER2p1248 (0.15), cJUN (0.14), PKCalphap657 (0.14), PTEN (0.14), CD31 (0.13), Stathmin (0.13), ERp118 (0.12), GSK3p21.9 (0.12), S6p240.244 (0.11), VEGFR2 (0.11), AcCoAp (0.1),
+Proteins that add to the pathway model:  (),
+
+
+TCS.PIM.11
+Model R2 (no subtype): 0.7272
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	2.7956	0.3033	9.2172	0
+`akt_75_gene_list/adap_adap_single/akt`	1.5225	0.4574	3.3285	0.0023
+`bad_200_gene_list/adap_adap_single/bad`	1.0729	0.7284	1.473	0.1512
+`egfr_25_gene_list/adap_adap_single/egfr`	1.504	0.3254	4.6224	1e-04
+`erk_250_gene_list/adap_adap_single/erk`	-1.1349	0.7569	-1.4994	0.1442
+`her2_15_gene_list/adap_adap_single/her2`	-0.744	0.3048	-2.4412	0.0208
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-1.1942	0.5143	-2.322	0.0272
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	1.8714	0.6431	2.9101	0.0067
+Important genes: FAM86B2 (0.16), TTN (0.11),
+Genes that add to the pathway model: COL5A2 (0.11),
+Important proteins: p70S6Kp389 (0.16), CCND1 (0.13), PKCalpha (0.12), stat3p705 (0.11), p110alpha (0.11), ER (0.11),
+Proteins that add to the pathway model:  (),
+
+Model R2 (+subtype): 0.7272
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	2.7956	0.3033	9.2172	0
+`akt_75_gene_list/adap_adap_single/akt`	1.5225	0.4574	3.3285	0.0023
+`bad_200_gene_list/adap_adap_single/bad`	1.0729	0.7284	1.473	0.1512
+`egfr_25_gene_list/adap_adap_single/egfr`	1.504	0.3254	4.6224	1e-04
+`erk_250_gene_list/adap_adap_single/erk`	-1.1349	0.7569	-1.4994	0.1442
+`her2_15_gene_list/adap_adap_single/her2`	-0.744	0.3048	-2.4412	0.0208
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-1.1942	0.5143	-2.322	0.0272
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	1.8714	0.6431	2.9101	0.0067
+Important genes: FAM86B2 (0.16), TTN (0.11),
+Genes that add to the pathway model: COL5A2 (0.11),
+Important proteins: p70S6Kp389 (0.16), CCND1 (0.13), PKCalpha (0.12), stat3p705 (0.11), p110alpha (0.11), ER (0.11),
+Proteins that add to the pathway model:  (),
+
+
+TCS2312.dihydrochloride
+Model R2 (no subtype): 0.2392
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	5.7846	0.3069	18.8497	0
+`erk_250_gene_list/adap_adap_single/erk`	1.0425	0.6101	1.7086	0.0966
+`her2_15_gene_list/adap_adap_single/her2`	-0.5653	0.2331	-2.425	0.0208
+`igf1r_75_gene_list/adap_adap_single/igf1r`	1.2652	0.4628	2.7338	0.0099
+Important genes: SLC9B1P4 (0.23), RIF1 (0.16), PCDHB11 (0.14), FAT2 (0.13), NID2 (0.11),
+Genes that add to the pathway model: SLC9B1P4 (0.25), PCDHB11 (0.13), FAT2 (0.12),
+Important proteins: PTEN (0.31), NOTCH3 (0.23), Collagen.VI (0.18), CCNE1 (0.14), p53 (0.12), PAI1 (0.12), CCNB1 (0.11),
+Proteins that add to the pathway model: PTEN (0.19), NOTCH3 (0.16), PAI1 (0.15),
+
+Model R2 (+subtype): 0.5137
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	6.3821	0.388	16.4485	0
+`akt_75_gene_list/adap_adap_single/akt`	0.6892	0.4325	1.5937	0.1215
+`igf1r_75_gene_list/adap_adap_single/igf1r`	1.0262	0.4363	2.3518	0.0254
+`raf_100_gene_list/adap_adap_single/raf`	-1.0697	0.5102	-2.0964	0.0446
+model_subsubtype_ERBB2Claudin-low	0.1401	0.1879	0.7459	0.4616
+model_subsubtype_ERBB2ERBB2	-0.7693	0.1764	-4.3623	1e-04
+model_subsubtype_ERBB2LUMINAL	-0.8549	0.1937	-4.4133	1e-04
+model_subsubtype_ERBB2NORMAL	-0.0591	0.1736	-0.3408	0.7356
+Important genes: SLC9B1P4 (0.23), RIF1 (0.16), PCDHB11 (0.14), FAT2 (0.13), NID2 (0.11),
+Genes that add to the pathway model:  (),
+Important proteins: PTEN (0.31), NOTCH3 (0.23), Collagen.VI (0.18), CCNE1 (0.14), p53 (0.12), PAI1 (0.12), CCNB1 (0.11),
+Proteins that add to the pathway model: X1 (0.14), Telomerase (0.12),
+
+
+Topotecan
+Model R2 (no subtype): 0.3204
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	6.1126	0.823	7.4268	0
+`akt_75_gene_list/adap_adap_single/akt`	1.8816	1.1378	1.6537	0.1094
+`bad_200_gene_list/adap_adap_single/bad`	6.166	1.8962	3.2517	0.003
+`erk_250_gene_list/adap_adap_single/erk`	-5.3936	2.3377	-2.3073	0.0286
+`raf_100_gene_list/adap_adap_single/raf`	-6.2139	3.2432	-1.916	0.0656
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	4.1423	2.6758	1.548	0.1328
+Important genes: COL5A2 (0.19), SYNE1 (0.15), ATP4A (0.11),
+Genes that add to the pathway model: XIRP2 (0.32), COL5A2 (0.31), GRAMD1A (0.28), SYNE1 (0.27), TTN (0.25), SYNE2 (0.25), PIK3CA (0.24), CFTR (0.23), NBPF10 (0.23), ARHGAP39 (0.23), SLC9B1P4 (0.23), FAT2 (0.22), PCDHB11 (0.22), PRB3 (0.22), NID2 (0.22), ATP4A (0.22), EPHA10 (0.22), RIF1 (0.22), TP53 (0.22),
+Important proteins: srcp416 (0.22), p70S6Kp389 (0.19), stat3p705 (0.19), stat3 (0.18), E.cadherin (0.17), IGFR1 (0.15), Fortilin (0.14), PTEN (0.14), src (0.11), AR (0.1), GSK3p21.9 (0.1),
+Proteins that add to the pathway model: PTEN (0.36), stat3p705 (0.3), PAI1 (0.28), X1 (0.27), stat3 (0.27), p70S6Kp389 (0.26), p53 (0.25), E.cadherin (0.22), VEGFR2 (0.22), mTor (0.19), S6p235.236 (0.18), srcp416 (0.18), S6p240.244 (0.18), TSC2 (0.16), src (0.16), EN1 (0.16), MAPKp (0.16), cJUN (0.16), PKCalphap657 (0.15), COMT (0.15), p70S6.Kinase (0.15), ER (0.15), ERK2 (0.15), AR (0.15), IGFR1 (0.14), PKCalpha (0.14), B.Catenin (0.14), CCNB1 (0.14), ERp118 (0.14), NOTCH3 (0.13), srcp527 (0.13), Fortilin (0.13), p38p (0.13), Rab25 (0.13), Aktp308 (0.13), EIG121 (0.12), GATA3 (0.12), IGFBP2 (0.12), MEK1 (0.12), Rb (0.12), JNK (0.12), EGFRp1068 (0.12), PR (0.12), Caveolin (0.12), PDK1 (0.12), FGFR1 (0.12), Collagen.VI (0.12), GSK3p21.9 (0.12), GSK3 (0.12), YB1 (0.12), CCND1 (0.11), Akt (0.11), p38 (0.11), Aktp473 (0.11), CD31 (0.11), HER2p1248 (0.11), p21 (0.11), PDK1p241 (0.11), AMPKp (0.11), p110alpha (0.11), JNKp183.5 (0.11), EGFR (0.11), Stathmin (0.11), HER2 (0.11), Bcl2 (0.11), X4EBP1p37 (0.11), CCNE1 (0.11), AcCoAp (0.11), cleaved.caspase.7 (0.11), Telomerase (0.11),
+
+Model R2 (+subtype): 0.3204
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	6.1126	0.823	7.4268	0
+`akt_75_gene_list/adap_adap_single/akt`	1.8816	1.1378	1.6537	0.1094
+`bad_200_gene_list/adap_adap_single/bad`	6.166	1.8962	3.2517	0.003
+`erk_250_gene_list/adap_adap_single/erk`	-5.3936	2.3377	-2.3073	0.0286
+`raf_100_gene_list/adap_adap_single/raf`	-6.2139	3.2432	-1.916	0.0656
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	4.1423	2.6758	1.548	0.1328
+Important genes: COL5A2 (0.19), SYNE1 (0.15), ATP4A (0.11),
+Genes that add to the pathway model: XIRP2 (0.32), COL5A2 (0.31), GRAMD1A (0.28), SYNE1 (0.27), TTN (0.25), SYNE2 (0.25), PIK3CA (0.24), CFTR (0.23), NBPF10 (0.23), ARHGAP39 (0.23), SLC9B1P4 (0.23), FAT2 (0.22), PCDHB11 (0.22), PRB3 (0.22), NID2 (0.22), ATP4A (0.22), EPHA10 (0.22), RIF1 (0.22), TP53 (0.22),
+Important proteins: srcp416 (0.22), p70S6Kp389 (0.19), stat3p705 (0.19), stat3 (0.18), E.cadherin (0.17), IGFR1 (0.15), Fortilin (0.14), PTEN (0.14), src (0.11), AR (0.1), GSK3p21.9 (0.1),
+Proteins that add to the pathway model: PTEN (0.36), stat3p705 (0.3), PAI1 (0.28), X1 (0.27), stat3 (0.27), p70S6Kp389 (0.26), p53 (0.25), E.cadherin (0.22), VEGFR2 (0.22), mTor (0.19), S6p235.236 (0.18), srcp416 (0.18), S6p240.244 (0.18), TSC2 (0.16), src (0.16), EN1 (0.16), MAPKp (0.16), cJUN (0.16), PKCalphap657 (0.15), COMT (0.15), p70S6.Kinase (0.15), ER (0.15), ERK2 (0.15), AR (0.15), IGFR1 (0.14), PKCalpha (0.14), B.Catenin (0.14), CCNB1 (0.14), ERp118 (0.14), NOTCH3 (0.13), srcp527 (0.13), Fortilin (0.13), p38p (0.13), Rab25 (0.13), Aktp308 (0.13), EIG121 (0.12), GATA3 (0.12), IGFBP2 (0.12), MEK1 (0.12), Rb (0.12), JNK (0.12), EGFRp1068 (0.12), PR (0.12), Caveolin (0.12), PDK1 (0.12), FGFR1 (0.12), Collagen.VI (0.12), GSK3p21.9 (0.12), GSK3 (0.12), YB1 (0.12), CCND1 (0.11), Akt (0.11), p38 (0.11), Aktp473 (0.11), CD31 (0.11), HER2p1248 (0.11), p21 (0.11), PDK1p241 (0.11), AMPKp (0.11), p110alpha (0.11), JNKp183.5 (0.11), EGFR (0.11), Stathmin (0.11), HER2 (0.11), Bcl2 (0.11), X4EBP1p37 (0.11), CCNE1 (0.11), AcCoAp (0.11), cleaved.caspase.7 (0.11), Telomerase (0.11),
+
+
+Tamoxifen
+Model R2 (no subtype): 0.3792
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	7.0825	1.012	6.9984	0
+`akt_75_gene_list/adap_adap_single/akt`	2.149	0.9597	2.2393	0.033
+`egfr_25_gene_list/adap_adap_single/egfr`	1.5114	0.9228	1.6379	0.1122
+`erk_250_gene_list/adap_adap_single/erk`	-5.468	1.6022	-3.4129	0.0019
+`igf1r_75_gene_list/adap_adap_single/igf1r`	-4.7758	1.3511	-3.5347	0.0014
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-3.1585	1.3525	-2.3353	0.0267
+Important genes:  (),
+Genes that add to the pathway model:  (),
+Important proteins: IGFBP2 (0.16), TSC2 (0.15), PR (0.14), p38p (0.13), GSK3 (0.13), ER (0.12), ERp118 (0.11), Akt (0.11), PTEN (0.11),
+Proteins that add to the pathway model:  (),
+
+Model R2 (+subtype): 0.3792
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	7.0825	1.012	6.9984	0
+`akt_75_gene_list/adap_adap_single/akt`	2.149	0.9597	2.2393	0.033
+`egfr_25_gene_list/adap_adap_single/egfr`	1.5114	0.9228	1.6379	0.1122
+`erk_250_gene_list/adap_adap_single/erk`	-5.468	1.6022	-3.4129	0.0019
+`igf1r_75_gene_list/adap_adap_single/igf1r`	-4.7758	1.3511	-3.5347	0.0014
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-3.1585	1.3525	-2.3353	0.0267
+Important genes:  (),
+Genes that add to the pathway model:  (),
+Important proteins: IGFBP2 (0.16), TSC2 (0.15), PR (0.14), p38p (0.13), GSK3 (0.13), ER (0.12), ERp118 (0.11), Akt (0.11), PTEN (0.11),
+Proteins that add to the pathway model:  (),
+
+
+Temsirolimus
+Model R2 (no subtype): 0.1049
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	5.2335	0.3966	13.1962	0
+`her2_15_gene_list/adap_adap_single/her2`	1.3736	0.6984	1.9667	0.0577
+Important genes: TTN (0.1),
+Genes that add to the pathway model:  (),
+Important proteins: Collagen.VI (0.34), AR (0.29), HER2 (0.25), X1 (0.24), HER2p1248 (0.22), cleaved.caspase.7 (0.19), TSC2 (0.19), Aktp308 (0.18), cJUN (0.18), CCNE1 (0.17), p38p (0.17), CCND1 (0.17), PDK1 (0.16), ERp118 (0.16), stat3 (0.15), ER (0.14), COMT (0.14), IGFBP2 (0.14), IGFR1 (0.14), EN1 (0.13), PDK1p241 (0.13), Fortilin (0.12),
+Proteins that add to the pathway model: cleaved.caspase.7 (0.42), Collagen.VI (0.35), p38 (0.29), AR (0.25), srcp416 (0.25), CCNE1 (0.24), p38p (0.23), mTor (0.23), p21 (0.23), EN1 (0.23), Fortilin (0.22), MEK1 (0.22), IGFR1 (0.21), Aktp308 (0.21), Stathmin (0.21), GSK3p21.9 (0.21), Rab25 (0.21), HER2 (0.21), stat3 (0.21), srcp527 (0.21), Caveolin (0.21), TSC2 (0.2), Bcl2 (0.2), src (0.2), p110alpha (0.2), E.cadherin (0.2), CD31 (0.2), CCND1 (0.2), HER2p1248 (0.2), CCNB1 (0.19), EGFRp1068 (0.19), JNKp183.5 (0.19), X1 (0.19), cJUN (0.19), GSK3 (0.19), EGFR (0.19), B.Catenin (0.18), X4EBP1p37 (0.18), FGFR1 (0.18), ERp118 (0.18), YB1 (0.18), Aktp473 (0.17), COMT (0.17), Telomerase (0.17), PKCalphap657 (0.17), Akt (0.17), ER (0.17), AMPKp (0.17), JNK (0.17), PDK1 (0.17), p70S6Kp389 (0.17), PKCalpha (0.17), stat3p705 (0.17), ERK2 (0.17), IGFBP2 (0.16), Rb (0.16), PR (0.16), NOTCH3 (0.16), AcCoAp (0.16), p70S6.Kinase (0.16), S6p240.244 (0.16), PDK1p241 (0.16), S6p235.236 (0.16), PAI1 (0.16), GATA3 (0.16), VEGFR2 (0.16), PTEN (0.16), MAPKp (0.16), p53 (0.16), EIG121 (0.16),
+
+Model R2 (+subtype): 0.21
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	5.4375	0.3482	15.6157	0
+model_subsubtype_ERBB2Claudin-low	-0.185	0.6031	-0.3067	0.7612
+model_subsubtype_ERBB2ERBB2	1.1413	0.4924	2.3175	0.0275
+model_subsubtype_ERBB2LUMINAL	0.7245	0.4672	1.5508	0.1314
+model_subsubtype_ERBB2NORMAL	0.3845	0.5615	0.6848	0.4987
+Important genes: TTN (0.1),
+Genes that add to the pathway model: GRAMD1A (0.19), EPHA10 (0.11),
+Important proteins: Collagen.VI (0.34), AR (0.29), HER2 (0.25), X1 (0.24), HER2p1248 (0.22), cleaved.caspase.7 (0.19), TSC2 (0.19), Aktp308 (0.18), cJUN (0.18), CCNE1 (0.17), p38p (0.17), CCND1 (0.17), PDK1 (0.16), ERp118 (0.16), stat3 (0.15), ER (0.14), COMT (0.14), IGFBP2 (0.14), IGFR1 (0.14), EN1 (0.13), PDK1p241 (0.13), Fortilin (0.12),
+Proteins that add to the pathway model: cleaved.caspase.7 (0.32), Collagen.VI (0.28), EN1 (0.23), MEK1 (0.23), CCNE1 (0.23), CCND1 (0.22), srcp416 (0.21), EGFRp1068 (0.2), Stathmin (0.2), src (0.2), p21 (0.19), p38 (0.19), AR (0.18), p110alpha (0.18), srcp527 (0.17), EGFR (0.17), Fortilin (0.17), GATA3 (0.17), Aktp308 (0.16), TSC2 (0.16), COMT (0.15), PTEN (0.15), p38p (0.15), ER (0.15), CD31 (0.15), NOTCH3 (0.15), B.Catenin (0.15), E.cadherin (0.15), Rb (0.14), p53 (0.14), stat3 (0.14), Caveolin (0.14), PAI1 (0.14), p70S6Kp389 (0.14), IGFR1 (0.14), HER2 (0.14), Bcl2 (0.13), mTor (0.13), GSK3 (0.13), AMPKp (0.13), YB1 (0.13), ERK2 (0.13), ERp118 (0.13), cJUN (0.13), Telomerase (0.13), PR (0.13), JNKp183.5 (0.13), PKCalphap657 (0.12), GSK3p21.9 (0.12), CCNB1 (0.12), JNK (0.12), Aktp473 (0.12), PDK1 (0.12), stat3p705 (0.12), FGFR1 (0.12), S6p240.244 (0.12), S6p235.236 (0.12), p70S6.Kinase (0.12), IGFBP2 (0.12), PKCalpha (0.12), AcCoAp (0.12), VEGFR2 (0.12), EIG121 (0.12), Akt (0.12), X1 (0.12), HER2p1248 (0.12), Rab25 (0.12), PDK1p241 (0.12), MAPKp (0.12), X4EBP1p37 (0.12),
+
+
+Trichostatin.A
+Model R2 (no subtype): 0.4261
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	6.5746	0.5954	11.0416	0
+`egfr_25_gene_list/adap_adap_single/egfr`	0.5713	0.4271	1.3375	0.1905
+`erk_250_gene_list/adap_adap_single/erk`	-2.0428	0.834	-2.4495	0.02
+`her2_15_gene_list/adap_adap_single/her2`	0.9722	0.3982	2.4413	0.0203
+`igf1r_75_gene_list/adap_adap_single/igf1r`	-1.1087	0.6152	-1.8022	0.0809
+`raf_100_gene_list/adap_adap_single/raf`	-2.0084	0.7359	-2.7292	0.0102
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	-1.6207	0.6891	-2.3519	0.025
+Important genes: CFTR (0.13), SYNE2 (0.13), PCDHB11 (0.11),
+Genes that add to the pathway model:  (),
+Important proteins: AR (0.32), PDK1p241 (0.27), GATA3 (0.26), X1 (0.25), AcCoAp (0.23), VEGFR2 (0.23), Fortilin (0.16), PKCalpha (0.15), PKCalphap657 (0.14), p70S6Kp389 (0.14), PDK1 (0.14), p21 (0.13), stat3p705 (0.13), MAPKp (0.13), CCNB1 (0.12), cJUN (0.11), TSC2 (0.11), ERp118 (0.1), CD31 (0.1), MEK1 (0.1), ER (0.1),
+Proteins that add to the pathway model: CCND1 (0.2), IGFBP2 (0.14),
+
+Model R2 (+subtype): 0.4261
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	6.5746	0.5954	11.0416	0
+`egfr_25_gene_list/adap_adap_single/egfr`	0.5713	0.4271	1.3375	0.1905
+`erk_250_gene_list/adap_adap_single/erk`	-2.0428	0.834	-2.4495	0.02
+`her2_15_gene_list/adap_adap_single/her2`	0.9722	0.3982	2.4413	0.0203
+`igf1r_75_gene_list/adap_adap_single/igf1r`	-1.1087	0.6152	-1.8022	0.0809
+`raf_100_gene_list/adap_adap_single/raf`	-2.0084	0.7359	-2.7292	0.0102
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	-1.6207	0.6891	-2.3519	0.025
+Important genes: CFTR (0.13), SYNE2 (0.13), PCDHB11 (0.11),
+Genes that add to the pathway model:  (),
+Important proteins: AR (0.32), PDK1p241 (0.27), GATA3 (0.26), X1 (0.25), AcCoAp (0.23), VEGFR2 (0.23), Fortilin (0.16), PKCalpha (0.15), PKCalphap657 (0.14), p70S6Kp389 (0.14), PDK1 (0.14), p21 (0.13), stat3p705 (0.13), MAPKp (0.13), CCNB1 (0.12), cJUN (0.11), TSC2 (0.11), ERp118 (0.1), CD31 (0.1), MEK1 (0.1), ER (0.1),
+Proteins that add to the pathway model: CCND1 (0.2), IGFBP2 (0.14),
+
+
+Tykerb.IGF1R..1.1.
+Model R2 (no subtype): 0.3164
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	5.3313	0.2588	20.5997	0
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	0.9401	0.3799	2.4746	0.0188
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	1.5363	0.4748	3.2359	0.0028
+Important genes: EPHA10 (0.16),
+Genes that add to the pathway model:  (),
+Important proteins: HER2p1248 (0.24), HER2 (0.23), EIG121 (0.21), cJUN (0.17), COMT (0.17), IGFR1 (0.14), FGFR1 (0.13), p38p (0.13), PKCalpha (0.12), AR (0.11),
+Proteins that add to the pathway model: p38p (0.1), Telomerase (0.1),
+
+Model R2 (+subtype): 0.43
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	5.3977	0.443	12.1842	0
+model_subsubtype_ERBB2Claudin-low	0.2001	0.3469	0.577	0.5684
+model_subsubtype_ERBB2ERBB2	0.1622	0.1829	0.8868	0.3825
+model_subsubtype_ERBB2LUMINAL	-0.0673	0.1784	-0.3772	0.7087
+model_subsubtype_ERBB2NORMAL	0.6564	0.2233	2.94	0.0064
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	1.8069	0.9399	1.9225	0.0644
+Important genes: EPHA10 (0.16),
+Genes that add to the pathway model:  (),
+Important proteins: HER2p1248 (0.24), HER2 (0.23), EIG121 (0.21), cJUN (0.17), COMT (0.17), IGFR1 (0.14), FGFR1 (0.13), p38p (0.13), PKCalpha (0.12), AR (0.11),
+Proteins that add to the pathway model: MEK1 (0.17), Telomerase (0.16), p70S6.Kinase (0.15), cleaved.caspase.7 (0.15), ERK2 (0.15), EIG121 (0.15), COMT (0.13), CCNB1 (0.13), p38p (0.12), IGFR1 (0.12), Fortilin (0.12), AMPKp (0.11), src (0.11), EGFRp1068 (0.11), FGFR1 (0.11), Aktp473 (0.11), cJUN (0.11), p70S6Kp389 (0.11), Stathmin (0.1), PAI1 (0.1), CD31 (0.1),
+
+
+VX.680
+Model R2 (no subtype): 0.3497
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	5.9259	0.4062	14.5898	0
+`egfr_25_gene_list/adap_adap_single/egfr`	1.7714	0.6511	2.7205	0.0102
+`her2_15_gene_list/adap_adap_single/her2`	-0.9149	0.4809	-1.9024	0.0656
+`raf_100_gene_list/adap_adap_single/raf`	-2.5922	1.0166	-2.5499	0.0155
+Important genes:  (),
+Genes that add to the pathway model:  (),
+Important proteins: PDK1p241 (0.25), CD31 (0.24), p38 (0.19), COMT (0.18), HER2 (0.16), GSK3 (0.15), PDK1 (0.15), AR (0.12), GSK3p21.9 (0.12), E.cadherin (0.12), PKCalpha (0.12), JNK (0.12), HER2p1248 (0.11), Rab25 (0.11), PR (0.11), X1 (0.11),
+Proteins that add to the pathway model:  (),
+
+Model R2 (+subtype): 0.3497
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	5.9259	0.4062	14.5898	0
+`egfr_25_gene_list/adap_adap_single/egfr`	1.7714	0.6511	2.7205	0.0102
+`her2_15_gene_list/adap_adap_single/her2`	-0.9149	0.4809	-1.9024	0.0656
+`raf_100_gene_list/adap_adap_single/raf`	-2.5922	1.0166	-2.5499	0.0155
+Important genes:  (),
+Genes that add to the pathway model:  (),
+Important proteins: PDK1p241 (0.25), CD31 (0.24), p38 (0.19), COMT (0.18), HER2 (0.16), GSK3 (0.15), PDK1 (0.15), AR (0.12), GSK3p21.9 (0.12), E.cadherin (0.12), PKCalpha (0.12), JNK (0.12), HER2p1248 (0.11), Rab25 (0.11), PR (0.11), X1 (0.11),
+Proteins that add to the pathway model:  (),
+
+
+Valproic.acid
+Model R2 (no subtype): 0.4361
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	2.7865	0.2219	12.5554	0
+`akt_75_gene_list/adap_adap_single/akt`	1.3105	0.3246	4.0372	3e-04
+`egfr_25_gene_list/adap_adap_single/egfr`	0.6489	0.2762	2.3499	0.0251
+`erk_250_gene_list/adap_adap_single/erk`	-1.2108	0.3857	-3.1388	0.0036
+`her2_15_gene_list/adap_adap_single/her2`	-0.4331	0.2154	-2.0103	0.0529
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-0.7272	0.3871	-1.8783	0.0695
+Important genes:  (),
+Genes that add to the pathway model:  (),
+Important proteins: cJUN (0.41), PDK1 (0.31), TSC2 (0.29), p38p (0.27), PDK1p241 (0.25), GSK3 (0.23), PKCalpha (0.22), PKCalphap657 (0.19), S6p235.236 (0.19), X1 (0.17), PAI1 (0.16), ERp118 (0.16), COMT (0.14), MAPKp (0.14), IGFR1 (0.13), CCNB1 (0.12), Fortilin (0.12), IGFBP2 (0.1), Akt (0.1),
+Proteins that add to the pathway model:  (),
+
+Model R2 (+subtype): 0.5795
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	3.2813	0.2648	12.3894	0
+`akt_75_gene_list/adap_adap_single/akt`	0.8836	0.3878	2.2787	0.0302
+`egfr_25_gene_list/adap_adap_single/egfr`	0.6644	0.2457	2.704	0.0113
+`erk_250_gene_list/adap_adap_single/erk`	-1.072	0.4498	-2.3833	0.0239
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-1.9421	0.4487	-4.3277	2e-04
+model_subsubtype_ERBB2Claudin-low	-0.3088	0.1817	-1.6996	0.0999
+model_subsubtype_ERBB2ERBB2	-0.3149	0.1252	-2.5144	0.0177
+model_subsubtype_ERBB2LUMINAL	-0.3969	0.1415	-2.8055	0.0089
+model_subsubtype_ERBB2NORMAL	0.2665	0.1223	2.1786	0.0376
+Important genes:  (),
+Genes that add to the pathway model:  (),
+Important proteins: cJUN (0.41), PDK1 (0.31), TSC2 (0.29), p38p (0.27), PDK1p241 (0.25), GSK3 (0.23), PKCalpha (0.22), PKCalphap657 (0.19), S6p235.236 (0.19), X1 (0.17), PAI1 (0.16), ERp118 (0.16), COMT (0.14), MAPKp (0.14), IGFR1 (0.13), CCNB1 (0.12), Fortilin (0.12), IGFBP2 (0.1), Akt (0.1),
+Proteins that add to the pathway model: X1 (0.11),
+
+
+Velcade
+Model R2 (no subtype): 0.2487
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	6.6315	0.7842	8.4563	0
+`bad_200_gene_list/adap_adap_single/bad`	6.155	2.19	2.8105	0.0083
+`erk_250_gene_list/adap_adap_single/erk`	-3.7934	2.5107	-1.5109	0.1403
+`her2_15_gene_list/adap_adap_single/her2`	2.2024	0.936	2.353	0.0247
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-3.201	1.2249	-2.6134	0.0134
+Important genes: FAT2 (0.19), NID2 (0.15), COL5A2 (0.12), TP53 (0.1),
+Genes that add to the pathway model: NBPF10 (0.11),
+Important proteins: Stathmin (0.19), CCNB1 (0.19), MEK1 (0.18), EGFRp1068 (0.15), VEGFR2 (0.14), Telomerase (0.12), COMT (0.12), Rb (0.12), Aktp473 (0.11), Caveolin (0.1),
+Proteins that add to the pathway model: CCNB1 (0.22), cJUN (0.22), COMT (0.18), Caveolin (0.18), X1 (0.18), YB1 (0.18), p70S6.Kinase (0.17), PTEN (0.15), Rb (0.13), MAPKp (0.13), JNK (0.13), Telomerase (0.13), GSK3p21.9 (0.13), p70S6Kp389 (0.12), p21 (0.12), stat3 (0.12), Akt (0.11), EGFRp1068 (0.11), Stathmin (0.11),
+
+Model R2 (+subtype): 0.4783
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	6.5686	1.0455	6.2827	0
+`akt_75_gene_list/adap_adap_single/akt`	1.9015	1.5639	1.2158	0.2346
+`bad_200_gene_list/adap_adap_single/bad`	6.5374	2.3041	2.8373	0.0085
+`egfr_25_gene_list/adap_adap_single/egfr`	2.2346	1.0701	2.0883	0.0463
+`erk_250_gene_list/adap_adap_single/erk`	-6.8705	2.6817	-2.562	0.0163
+`her2_15_gene_list/adap_adap_single/her2`	5.6646	1.8346	3.0877	0.0046
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	-8.9026	2.8064	-3.1723	0.0038
+model_subsubtype_ERBB2Claudin-low	0.4952	0.7828	0.6327	0.5323
+model_subsubtype_ERBB2ERBB2	-2.0797	0.7151	-2.9082	0.0072
+model_subsubtype_ERBB2LUMINAL	-1.9262	0.6857	-2.8093	0.0091
+model_subsubtype_ERBB2NORMAL	1.0125	0.7908	1.2803	0.2113
+Important genes: FAT2 (0.19), NID2 (0.15), COL5A2 (0.12), TP53 (0.1),
+Genes that add to the pathway model:  (),
+Important proteins: Stathmin (0.19), CCNB1 (0.19), MEK1 (0.18), EGFRp1068 (0.15), VEGFR2 (0.14), Telomerase (0.12), COMT (0.12), Rb (0.12), Aktp473 (0.11), Caveolin (0.1),
+Proteins that add to the pathway model: YB1 (0.18), HER2 (0.15), p70S6Kp389 (0.13), p70S6.Kinase (0.13), Caveolin (0.13), p21 (0.13), cJUN (0.12), COMT (0.12), CCNB1 (0.12), Stathmin (0.12), EGFR (0.12), HER2p1248 (0.12), AcCoAp (0.11), NOTCH3 (0.1), GATA3 (0.1),
+
+
+Vinorelbine
+Model R2 (no subtype): 0.0906
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	8.3474	0.4659	17.916	0
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	-1.9049	1.035	-1.8404	0.0744
+Important genes: PRB3 (0.13),
+Genes that add to the pathway model: PRB3 (0.11),
+Important proteins: E.cadherin (0.14), Fortilin (0.14), PKCalphap657 (0.1), PR (0.1),
+Proteins that add to the pathway model: EIG121 (0.22), COMT (0.13), PDK1 (0.12), cleaved.caspase.7 (0.12), Fortilin (0.1), JNKp183.5 (0.1),
+
+Model R2 (+subtype): 0.3826
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	9.0923	1.8557	4.8998	0
+`akt_75_gene_list/adap_adap_single/akt`	5.9102	2.1249	2.7815	0.0101
+`egfr_25_gene_list/adap_adap_single/egfr`	1.7771	1.2343	1.4397	0.1623
+`erk_250_gene_list/adap_adap_single/erk`	-4.9513	2.2321	-2.2182	0.0359
+`raf_100_gene_list/adap_adap_single/raf`	-8.0397	4.1954	-1.9163	0.0668
+`krasqv_300_gene_list/adap_adap_single/sigProtein`	6.052	4.041	1.4976	0.1467
+`kraswt_300_gene_list/adap_adap_single/sigProtein`	-4.8697	2.8312	-1.72	0.0978
+model_subsubtype_ERBB2Claudin-low	1.1445	1.0003	1.1441	0.2634
+model_subsubtype_ERBB2ERBB2	-1.0091	0.626	-1.6119	0.1195
+model_subsubtype_ERBB2LUMINAL	-1.6114	0.7422	-2.1711	0.0396
+model_subsubtype_ERBB2NORMAL	0.3926	0.6693	0.5866	0.5627
+Important genes: PRB3 (0.13),
+Genes that add to the pathway model: NBPF10 (0.14),
+Important proteins: E.cadherin (0.14), Fortilin (0.14), PKCalphap657 (0.1), PR (0.1),
+Proteins that add to the pathway model: cleaved.caspase.7 (0.16), Rab25 (0.14), srcp527 (0.14), JNKp183.5 (0.11), EGFR (0.11), p70S6.Kinase (0.11), NOTCH3 (0.11), Fortilin (0.11), EN1 (0.1),
+
+
+XRP44X
+Model R2 (no subtype): 0.4301
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	3.7145	0.597	6.2221	0
+`akt_75_gene_list/adap_adap_single/akt`	2.6358	0.8758	3.0095	0.0051
+`bad_200_gene_list/adap_adap_single/bad`	2.8332	0.8507	3.3303	0.0022
+`egfr_25_gene_list/adap_adap_single/egfr`	1.7455	0.7843	2.2256	0.0332
+`raf_100_gene_list/adap_adap_single/raf`	-2.6871	1.1583	-2.32	0.0269
+Important genes:  (),
+Genes that add to the pathway model:  (),
+Important proteins: COMT (0.16), TSC2 (0.15), CD31 (0.1),
+Proteins that add to the pathway model:  (),
+
+Model R2 (+subtype): 0.4301
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	3.7145	0.597	6.2221	0
+`akt_75_gene_list/adap_adap_single/akt`	2.6358	0.8758	3.0095	0.0051
+`bad_200_gene_list/adap_adap_single/bad`	2.8332	0.8507	3.3303	0.0022
+`egfr_25_gene_list/adap_adap_single/egfr`	1.7455	0.7843	2.2256	0.0332
+`raf_100_gene_list/adap_adap_single/raf`	-2.6871	1.1583	-2.32	0.0269
+Important genes:  (),
+Genes that add to the pathway model:  (),
+Important proteins: COMT (0.16), TSC2 (0.15), CD31 (0.1),
+Proteins that add to the pathway model:  (),
+
+
+ZM447439
+Model R2 (no subtype): 0.3358
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	3.6761	0.8168	4.5007	1e-04
+`bad_200_gene_list/adap_adap_single/bad`	-2.977	1.5244	-1.9528	0.0602
+`egfr_25_gene_list/adap_adap_single/egfr`	0.7987	0.572	1.3964	0.1728
+`erk_250_gene_list/adap_adap_single/erk`	5.7376	1.7968	3.1932	0.0033
+`her2_15_gene_list/adap_adap_single/her2`	-1.186	0.667	-1.7782	0.0855
+`igf1r_75_gene_list/adap_adap_single/igf1r`	2.7719	0.9925	2.7927	0.009
+Important genes: ZNF804B (0.17), SYNE2 (0.13),
+Genes that add to the pathway model: TP53 (0.12),
+Important proteins: p21 (0.29), p38 (0.15), Stathmin (0.14), JNK (0.12), NOTCH3 (0.1),
+Proteins that add to the pathway model: p21 (0.14), JNK (0.12), GSK3 (0.11),
+
+Model R2 (+subtype): 0.3358
+	Estimate	Std. Error	t value	Pr(>|t|)
+(Intercept)	3.6761	0.8168	4.5007	1e-04
+`bad_200_gene_list/adap_adap_single/bad`	-2.977	1.5244	-1.9528	0.0602
+`egfr_25_gene_list/adap_adap_single/egfr`	0.7987	0.572	1.3964	0.1728
+`erk_250_gene_list/adap_adap_single/erk`	5.7376	1.7968	3.1932	0.0033
+`her2_15_gene_list/adap_adap_single/her2`	-1.186	0.667	-1.7782	0.0855
+`igf1r_75_gene_list/adap_adap_single/igf1r`	2.7719	0.9925	2.7927	0.009
+Important genes: ZNF804B (0.17), SYNE2 (0.13),
+Genes that add to the pathway model: TP53 (0.12),
+Important proteins: p21 (0.29), p38 (0.15), Stathmin (0.14), JNK (0.12), NOTCH3 (0.1),
+Proteins that add to the pathway model: p21 (0.14), JNK (0.12), GSK3 (0.11),
+

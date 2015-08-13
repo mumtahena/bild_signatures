@@ -29,3 +29,5 @@ Rmarkdowns_scripts/ICBP/Archive
 Rmarkdowns_scripts/TCGA/Archive
 Rmarkdowns_scripts/ICBP/*cache
 Rmarkdowns_scripts/TCGA/*cache
+CCLE_data
+CCLE_data/*

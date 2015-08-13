@@ -1,0 +1,181 @@
+---
+title: "Heatmaps of pathway predictions in icbp breast cancer cell line based on subtypes"
+output: html_document
+---
+
+```{r include=FALSE}
+
+source('~/Dropbox/bild_signatures/bild_signatures/Rmarkdowns_scripts//Key_ASSIGN_functions.Rmd', echo=TRUE)
+data_icbp<-gatherFile("~/Dropbox/bild_signatures/icbp_15_april_assign_adap_/")
+head(data_icbp)
+dim(data_icbp)
+colnames(data_icbp)<-gsub(pattern = "/pathway_activity_testset.csv",replacement = "",x = colnames(data_icbp))
+
+head(data_icbp)
+rownames(data_icbp)[1:7]<-c("184A1","184B5","21MT1","21MT2","21NT","21PT","600MPE")
+setwd("~/Dropbox/bild_signatures//Datasets")
+drugs<-read.delim("ICBP_drugs.txt", header=1, sep='\t',row.names=1)
+head(drugs);dim(drugs)
+colnames(drugs)[1:15]<-gsub("X","",colnames(drugs)[1:15])
+pred_drug<-merge_drop(data_icbp,drugs,by=0)
+dim(pred_drug)
+
+single_pathway_best<-data_icbp[,c("akt_75_gene_list/adap_adap_single/akt","her2_15_gene_list/adap_adap_single/her2","igf1r_75_gene_list/adap_adap_single/igf1r","bad_200_gene_list/adap_adap_single/bad","erk_250_gene_list/adap_adap_single/erk","raf_100_gene_list/adap_adap_single/raf","egfr_25_gene_list/adap_adap_single/egfr","krasgv_300_gene_list/adap_adap_single/sigProtein","krasqh_300_gene_list/adap_adap_single/sigProtein")]#,"kraswt_300_gene_list/adap_adap_single/sigProtein")]
+
+multi_pathway_best<-data_icbp[,c("akt_bad_her2_raf/adap_adap_multi/akt","akt_bad_her2_erk/adap_adap_multi/bad","her2_igf1r/adap_adap_multi/her2","igf1r_raf_her2_erk/adap_adap_multi/igf1r","erk_bad/adap_adap_multi/erk","akt_bad_igf1r_raf/adapB_multi/raf","egfr_25_gene_list/adap_adap_single/egfr","krasgv_300_gene_list/adap_adap_single/sigProtein","krasqh_300_gene_list/adap_adap_single/sigProtein")]#,"kraswt_300_gene_list/adap_adap_single/sigProtein")]
+
+
+
+```
+
+Creating heatmaps
+```{r include=FALSE}
+
+if (!require("gplots")) {
+   install.packages("gplots", dependencies = TRUE)
+   library(gplots)
+   }
+if (!require("RColorBrewer")) {
+   install.packages("RColorBrewer", dependencies = TRUE)
+   library(RColorBrewer)
+   }
+colnames(single_pathway_best)=c("AKT","HER2","IGF1R","BAD","ERK","RAF","EGFR","KRASGV","KRASQH")#,"KRASWT")           
+heatmap.2(as.matrix(single_pathway_best),col = bluered,density.info = "none",trace="none",margins = c(8,8),scale = "row")
+colnames(multi_pathway_best)=c("AKT","BAD","HER2","IGF1R","ERK","RAF","EGFR","KRASGV","KRASQH")#,"KRASWT")           
+
+heatmap.2(as.matrix(multi_pathway_best),col = bluered,density.info = "none",trace="none",margins = c(6.5,6.5),scale = "row")
+heatmap.2(as.matrix(single_pathway_best),col = bluered,density.info = "none",trace="none",margins = c(6.5,6.5),scale = "row")
+
+#heatmap.2(cor(single_pathway_best),col = bluered,density.info = "none",trace="none",margins = c(6.5,6.5))
+
+```
+
+
+```{r echo=FALSE}
+drugs$Transcriptional.subtype=gsub("Basal.*","BASAL",drugs$Transcriptional.subtype)
+drugs$Transcriptional.subtype=gsub("Luminal.*","LUMINAL",drugs$Transcriptional.subtype)
+drugs$Transcriptional.subtype=gsub(".*ormal.*","NORMAL",drugs$Transcriptional.subtype)
+
+drugs$Transcriptional.subtype...ERBB2.status=gsub("ERBB2.*","ERBB2",drugs$Transcriptional.subtype...ERBB2.status)
+drugs$Transcriptional.subtype...ERBB2.status=gsub("Basal.*","BASAL",drugs$Transcriptional.subtype...ERBB2.status)
+drugs$Transcriptional.subtype...ERBB2.status=gsub("Luminal.*","LUMINAL",drugs$Transcriptional.subtype...ERBB2.status)
+drugs$Transcriptional.subtype...ERBB2.status=gsub(".*ormal.*","NORMAL",drugs$Transcriptional.subtype...ERBB2.status)
+
+
+comb_drug<-merge_drop(multi_pathway_best,drugs)
+pdf("~/Dropbox/within_pathway_cor.pdf")
+par(mfrow = c(1,1),lwd=1)
+heatmap.2(cor(multi_pathway_best,method="spearman"),col = bluered,density.info = "none",trace="none",margins = c(6.5,7),main="Within pathways correations \n in ICBP")
+par(mfrow = c(1,1),lwd=4)
+boxplot2(comb_drug$AKT~comb_drug$Transcriptional.subtype...ERBB2.status,col=2:6,main="AKT Activity across Subtypes",ylab="AKT Activity",margins = c(7,7), las=1)
+boxplot2(comb_drug$BAD~comb_drug$Transcriptional.subtype...ERBB2.status,col=2:6,ylab="BAD Activity",main="BAD Activity across Subtypes",las=1)
+dev.off()
+
+drugs_names=colnames(drugs)[11:100]
+#pdf("~/Desktop/subtypes_ICBP.pdf")
+basal<-subset(comb_drug,comb_drug$Transcriptional.subtype...ERBB2.status=="BASAL",select = c((colnames(comb_drug)%in%colnames(multi_pathway_best))))
+heatmap.2(as.matrix(basal),col=my_palette,margins=c(15,9),trace="none",main=paste("Basal","Multi", sep = "\n"),density.info = 'none')#,scale = 'row')#,cellnote = round(x[,51:54],digits = 2)
+
+
+her<-subset(comb_drug,comb_drug$Transcriptional.subtype...ERBB2.status=="ERBB2")
+her_basal<-subset(her,her$Transcriptional.subtype=="BASAL",select = c((colnames(her)%in%colnames(multi_pathway_best))))
+her_lum<-subset(her,her$Transcriptional.subtype=="LUMINAL",select = c((colnames(her)%in%colnames(multi_pathway_best))))#,select = c((colnames(her)%in%colnames(single_pathway_best))))
+heatmap.2(as.matrix(her_basal),col=my_palette,margins=c(15,9),trace="none",main=paste("Basal-HER2","Multi", sep = "\n"),density.info = 'none',scale = 'row')
+heatmap.2(as.matrix(her_lum),col=my_palette,margins=c(15,9),trace="none",main=paste(" Luminal-HER2","Multi", sep = "\n"),density.info = 'none',scale = 'row')#,cellnote = round(x[,51:54],digits = 2)
+
+claudin<-subset(comb_drug,comb_drug$Transcriptional.subtype...ERBB2.status=="Claudin-low",select = c((colnames(comb_drug)%in%colnames(multi_pathway_best))))
+heatmap.2(as.matrix(claudin),col=my_palette,margins=c(15,9),trace="none",main=paste(" Claudin-low","Multi", sep = "\n"),density.info = 'none',scale = 'row')
+
+luminal<-subset(comb_drug,comb_drug$Transcriptional.subtype...ERBB2.status=="LUMINAL",select = c((colnames(comb_drug)%in%colnames(multi_pathway_best))))
+heatmap.2(as.matrix(luminal),col=my_palette,margins=c(15,9),trace="none",main=paste(" Luminal","Multi", sep = "\n"),density.info = 'none',scale = 'row')
+norm<-subset(comb_drug,comb_drug$Transcriptional.subtype...ERBB2.status=="NORMAL",select = c((colnames(comb_drug)%in%colnames(multi_pathway_best))))
+heatmap.2(as.matrix(norm),col=my_palette,margins=c(15,9),trace="none",main=paste(" Normal-like","Multi", sep = "\n"),density.info = 'none',scale = 'row')
+#pdf("~/Dropbox/bild_signatures/bild_signatures/Results/Multipathway_subtype2.pdf")
+pdf("~/Dropbox/bild_signatures/bild_signatures/Results/Multipathway_subtype_7_10.pdf")
+#heatmap.2(as.matrix(rbind(basal,her_basal,her_lum,claudin,luminal,norm)), RowSideColors = c(rep("gray", nrow(basal)),rep("blue", nrow(her_basal)),rep("brown", nrow(her_lum)),rep("black", nrow(claudin)),rep("green",nrow(luminal)),rep("yellow",nrow(norm))),col=bluered,density.info = 'none',trace="none",margins=c(6.5,6.5),main="Multipathway activity \n within breast cancer subtypes\n(Pathway-based not scaled)")#,scale='row')#,Rowv=F,Colv=F)
+#par(lend = 1)           # square line ends for the color legend
+#legend("topright",legend = c("Basal", "HER2-Basal", "HER2-Luminal","Claudin","Luminal","Normal-like"), col = c("gray", "blue","brown" ,"black","green","yellow"),  lty= 1,lwd = 10,cex = 0.55)
+heatmap.2(as.matrix(rbind(basal,her_basal,her_lum,claudin,luminal,norm)), RowSideColors = c(rep("gray", nrow(basal)),rep("blue", nrow(her_basal)),rep("brown", nrow(her_lum)),rep("black", nrow(claudin)),rep("green",nrow(luminal)),rep("yellow",nrow(norm))),col=bluered,density.info = 'none',trace="none",margins=c(6.5,6.5),main="Multipathway activity \n within breast cancer subtypes\n(Pathway-based-scaled)",scale='row')#,Rowv=F,Colv=F)
+par(lend = 1)           # square line ends for the color legend
+legend("topright",legend = c("Basal", "HER2-Basal", "HER2-Luminal","Claudin","Luminal","Normal-like"), col = c("gray", "blue","brown" ,"black","green","yellow"),  lty= 1,lwd = 10,cex = 0.45)
+#heatmap.2(as.matrix(rbind(basal,her_basal,her_lum,claudin,luminal,norm)), RowSideColors = c(rep("gray", nrow(basal)),rep("blue", nrow(her_basal)),rep("brown", nrow(her_lum)),rep("black", nrow(claudin)),rep("green",nrow(luminal)),rep("yellow",nrow(norm))),col=bluered,density.info = 'none',trace="none",margins=c(6.5,6.5),main="Multipathway activity \n within breast cancer subtypes\n(Subtypes-based)",scale='row',Rowv=F,Colv=T)
+#par(lend = 1)           # square line ends for the color legend
+#legend("topright",legend = c("Basal", "HER2-Basal", "HER2-Luminal","Claudin","Luminal","Normal-like"), col = c("gray", "blue","brown" ,"black","green","yellow"),  lty= 1,lwd = 10,cex = 0.55)
+
+ordered<-rbind(basal,her_basal,her_lum,claudin,luminal,norm)
+ord_comb_drug<-comb_drug[rownames(ordered),]
+heatmap.2(as.matrix(cor(ord_comb_drug[,1:9],ord_comb_drug[,20:109],method="spearman",use="pairwise")),col=bluered,trace='none',density.info = 'none',margins = c(6,6),cexCol = 0.6,scale = "row",main="Pathway-drug sensitivity \n Spearman correlations")
+par(lwd=1)
+heatmap.2(as.matrix(cor(ord_comb_drug[,1:8],ord_comb_drug[,19:108],method="spearman",use="pairwise")),col=bluered,trace='none',density.info = 'none',margins = c(9,6),cexCol = 0.75,scale = "row",main="")#Pathway-drug sensitivity \n Spearman correlations")
+
+
+```
+Drug response assay
+```{r}
+assay_ec50<-read.table("~/Dropbox/bild_signatures/bild_signatures/response_br.txt",header=1,row.names=1,sep='\t')
+
+#assay_ec50_preds_subtypes<-assay_ec50[,c(6,7,8,10,12,14,18,20,24,28,30,32,34,36,38,40,42)]
+assay_ec50_preds_subtypes<-assay_ec50[,c(6,7,8,10,12,20,24,28,30,32,36,38,40,42)]
+#assay_ec50_preds_subtypes<-assay_ec50[,c(6,7,9,11,13,17,21,23,25,29,31,33,37,39,41,43)]
+tmp<-t(assay_ec50_preds_subtypes[,3:14])
+colnames(tmp)<-rownames(assay_ec50_preds_subtypes)
+tmp1<-normalize.quantiles(tmp)
+colnames(tmp1)<-rownames(assay_ec50_preds_subtypes)
+rownames(tmp1)<-colnames(assay_ec50_preds_subtypes)[3:14]
+heatmap.2(tmp1)
+
+#assay_ec50<- read.table("~/Dropbox/Bild drug screen 2015/Plate_Layouts/Response/BR_OV_EC50.txt",sep='\t',header=1,row.names=1)
+#assay_ec50_log10<- -apply((assay_ec50+0.0000000001),2,log10)##converting the EC50 values to -log10(EC50 in microM)
+ordered_assay_ec50_preds_subtypes<-assay_ec50_preds_subtypes[order(assay_ec50_preds_subtypes$Transcriptional.subtype...ERBB2.status,assay_ec50_preds_subtypes$Transcriptional.subtype...ERBB2.status),]
+
+ordered_assay_ec50_preds_subtypes$Paclitaxel<-NULL
+ordered_assay_ec50_preds_subtypes$MK2206<-NULL
+ordered_assay_ec50_preds_subtypes$RA190<-NULL
+ordered_assay_ec50_preds_subtypes$NAV.4471<-NULL
+
+basal_assay<-subset(ordered_assay_ec50_preds_subtypes,ordered_assay_ec50_preds_subtypes$Transcriptional.subtype...ERBB2.status=="Basal")
+her_assay<-subset(ordered_assay_ec50_preds_subtypes,ordered_assay_ec50_preds_subtypes$Transcriptional.subtype...ERBB2.status=="ERBB2-amp")
+her_assay_lum<-subset(her_assay,her_assay$Transcriptional.subtype=="Luminal")
+her_assay_basal<-subset(her_assay,her_assay$Transcriptional.subtype=="Basal")
+lum_assay<-subset(ordered_assay_ec50_preds_subtypes,ordered_assay_ec50_preds_subtypes$Transcriptional.subtype...ERBB2.status=="Luminal")
+claudin_assay<-subset(ordered_assay_ec50_preds_subtypes,ordered_assay_ec50_preds_subtypes$Transcriptional.subtype...ERBB2.status=="Claudin-low")
+#norm_assay<-subset(ordered_assay_ec50_preds_subtypes,ordered_assay_ec50_preds_subtypes$Transcriptional.subtype...ERBB2.status=="NORMAL")
+
+ordered_assay<-rbind(basal_assay,her_assay_basal,her_assay_lum,claudin_assay,lum_assay)
+rank_tmp<-apply(apply(ordered_assay[,3:14],2,rank),2,scale)
+rownames(rank_tmp)=rownames(ordered_assay)
+heatmap.2(rank_tmp, RowSideColors = c(rep("gray", nrow(basal_assay)),rep("blue", nrow(her_assay_basal)),rep("brown", nrow(her_assay_lum)),rep("black", nrow(claudin_assay)),rep("green",nrow(lum_assay))),col=bluered,density.info = 'none',trace="none",margins=c(6.5,6.5),scale="column",main="Drug response \n within breast cancer subtypes\n(Bild drug assay 2015) RANKED mean centerd")#,Rowv=F,Colv=F)
+par(lend = 1)           # square line ends for the color legend
+legend("topright",legend = c("Basal", "HER2-Basal", "HER2-Luminal","Claudin","Luminal"), col = c("gray", "blue","brown" ,"black","green"),  lty= 1,lwd = 10,cex = 0.55)
+tmp<-t(ordered_assay[,3:14])
+colnames(tmp)<-rownames(ordered_assay)
+tmp1<-normalize.quantiles(tmp)
+colnames(tmp1)<-rownames(ordered_assay)
+rownames(tmp1)<-colnames(ordered_assay)[3:14]
+tmp2=apply((tmp1),2,scale)
+#rownames(tmp2)=colnames(tmp1)
+rownames(tmp2)=rownames(tmp1)
+heatmap.2(t(tmp2), RowSideColors = c(rep("gray", nrow(basal_assay)),rep("blue", nrow(her_assay_basal)),rep("brown", nrow(her_assay_lum)),rep("black", nrow(claudin_assay)),rep("green",nrow(lum_assay))),col=bluered,density.info = 'none',trace="none",margins=c(6.5,6.5),main="Drug response \n within breast cancer subtypes\n(Bild drug assay 2015) QUANTILE mean-centered",scale = "column")#,scale="column",main="Drug response \n within breast cancer subtypes\n(Bild drug assay 2015)")#,Rowv=F,Colv=F)
+par(lend = 1)           # square line ends for the color legend
+legend("topright",legend = c("Basal", "HER2-Basal", "HER2-Luminal","Claudin","Luminal"), col = c("gray", "blue","brown" ,"black","green"),  lty= 1,lwd = 10,cex = 0.55)
+
+
+#heatmap.2(t(tmp1), RowSideColors = c(rep("gray", nrow(basal_assay)),rep("blue", nrow(her_assay_basal)),rep("brown", nrow(her_assay_lum)),rep("black", nrow(claudin_assay)),rep("green",nrow(lum_assay))),col=bluered,density.info = 'none',trace="none",margins=c(6.5,6.5),main="Drug response \n within breast cancer subtypes\n(Bild drug assay 2015) QUANTILE ")#,scale="column",main="Drug response \n within breast cancer subtypes\n(Bild drug assay 2015)")#,Rowv=F,Colv=F)
+
+
+heatmap.2(as.matrix(x = ordered_assay[,3:14]), RowSideColors = c(rep("gray", nrow(basal_assay)),rep("blue", nrow(her_assay_basal)),rep("brown", nrow(her_assay_lum)),rep("black", nrow(claudin_assay)),rep("green",nrow(lum_assay))),col=bluered,density.info = 'none',trace="none",margins=c(6.5,6.5))#,scale="column",main="Drug response \n within breast cancer subtypes\n(Bild drug assay 2015)")#,Rowv=F,Colv=F)
+par(lend = 1)           # square line ends for the color legend
+legend("topright",legend = c("Basal", "HER2-Basal", "HER2-Luminal","Claudin","Luminal"), col = c("gray", "blue","brown" ,"black","green"),  lty= 1,lwd = 10,cex = 0.55)
+
+
+heatmap.2(as.matrix(cor(ordered_assay[,1:14],ordered_assay[,15:25],method="spearman",use="pairwise")),col=bluered,trace='none',density.info = 'none',margins = c(6,6),cexCol = 1,main="Pathway-drug sensitivity \n Spearman correlations\n Bild drug assay 2015")
+
+dev.off()
+
+```
+
+```{r echo=FALSE}
+time<-format(Sys.time(),"%a %b %d %X %Y")
+```
+This analysis was run on `r time` 
+

@@ -1,0 +1,14 @@
+#!/bin/bash
+outDir=~/PE_Preds/full_version_preds/
+mkdir -p $outDir
+for f in /data2/Moom_datasets/PE_*.tpmlog
+    do
+        echo Processing $f
+        outF=`basename $f`
+        outF=${outF/_TPMlog2\.txt/} 
+        echo Saving results in $outDir/$outF
+        mkdir -p $outDir/$outF
+        Rscript --vanilla ASSIGN_run_full_version.R $f $outDir/$outF #&
+        
+    done
+    #wait

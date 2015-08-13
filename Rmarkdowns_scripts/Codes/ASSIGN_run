@@ -1,0 +1,17 @@
+#!/bin/bash
+outDir=~/PANCAN24_Preds
+mkdir -p $outDir
+for f in /data2/Moom_datasets/PANCAN24/*.txt
+    do
+        echo Processing $f
+        outF=`basename $f`
+        outF=${outF/_TPMlog2\.txt/} 
+        echo Saving results in $outDir/$outF
+        echo $outDir/Done/${outF}_pcaPlots.pdf
+        mkdir -p $outDir/$outF
+        if [ ! -f $outDir/Done/${outF}_pcaPlots.pdf ]
+        then
+                Rscript --vanilla ASSIGN_run.R $f $outDir/$outF #&
+            fi
+    done
+    #wait
