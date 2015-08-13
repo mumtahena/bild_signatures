@@ -41,3 +41,5 @@ combat_expr1<-ComBat(dat=all_icbp_f,batch=bat1[,2], mod=NULL)#, numCovs=NULL)
 mod <- model.matrix(~as.factor(bat1[,3]))
 combat_expr1_mean<-ComBat(dat=all_icbp_f,batch=bat1[,2], mod=mod,mean.only = T)#, numCovs=NULL)
 pcaplot(combat_expr1_mean,sub)
+
+
