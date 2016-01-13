@@ -1,0 +1,32 @@
+---
+title: "IGF1R TCGA Analysis"
+output: html_document
+---
+
+
+
+
+#Open the files
+```{r}
+setwd("~/Documents/Multipathway_Modeling/Predictions/")
+akt_20=read.csv("akt_20_gene_list/adap_adap_single/TCGA_pathway_activity_testset_akt20_adap_adap.csv", row.names = 1, header = 1,sep=',')
+View(akt_20)
+bad_225=read.csv("bad_225_gene_list//adap_adap_single/TCGA_pathway_activity_testset_bad225_adap_adap.csv", row.names = 1, header = 1,sep=',')
+View(bad_225)
+egfr_15=read.csv("egfr_15_gene_list//adap_adap_single/TCGA_pathway_activity_testset_egfr15_adap_adap.csv", row.names = 1, header = 1,sep=',')
+View(egfr_15)
+her2_75=read.csv("her2_75_gene_list//adap_adap_single/TCGA_pathway_activity_testset_her75_adap_adap.csv", row.names = 1, header = 1,sep=',')
+View(her2_75)
+igf1r_75=read.csv("igf1r_75_gene_list//adap_adap_single//TCGA_pathway_activity_testset_igf1r75__adap_adap.csv", row.names = 1, header = 1,sep=',')
+View(igf1r_75)
+krasgv_125=read.csv("krasgv_125_gene_list/adap_adap_single/TCGA_pathway_activity_testset_krasgv125_adap_adap.csv", row.names = 1, header = 1,sep=',')
+View(krasgv_125)
+krasqh_150=read.csv("krasqh_150_gene_list/adap_adap_single/TCGA_pathway_activity_testset_krasqh150_adap_adap.csv", row.names = 1, header = 1,sep=',')
+View(krasqh_150)
+kraswt_250=read.csv("kraswt_250_gene_list/adap_adap_single/TCGA_pathway_activity_testset_kraswt250_adap_adap.csv", row.names = 1, header = 1,sep=',')
+View(kraswt_250)
+raf_175=read.csv("raf_175_gene_list/adap_adap_single/TCGA_pathway_activity_testset_raf175_adap_adap.csv", row.names = 1, header = 1,sep=',')
+View(raf_175)
+
+```
+

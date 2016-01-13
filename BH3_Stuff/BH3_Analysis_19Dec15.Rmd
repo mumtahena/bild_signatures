@@ -1,0 +1,685 @@
+---
+title: "Analysis of BH3 peptide experiments"
+output: html_document
+---
+
+# This block creates the response files 
+```{r}
+
+library("psych")
+library("dplyr")
+source("~/Documents/Multipathway_Modeling/bild_signatures-master/Rmarkdowns_scripts/Key_ASSIGN_functions.Rmd")
+cell_lines_subtypes<-read.table("~/Dropbox/BH3/Data/cellLine_subtypes.txt", row.names = 1, header = 1,sep='\t')
+
+
+if (!require("gplots")) {
+  install.packages("gplots", dependencies = TRUE)
+  library(gplots)
+}
+if (!require("RColorBrewer")) {
+  install.packages("RColorBrewer", dependencies = TRUE)
+  library(RColorBrewer)
+}
+
+setwd("~/Documents/Multipathway_Modeling/BH3_Profiling/BH3_December2015/")
+
+BH3data=read.csv("BH3_BothPlates_CytoCRent_Ordered.txt",header = T,sep='\t', row.names=1)[,1:2]
+
+#subtract one so it becomes release 
+CytoC_Release=100-BH3data
+View(CytoC_Release)
+colnames(CytoC_Release)[1]="CytoC_Release"
+View(CytoC_Release)
+
+write.table(CytoC_Release,"~/Documents/Multipathway_Modeling/BH3_Profiling/BH3_December2015/BH3_CytoC_Release_AllReps_Dec15.txt",sep='\t',quote=F,col.names = NA)
+
+
+#remove rep 4 and 8
+CytoC_Release_rm4=CytoC_Release[!grepl(pattern="_4", x=rownames(CytoC_Release), fixed=TRUE), ]
+CytoC_Release_rm4n8=CytoC_Release_rm4[!grepl(pattern="_8", x=rownames(CytoC_Release_rm4), fixed=TRUE), ]
+View(CytoC_Release_rm4n8)
+write.table(CytoC_Release_rm4n8,"~/Documents/Multipathway_Modeling/BH3_Profiling/BH3_December2015/BH3_CytoC_Release_AllReps_Dec15_rm4n8.txt",sep='\t',quote=F,col.names = NA)
+
+
+#average all the reps 
+Names_CytoC=row.names(CytoC_Release)[c(1,9,  17,  25,  33,  41,  49,  57,  65,  73,  81,  89,  97, 105, 113, 121, 129, 137, 145, 153, 161, 169, 177, 185, 193, 201, 209, 217, 225, 233, 241, 249, 257, 265, 273, 281, 289, 297, 305, 313, 321, 329, 337, 345, 353, 361,369, 377, 385, 393, 401, 409, 417, 425, 433, 441, 449, 457, 465, 473, 481, 489, 497, 505, 513, 521, 529, 537, 545,553, 561, 569, 577, 585, 593, 601, 609, 617, 625, 633, 641, 649, 657, 665, 673, 681, 689, 697, 705, 713, 721, 729, 737, 745, 753, 761)]
+n <- 8;
+CytoRelease_Mean=aggregate(CytoC_Release,list(rep(1:(nrow(CytoC_Release)%/%n+1),each=n,len=nrow(CytoC_Release))),mean, na.rm = TRUE)[-1];
+View(CytoRelease_Mean)
+CytoRelease_Mean=cbind(Names_CytoC,CytoRelease_Mean)
+View(CytoRelease_Mean)
+
+n=6
+CytoRelease_Mean_rm4n8=aggregate(CytoC_Release_rm4n8,list(rep(1:(nrow(CytoC_Release_rm4n8)%/%n+1),each=n,len=nrow(CytoC_Release_rm4n8))),mean, na.rm = TRUE)[-1];
+CytoRelease_Mean_rm4n8=cbind(Names_CytoC,CytoRelease_Mean_rm4n8)
+View(CytoRelease_Mean_rm4n8)
+
+write.table(CytoRelease_Mean_rm4n8,"~/Documents/Multipathway_Modeling/BH3_Profiling/BH3_December2015/Column_CytoRelease_Mean_rm4n8.txt",sep='\t',quote=F,col.names = NA)
+
+
+#Make cell lines side by side
+#CytoRelease_Mean=(t(CytoRelease_Mean))
+#View(CytoRelease_Mean)
+#colnames(CytoRelease_Mean)=CytoRelease_Mean[1,]
+#rownames(CytoRelease_Mean)="CytoC Release"
+
+#Column_CytoRelease_Mean=(t(CytoRelease_Mean))
+#View(Column_CytoRelease_Mean)
+#as.matrix(Column_CytoRelease_Mean)
+
+write.table(Column_CytoRelease_Mean,"~/Documents/Multipathway_Modeling/BH3_Profiling/BH3_December2015/Column_CytoRelease_Mean.txt",sep='\t',quote=F,col.names = NA)
+
+CytoCRelease_Mean=read.csv("CytoRelease_Mean_Matrix.txt",header = T,sep='\t', row.names=1)
+CytoCRelease_Mean_rm4n8=read.csv("Column_CytoRelease_Mean_rm4n8_Matrix.txt",header = T,sep='\t', row.names=1)
+
+center_scale <- function(x) {
+    scale(x, scale = FALSE)
+}
+
+
+View(CytoCRelease_Mean_rm4n8)
+CytoCRelease_Mean_rm4n8=t(CytoCRelease_Mean_rm4n8)
+mean_center_CytoCRelease_Mean_rm4n8=center_scale(CytoCRelease_Mean_rm4n8)
+View(mean_center_CytoCRelease_Mean_rm4n8)
+View(CytoCRelease_Mean)
+
+View(CytoCRelease_Mean_rm4n8)
+View(CytoCRelease_Mean)
+
+NegativeControl=CytoCRelease_Mean[5,]
+NegativeControl_rm4n8=CytoCRelease_Mean_rm4n8[5,]
+
+View(NegativeControl)
+
+NegativeControl=as.matrix(NegativeControl)
+NegativeControl_rm4n8=as.matrix(NegativeControl_rm4n8)
+
+View(CytoCRelease_Mean_rm4n8)
+CytoCRelease_Mean=CytoCRelease_Mean[-5,]
+CytoCRelease_Mean_rm4n8=CytoCRelease_Mean_rm4n8[-5,]
+
+CytoCRelease_Mean=rbind(CytoCRelease_Mean,NegativeControl)
+CytoCRelease_Mean_rm4n8=rbind(CytoCRelease_Mean_rm4n8,NegativeControl_rm4n8)
+
+View(CytoCRelease_Mean_rm4n8)
+
+CytoCRelease_Mean_RemoveBasal=sweep(CytoCRelease_Mean, 2, NegativeControl, FUN='-')
+CytoCRelease_Mean_RemoveBasal_rm4n8=sweep(CytoCRelease_Mean_rm4n8, 2, NegativeControl_rm4n8, FUN='-')
+
+
+View(CytoCRelease_Mean_RemoveBasal_rm4n8)
+
+CytoCRelease_Mean_RemoveBasal_NegCtrl=CytoCRelease_Mean_RemoveBasal[5,]
+CytoCRelease_Mean_RemoveBasal_NegCtrl
+CytoCRelease_Mean_RemoveBasal=CytoCRelease_Mean_RemoveBasal[-5,]
+CytoCRelease_Mean_RemoveBasal=rbind(CytoCRelease_Mean_RemoveBasal,CytoCRelease_Mean_RemoveBasal_NegCtrl)
+
+
+CytoCRelease_Mean_RemoveBasal
+write.table(CytoCRelease_Mean_RemoveBasal,"~/Documents/Multipathway_Modeling/BH3_Profiling/BH3_December2015/BH3_CytoCRelease_Mean_RemoveBasal_Dec15.txt",sep='\t',quote=F,col.names = NA)
+
+write.table(CytoCRelease_Mean_RemoveBasal_rm4n8,"~/Documents/Multipathway_Modeling/BH3_Profiling/BH3_December2015/BH3_CytoCRelease_Mean_RemoveBasal_Dec15_rm4n8.txt",sep='\t',quote=F,col.names = NA)
+
+
+CytoCRelease_Mean_RemoveBasal_Heatmap=CytoCRelease_Mean_RemoveBasal
+CytoCRelease_Mean_RemoveBasal_Heatmap[CytoCRelease_Mean_RemoveBasal_Heatmap < 0] <- 0
+View(CytoCRelease_Mean_RemoveBasal_Heatmap)
+CytoCRelease_Mean_RemoveBasal_Heatmap=CytoCRelease_Mean_RemoveBasal_Heatmap[-c(1,3,6,7,8),]
+write.table(CytoCRelease_Mean_RemoveBasal_Heatmap,"~/Documents/Multipathway_Modeling/BH3_Profiling/BH3_December2015/BH3_CytoCRelease_Mean_RemoveBasal_Dec15.txt",sep='\t',quote=F,col.names = NA)
+heatmap.2(t(as.matrix(CytoCRelease_Mean_RemoveBasal_Heatmap)), col = bluered, trace='none',margins = c(9, 9), cexCol=2)
+heatmap.2(t(as.matrix(CytoCRelease_Mean_RemoveBasal_Heatmap[1:2,])), col = bluered, trace='none',margins = c(9, 9),cexCol=2)
+CytoCRelease_Mean_RemoveBasal_Heatmap
+CytoCRelease_Mean_RemoveBasal_Boxplot=CytoCRelease_Mean_RemoveBasal
+#plot the heatmaps
+names= c("HCC1143(EGFR)",  "HCC1419(AKT)", "HCC1806(EGFR)",  "HCC1937(EGFR)", "MCF7(AKT)",  "T47D(AKT)", "BT483(AKT)",   "BT549(EGFR)",   "CAMA1(AKT)", "HCC70(EGFR)",  "JIMT1(EGFR)",   "SKBR3(AKT)")
+colnames(CytoCRelease_Mean_RemoveBasal_Heatmap)=names
+
+#boc plots
+View(CytoCRelease_Mean_RemoveBasal_rm4n8)
+CytoCRelease_Mean_RemoveBasal_Boxplot=CytoCRelease_Mean_RemoveBasal
+CytoCRelease_Mean_RemoveBasal_Boxplot_rm4n8=CytoCRelease_Mean_RemoveBasal_rm4n8[1:6,]
+
+CytoCRelease_Mean_RemoveBasal_Boxplot[CytoCRelease_Mean_RemoveBasal_Boxplot < 0] <- 0
+CytoCRelease_Mean_RemoveBasal_Boxplot_rm4n8[CytoCRelease_Mean_RemoveBasal_Boxplot_rm4n8 < 0] <- 0
+
+CytoCRelease_Mean_RemoveBasal_Boxplot_rm4n8_t=t(CytoCRelease_Mean_RemoveBasal_Boxplot_rm4n8)
+View(CytoCRelease_Mean_RemoveBasal_Boxplot_rm4n8_t)
+
+CytoCRelease_Mean_RemoveBasal_Boxplot_rm4n8_MC=center_scale(CytoCRelease_Mean_RemoveBasal_Boxplot_rm4n8_t)
+CytoCRelease_Mean_RemoveBasal_Boxplot_rm4n8_MC=t(CytoCRelease_Mean_RemoveBasal_Boxplot_rm4n8_MC)
+
+View(CytoCRelease_Mean_RemoveBasal_Boxplot_rm4n8_MC)
+
+
+colnames(CytoCRelease_Mean_RemoveBasal_Boxplot)=names
+colnames(CytoCRelease_Mean_RemoveBasal_Boxplot_rm4n8)=names
+colnames(CytoCRelease_Mean_RemoveBasal_Boxplot_rm4n8_MC)=names
+
+View(CytoCRelease_Mean_RemoveBasal_Boxplot)
+
+
+GF1_AKT=CytoCRelease_Mean_RemoveBasal_Boxplot[,c("HCC1419(AKT)", "MCF7(AKT)",  "T47D(AKT)", "BT483(AKT)",   "CAMA1(AKT)",   "SKBR3(AKT)")]
+View(GF1_AKT)
+GF2_EGFR=CytoCRelease_Mean_RemoveBasal_Boxplot[,c("HCC1143(EGFR)","HCC1806(EGFR)",  "HCC1937(EGFR)",  "BT549(EGFR)", "HCC70(EGFR)",  "JIMT1(EGFR)")]
+View(GF2_EGFR)
+
+GF1_AKT_rm4n8=CytoCRelease_Mean_RemoveBasal_Boxplot_rm4n8[,c("HCC1419(AKT)", "MCF7(AKT)",  "T47D(AKT)", "BT483(AKT)",   "CAMA1(AKT)",   "SKBR3(AKT)")]
+View(GF1_AKT_rm4n8)
+GF2_EGFR_rm4n8=CytoCRelease_Mean_RemoveBasal_Boxplot_rm4n8[,c("HCC1143(EGFR)","HCC1806(EGFR)",  "HCC1937(EGFR)",  "BT549(EGFR)", "HCC70(EGFR)",  "JIMT1(EGFR)")]
+View(GF2_EGFR_rm4n8)
+
+GF1_AKT_rm4n8_MC=CytoCRelease_Mean_RemoveBasal_Boxplot_rm4n8_MC[,c("HCC1419(AKT)", "MCF7(AKT)",  "T47D(AKT)", "BT483(AKT)",   "CAMA1(AKT)",   "SKBR3(AKT)")]
+View(GF1_AKT_rm4n8_MC)
+GF2_EGFR_rm4n8_MC=CytoCRelease_Mean_RemoveBasal_Boxplot_rm4n8_MC[,c("HCC1143(EGFR)","HCC1806(EGFR)",  "HCC1937(EGFR)",  "BT549(EGFR)", "HCC70(EGFR)",  "JIMT1(EGFR)")]
+View(GF2_EGFR_rm4n8_MC)
+
+
+GF1_AKT=t(GF1_AKT)
+GF2_EGFR=t(GF2_EGFR)
+GF2_EGFR_rm1143=GF2_EGFR[-1,]
+
+GF1_AKT_rm4n8=t(GF1_AKT_rm4n8)
+GF2_EGFR_rm4n8=t(GF2_EGFR_rm4n8)
+GF2_EGFR_rm1143_rm4n8=GF2_EGFR_rm4n8[-1,]
+
+GF1_AKT_rm4n8_MC=t(GF1_AKT_rm4n8_MC)
+GF2_EGFR_rm4n8_MC=t(GF2_EGFR_rm4n8_MC)
+
+
+CytoCRelease_Mean_RemoveBasal_Boxplot_r=t(CytoCRelease_Mean_RemoveBasal_Boxplot)
+CytoCRelease_Mean_RemoveBasal_Boxplot
+
+# GF1 and GF2 for BAD
+pdf("BH3_Boxplots_Dec2015.pdf")
+
+boxplot(CytoCRelease_Mean_RemoveBasal_Boxplot[,2],CytoCRelease_Mean_RemoveBasal_Boxplot[,4], ylab="% Cytochrome C Release",names = c("Bad 100", " Bim 10"), col = c("red", "grey"), main="All Cell Lines", ylim=c(0,100))
+text(1,99,"p-value = 2.221e-05")
+t.test(CytoCRelease_Mean_RemoveBasal_Boxplot[,2],CytoCRelease_Mean_RemoveBasal_Boxplot[,4])
+
+#boxplot(CytoCRelease_Mean_RemoveBasal_Boxplot[,2],CytoCRelease_Mean_RemoveBasal_Boxplot[,6], ylab="% Cytochrome C Release",names = c("Bad 100", " Noxa 100"), col = c("red", "grey"), #main="All Cell Lines", ylim=c(0,100))
+#text(1,99,"p-value = 0.003846")
+#t.test(CytoCRelease_Mean_RemoveBasal_Boxplot[,2],CytoCRelease_Mean_RemoveBasal_Boxplot[,6])
+
+#boxplot(CytoCRelease_Mean_RemoveBasal_Boxplot[,4],CytoCRelease_Mean_RemoveBasal_Boxplot[,6], ylab="% Cytochrome C Release",names = c("Bim 10", " Noxa 100"), col = c("red", "grey"), main="All Cell Lines", ylim=c(0,100))
+#text(1,99,"p-value = 8.857e-07")
+#t.test(CytoCRelease_Mean_RemoveBasal_Boxplot[,4],CytoCRelease_Mean_RemoveBasal_Boxplot[,6])
+
+boxplot(GF1_AKT[,1],GF2_EGFR[,1], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to Bad 10", ylim=c(0,40))
+text(1,39,"p-value = 0.459")
+t.test(GF1_AKT[,1],GF2_EGFR[,1]  )
+
+boxplot(GF1_AKT[,2],GF2_EGFR[,2], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to Bad 100", ylim=c(0,60))
+text(1,59,"p-value = 0.4303")
+t.test(GF1_AKT[,2],GF2_EGFR[,2]  )
+
+boxplot(GF1_AKT[,4],GF2_EGFR[,4], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to Bim 10", ylim=c(0,100))
+text(1,99,"p-value = 0.845")
+t.test(GF1_AKT[,4],GF2_EGFR[,4]  )
+
+boxplot(GF1_AKT[,5],GF2_EGFR[,5], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to Noxa 10", ylim=c(0,20))
+text(1,19,"p-value = 0.5058")
+t.test(GF1_AKT[,5],GF2_EGFR[,5]  )
+
+boxplot(GF1_AKT[,6],GF2_EGFR[,6], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to Noxa 100", ylim=c(0,10))
+text(1,9,"p-value = 0.3733")
+t.test(GF1_AKT[,6],GF2_EGFR[,6]  )
+
+dev.off()
+
+```
+
+
+#rm4n8 Mean Centered
+```{r}
+View(GF1_AKT_rm4n8_MC)
+boxplot(GF1_AKT_rm4n8_MC[,1],GF2_EGFR_rm4n8_MC[,1], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to Bad 10", ylim=c(0,40))
+text(1,39,"p-value = 0.4276")
+t.test(GF1_AKT_rm4n8_MC[,1],GF2_EGFR_rm4n8_MC[,1]  )
+
+boxplot(GF1_AKT_rm4n8_MC[,2],GF2_EGFR_rm4n8_MC[,2], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to Bad 100", ylim=c(0,60))
+text(1,59,"p-value = 0.4204")
+t.test(GF1_AKT_rm4n8_MC[,2],GF2_EGFR_rm4n8_MC[,2]  )
+
+boxplot(GF1_AKT_rm4n8_MC[,3],GF2_EGFR_rm4n8_MC[,3], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to Bim 0.1", ylim=c(0,10))
+text(1,99,"p-value = 0.1")
+t.test(GF1_AKT_rm4n8_MC[,3],GF2_EGFR_rm4n8_MC[,3]  )
+
+boxplot(GF1_AKT_rm4n8_MC[,4],GF2_EGFR_rm4n8_MC[,4], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to Bim 10", ylim=c(0,100))
+text(1,99,"p-value = 0.9232")
+t.test(GF1_AKT_rm4n8_MC[,4],GF2_EGFR_rm4n8_MC[,4]  )
+
+boxplot(GF1_AKT_rm4n8_MC[,5],GF2_EGFR_rm4n8_MC[,5], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to Noxa 10", ylim=c(0,20))
+text(1,19,"p-value = 0.3222")
+t.test(GF1_AKT_rm4n8_MC[,5],GF2_EGFR_rm4n8_MC[,5]  )
+
+boxplot(GF1_AKT_rm4n8_MC[,6],GF2_EGFR_rm4n8_MC[,6], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to Noxa 100", ylim=c(0,10))
+text(1,9,"p-value = 0.4657")
+t.test(GF1_AKT_rm4n8_MC[,6],GF2_EGFR_rm4n8_MC[,6]  )
+
+
+```
+
+
+
+
+#rm4n8 not a big difference at all. 
+```{r}
+View(GF1_AKT_rm4n8)
+View(GF2_EGFR_rm4n8)
+
+boxplot(GF1_AKT_rm4n8[,1],GF2_EGFR_rm4n8[,1], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to Bad 10", ylim=c(0,40))
+text(1,39,"p-value = 0.4276")
+t.test(GF1_AKT_rm4n8[,1],GF2_EGFR_rm4n8[,1]  )
+
+boxplot(GF1_AKT_rm4n8[,2],GF2_EGFR_rm4n8[,2], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to Bad 100", ylim=c(0,60))
+text(1,59,"p-value = 0.4204")
+t.test(GF1_AKT_rm4n8[,2],GF2_EGFR_rm4n8[,2]  )
+
+boxplot(GF1_AKT_rm4n8[,3],GF2_EGFR_rm4n8[,3], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to Bim 0.1", ylim=c(0,10))
+text(1,99,"p-value = 0.9232")
+t.test(GF1_AKT_rm4n8[,3],GF2_EGFR_rm4n8[,3]  )
+
+boxplot(GF1_AKT_rm4n8[,4],GF2_EGFR_rm4n8[,4], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to Bim 10", ylim=c(0,100))
+text(1,99,"p-value = 0.9232")
+t.test(GF1_AKT_rm4n8[,4],GF2_EGFR_rm4n8[,4]  )
+
+boxplot(GF1_AKT_rm4n8[,5],GF2_EGFR_rm4n8[,5], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to Noxa 10", ylim=c(0,20))
+text(1,19,"p-value = 0.3222")
+t.test(GF1_AKT_rm4n8[,5],GF2_EGFR_rm4n8[,5]  )
+
+boxplot(GF1_AKT_rm4n8[,6],GF2_EGFR_rm4n8[,6], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to Noxa 100", ylim=c(0,10))
+text(1,9,"p-value = 0.4657")
+t.test(GF1_AKT_rm4n8[,6],GF2_EGFR_rm4n8[,6]  )
+
+```
+
+#without Hcc1143
+```{r}
+View(GF1_AKT_rm4n8)
+
+View(GF2_EGFR_rm4n8)
+GF2_EGFR_rm4n8_rm1143=GF2_EGFR_rm4n8[-1,]
+View(GF2_EGFR_rm4n8_rm1143)
+
+boxplot(GF1_AKT_rm4n8[,1],GF2_EGFR_rm4n8_rm1143[,1], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to Bad 10", ylim=c(0,40))
+text(1,39,"p-value = 0.694")
+t.test(GF1_AKT_rm4n8[,1],GF2_EGFR_rm4n8_rm1143[,1]  )
+
+#no diffm but Bad 100 higher in EGFR
+boxplot(GF1_AKT_rm4n8[,2],GF2_EGFR_rm4n8_rm1143[,2], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to Bad 100", ylim=c(0,60))
+text(1,59,"p-value = 0.5313")
+t.test(GF1_AKT_rm4n8[,2],GF2_EGFR_rm4n8_rm1143[,2]  )
+
+
+#no diff, Bim 10 higher in EGFR
+boxplot(GF1_AKT_rm4n8[,4],GF2_EGFR_rm4n8_rm1143[,4], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to Bim 10", ylim=c(0,100))
+text(1,99,"p-value = 0.7059")
+t.test(GF1_AKT_rm4n8[,4],GF2_EGFR_rm4n8_rm1143[,4]  )
+
+#no diff
+boxplot(GF1_AKT_rm4n8[,5],GF2_EGFR_rm4n8_rm1143[,5], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to Noxa 10", ylim=c(0,20))
+text(1,19,"p-value = 0.99")
+t.test(GF1_AKT_rm4n8[,5],GF2_EGFR_rm4n8_rm1143[,5]  )
+
+#higher in AKT
+boxplot(GF1_AKT_rm4n8[,6],GF2_EGFR_rm4n8_rm1143[,6], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to Noxa 100", ylim=c(0,10))
+text(1,9,"p-value = 0.588")
+t.test(GF1_AKT_rm4n8[,6],GF2_EGFR_rm4n8_rm1143[,6]  )
+
+
+```
+
+
+
+
+#rm4n8 without SKBR
+```{r}
+GF1_AKT_rm4n8_rmSKBR=GF1_AKT_rm4n8[-6,]
+View(GF1_AKT_rm4n8_rmSKBR)
+boxplot(GF1_AKT_rm4n8_rmSKBR[,1],GF2_EGFR_rm4n8[,1], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to Bad 10", ylim=c(0,40))
+text(1,39,"p-value = 0.5186")
+t.test(GF1_AKT_rm4n8_rmSKBR[,1],GF2_EGFR_rm4n8[,1]  )
+
+boxplot(GF1_AKT_rm4n8_rmSKBR[,2],GF2_EGFR_rm4n8[,2], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to Bad 100", ylim=c(0,60))
+text(1,59,"p-value = 0.5326")
+t.test(GF1_AKT_rm4n8_rmSKBR[,2],GF2_EGFR_rm4n8[,2]  )
+
+boxplot(GF1_AKT_rm4n8_rmSKBR[,4],GF2_EGFR_rm4n8[,4], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to Bim 10", ylim=c(0,100))
+text(1,99,"p-value = 0.7612")
+t.test(GF1_AKT_rm4n8_rmSKBR[,4],GF2_EGFR_rm4n8[,4]  )
+
+boxplot(GF1_AKT_rm4n8_rmSKBR[,5],GF2_EGFR_rm4n8[,5], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to Noxa 10", ylim=c(0,20))
+text(1,19,"p-value = 0.2757")
+t.test(GF1_AKT_rm4n8_rmSKBR[,5],GF2_EGFR_rm4n8[,5]  )
+
+boxplot(GF1_AKT_rm4n8_rmSKBR[,6],GF2_EGFR_rm4n8[,6], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to Noxa 100", ylim=c(0,10))
+text(1,9,"p-value = 0.7939")
+t.test(GF1_AKT_rm4n8_rmSKBR[,6],GF2_EGFR_rm4n8[,6]  )
+
+```
+
+
+#Seperate the peptides for mean centering
+```{r}
+
+pdf("~/Dropbox/Multipathway_profiling_paper/Grant_U54/BAD_NOXA_Plot.pdf")
+# peptide only, set to zerp
+plot(peptide_only_0[,1],type="l", col="blue",ylim=c(0,45), xlab="", ylab="% Cytochrome C Release", xaxt='n')
+
+
+#lines(peptide_only_0[,2], type="l", col="red")
+lines(peptide_only_0[,3], type="l", col="red",xlab="Cell Lines", ylab="% Cytochrome C Release",xaxt='n')
+legend(1,45, c("BAD", "NOXA"), cex=0.8, col=c("red", "black"), lty=1)
+title("Peptide Only(Negatives to Zero)")
+axis(1, at=1:14, labels=FALSE, xaxt='n')
+lablist<-row.names(peptide_only)
+text(seq(1, 14, by=1), par("usr")[3]-1, labels = lablist, srt = 45, pos = 2, xpd = T, cex=0.55)
+
+
+plot(bad_neg_MC[,11],type="l", col="blue",ylim=c(-25,45), xlab="", ylab="% Cytochrome C Release", xaxt='n')
+#lines(peptide_only_0[,2], type="l", col="red")
+lines(noxa_neg_MC[,11], type="l", col="red",xlab="Cell Lines", ylab="% Cytochrome C Release",xaxt='n')
+legend(1,45, c("BAD", "NOXA"), cex=0.8, col=c("red", "black"), lty=1)
+title("Peptide Only(Mean-Centered)")
+axis(1, at=1:14, labels=FALSE, xaxt='n')
+lablist<-row.names(peptide_only)
+text(seq(1, 14, by=1), par("usr")[3]-1, labels = lablist, srt = 45, pos = 2, xpd = T, cex=0.55)
+
+boxplot(peptide_only_0[,1],peptide_only_0[,3], ylab="% Cytochrome C Release",names = c("BAD", "NOXA"), col = c("red", "grey"), main="BAD vs Noxa(Raw, Negatives to zero)")
+text(43, label = "p-value = 0.007", pos = 4, cex = 1, col = "black")
+row.names(peptide_only_0)
+boxplot(peptide_only_0[,1],peptide_only_0[,3], ylab="% Cytochrome C Release",names = c("BAD", "NOXA"), col = c("red", "grey"), main="BAD vs Noxa(Raw, Negatives to zero)", ylim=c(-10,40))
+text(43, label = "p-value = 0.007", pos = 4, cex = 1, col = "black")
+t.test(peptide_only_0[,1],peptide_only_0[,3]  )
+
+
+peptide_only_0_GF1=peptide_only_0[c("Luminal_ERRB2_BT474","Basal_ERBB2_HCC1569","Basal_HCC70","Luminal_MCF7", "Luminal_ERBB2_MDAMB361","Luminal_T47D", "Luminal_ERBB2_ZR7530" ),]
+peptide_only_0_GF2=peptide_only_0[c("Claudin_BT549", "Basal_HCC1143", "Basal_HCC1806", "Basal_HCC1937", "Basal_ERRB2_HCC1954", "Claudin_HCC38" , "Basal_ERRB2_JIMT1"),]
+
+
+
+
+
+
+# GF1 and GF2 for BAD
+pdf("~/Dropbox/Multipathway_profiling_paper/Grant_U54/GF1_GF2_BH3_Boxplot.pdf")
+
+peptide_only_0_GF1[,1]
+peptide_only_0_GF2[,1]
+
+boxplot(peptide_only_0_GF1[,1],peptide_only_0_GF2[,1], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to BAD", ylim=c(-3,18))
+t.test(peptide_only_0_GF1[,1],peptide_only_0_GF2[,1]  )
+boxplot(peptide_only_0_GF1_MC[,1],peptide_only_0_GF2_MC[,1], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to BAD(MC,0)", ylim=c(-3,20))
+t.test(peptide_only_0_GF1_MC[,1],peptide_only_0_GF2_MC[,1]  )
+boxplot(peptide_only_GF1_MC[,1],peptide_only_GF2_MC[,1], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to BAD(MC)", ylim=c(-15,20))
+t.test(peptide_only_GF1_MC[,1],peptide_only_GF2_MC[,1]  )
+peptide_only_GF1_MC[,1]
+peptide_only_GF2_MC[,1]
+
+
+# GF1 and GF2 for NOXA
+boxplot(peptide_only_0_GF1[,3],peptide_only_0_GF2[,3], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to NOXA", ylim=c(-5,25))                                                                                                                                                                                              
+t.test(peptide_only_0_GF1[,3],peptide_only_0_GF2[,3]  )
+boxplot(peptide_only_0_GF1_MC[,3],peptide_only_0_GF2_MC[,3], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to NOXA(MC,0)", ylim=c(-5,35))
+t.test(peptide_only_0_GF1_MC[,3],peptide_only_0_GF2_MC[,3]  )
+boxplot(peptide_only_GF1_MC[,3],peptide_only_GF2_MC[,3], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to NOXA(MC)", ylim=c(-25,20))
+t.test(peptide_only_GF1_MC[,3],peptide_only_GF2_MC[,3]  )
+
+
+#bim
+boxplot(peptide_only_0_GF1[,2],peptide_only_0_GF2[,2], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to BIM", ylim=c(-1,5))                                                                                                                                                                                              
+t.test(peptide_only_0_GF1[,2],peptide_only_0_GF2[,2]  )
+
+
+View(peptide_only_0_GF1_MC)
+peptide_only_0_GF1_MC[,2]
+peptide_only_0_GF2_MC[,2]
+
+
+boxplot(peptide_only_GF1_MC[,2],peptide_only_GF2_MC[,2], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to BIM(MC)", ylim=c(-12,10))
+t.test(peptide_only_GF1_MC[,2],peptide_only_GF2_MC[,2]  )
+dev.off()
+
+
+peptide_only_0
+peptide_only_neg_MC_0
+peptide_only_neg_MC_0=pmax(peptide_only_neg_MC,0)
+write.table(peptide_only_neg_MC_0, file = "~/Dropbox/BH3/peptide_only.txt", sep = "\t")
+
+
+
+
+colnames(peptide_only)=c("BAD", "BIM", "NOXA")
+
+plot(bad_neg[,11], type="", col="blue",ylim=c(-30,45))
+#lines(bim_neg[,11], col="green")
+lines(noxa_neg[,11], type="o", col="red", ylim=c(-30,45))
+axis(1, at=1:14, lab=row.names(noxa_neg), ,las=1)
+
+
+all_neg=c(bad_neg[,11],bim_neg[,11],noxa_neg[,11])
+View(all_neg)
+
+
+# bad_neg_0=cytoC_reponse_basal_neg_ordered_t_0[1:14,]
+# bim_neg_0=cytoC_reponse_basal_neg_ordered_t_0[15:28,]
+# noxa_neg_0=cytoC_reponse_basal_neg_ordered_t_0[43:56,]
+neg_neg_0=pmax(neg_neg,0)
+neg_neg_0
+neg_neg
+# row.names(bad_neg_0)=row.names(bim_neg_0)=row.names(noxa_neg_0)=row.names(neg_neg_0)=cellLines
+# peptide_only_0=cbind(bad_neg_0[,11],bim_neg_0[,11],noxa_neg_0[,11])
+# colnames(peptide_only)=c("BAD", "BIM", "NOXA")
+
+```
+
+#correlate w drug icbp
+```{r}
+
+icbp_select_drugs<-read.table("~/Dropbox/Multipathway_profiling_paper/ICBP_drugs_select.txt", row.names = 1, header = 1,sep='\t')
+dim(icbp_select)
+cellLines2=c("BT474","BT549", "HCC1143","HCC1569" ,"HCC1806","HCC1937","HCC1954","HCC38","HCC70","JIMT1","MCF7","MDAMB361", "T47D", "ZR7530")
+
+View(icbp_select_drugs)
+#all drugs
+pep_drug<-merge_drop(peptide_only_neg_MC_0,drugs,by=0)
+ownames(icbp_select_drugs)
+pep_drug_select=pep_drug[,c("Carboplatin", "AG1478", "Docetaxel","PD98059" ,"Paclitaxel","Epirubicin"  , "Temsirolimus"   ,"Everolimus" ,"CGC.11047"   , "Etoposide","Doxorubicin"  , "Topotecan"  ,"CPT.11"  ,"Pemetrexed" ,"Gefitinib"  , "Gemcitabine"  , "Methotrexate","FTase.inhibitor.I" , "CGC.11144"  ,"5.FU","5.FdUR"   ,"AZD6244", "Lapatinib" , "GSK1120212" , "Erlotinib"  , "L.779450"  ,"Cisplatin" ,"BEZ235", "AS.252424" ,"BIBW2992" ,"Sunitinib.Malate",  "ICRF.193"  ,"GSK1059615","Sigma.AKT1.2.inhibitor",  "ERKi.II..FR180304." , "PF.4691502",     "Triciribine" ,"GSK2126458", "GSK2119563", "Rapamycin","Ixabepilone","GSK2141795","GSK1059868" ,"Sorafenib","GSK1838705","Tykerb.IGF1R..1.1.")]
+dim(pep_drug_select)
+View(pep_drug)
+
+pep_drug_select=pep_drug[,c("5.FdUR","5.FU","Carboplatin","CGC.11047","CGC.11144","Cisplatin","CPT.11","Docetaxel","Doxorubicin","Epirubicin","Etoposide","Gemcitabine","ICRF.193","Ixabepilone","Methotrexate","Paclitaxel","Pemetrexed","Topotecan","AS.252424","BEZ235","BIBW2992","Everolimus","GSK1059615","GSK1059868","GSK1838705","GSK2119563","GSK2126458","GSK2141795","Lapatinib","PF.4691502","Rapamycin","Sigma.AKT1.2.inhibitor","Temsirolimus","Triciribine","Tykerb.IGF1R..1.1.","AG1478","AZD6244","ERKi.II..FR180304.","Erlotinib","FTase.inhibitor.I","Gefitinib","GSK1120212","L.779450","PD98059","Sorafenib","Sunitinib.Malate")]
+View(pep_drug_select)
+
+peptide_MC_0_icbp_select=round(cor(pep_drug_select,pep_drug[,1:3],method="spearman" , use="pairwise.complete.obs"),2)
+View(peptide_MC_0_icbp_select)
+
+View(peptide_MC_0_icbp_select)
+peptide_MC_0_icbp_select_BAD_NOXA=peptide_MC_0_icbp_select[,c(1,3)]
+View(peptide_MC_0_icbp_select_BAD_NOXA)
+#all
+peptide_MC_0_icbp=round(cor(pep_drug[,14:100],pep_drug[,1:3], method="spearman", use="pairwise.complete.obs"),2)
+View(peptide_MC_0_icbp)
+is.numeric(pep_drug[,14:100])
+
+pdf("~/Dropbox/Multipathway_profiling_paper/Grant_U54/BH3_ICBP_Plot.pdf")
+
+par(cex.main=0.7)
+
+peptide_MC_0_icbp_select_BAD_NOXA
+
+heatmap.2(as.matrix(peptide_MC_0_icbp_select_BAD_NOXA),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", main="ICBP-BH3 Correlation",cexRow=0.55, cexCol=1.1,srtCol=45,margins = c(3, 9), notecex = 0.7,cellnote =peptide_MC_0_icbp_select_BAD_NOXA, dendrogram="none", Colv=F, Rowv=T,lhei = c(0.07,1))  
+dev.off()
+pep_drug[,14:100]
+par(cex.main=0.7)
+heatmap.2(as.matrix(peptide_MC_0_icbp),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black",cexRow=0.5, cexCol=0.7,srtCol=45,margins = c(3, 9), notecex = 0.7,dendrogram="none", Colv=F, Rowv=TRUE,lhei = c(0.005,1))  
+
+pdf("~/Dropbox/Multipathway_profiling_paper/Grant_U54/BH3_ICBP_Lineplot2.pdf")
+par(cex.main=0.9)
+par(mar=c(6, 4, 4, 1))
+dim(peptide_MC_0_icbp_select_BAD_NOXA)
+plot(peptide_MC_0_icbp_select_BAD_NOXA[,1],type="l", col="red",ylim=c(-1,1), xlab="", ylab="Spearman Correlation, R2", xaxt="n",lwd=3)
+lines(peptide_MC_0_icbp_select_BAD_NOXA[,2], type="l", col="blue",xlab="Cell Lines", ylab="% Cytochrome C Release",xaxt="n",lwd=3)
+legend(1, c("BAD", "NOXA"), cex=0.8, col=c("red", "blue"), lty=1)
+title("Correlation Between BH3 peptides and ICBP Drug Reponse")
+axis(1, at=1:45, labels=lablist,las=2, cex.axis=0.6)
+lablist=colnames(peptide_MC_0_icbp_select_BAD_NOXA)
+dev.off()
+View(peptide_MC_0_icbp_select_BAD_NOXA)
+dim(peptide_MC_0_icbp_select_BAD_NOXA)
+
+
+
+```
+
+
+
+
+
+
+
+
+#Plot everything for lab meeting ##################
+# 1) Drug Screen
+# 2) Peptides Only/Corr with Drug Screen
+# 3) Drugs only /Corr with Drug Screen
+# 4) Synergy//Corr with Drug Screen
+
+#Plot the drug screen results (EC50 Stuff) (NO BH3)
+```{r}
+#read in -logGI50 from drugscreen
+drug_screen_results<-read.table("~/Dropbox/Bild drug screen 2015/Plate_Layouts/updated_response_predictions.txt", row.names = 1, header = 1,sep='\t')
+View(drug_screen_results)
+
+#remove the columns I don't want 
+drug_screen_drugs2=drug_screen_results[,8:43]
+colnames(drug_screen_drugs2)
+drug_screen_drugs=NULL
+for(i in 1:ncol(drug_screen_drugs2)){
+  tmp_col=drug_screen_drugs2[,i]
+  print(tmp_col)
+  if(strsplit(colnames(drug_screen_drugs2)[i],split = "_")[[1]][1]!="Bin"){
+ drug_screen_drugs=cbind(drug_screen_drugs,tmp_col)
+  colnames(drug_screen_drugs)[ncol(drug_screen_drugs)]=colnames(drug_screen_drugs2)[i]
+  }
+  }
+row.names(drug_screen_drugs)=row.names(drug_screen_results)
+
+#pull out the zero and 1 data
+drug_screen_drugs2=drug_screen_results[,8:43]
+colnames(drug_screen_drugs2)
+drug_screen_zero1=NULL
+for(i in 1:ncol(drug_screen_drugs2)){
+  tmp_col=drug_screen_drugs2[,i]
+  print(tmp_col)
+  if(strsplit(colnames(drug_screen_drugs2)[i],split = "_")[[1]][1]=="Bin"){
+ drug_screen_zero1=cbind(drug_screen_zero1,tmp_col)
+  colnames(drug_screen_zero1)[ncol(drug_screen_zero1)]=colnames(drug_screen_drugs2)[i]
+  }
+  }
+
+#remove the response data 0 and 1s
+row.names(drug_screen_zero1)=row.names(drug_screen_results)
+drug_screen_zero1=drug_screen_zero1[,-6]
+drug_screen_zero1=drug_screen_zero1[c(2,4,6,9:12,14,15,17,18,19,21,23),]
+drug_screen_zero1_BH3drugsAll=drug_screen_zero1[,c(1:2,6,8,10,11,15,17)]
+drug_screen_zero1_BH3drugsAll
+drug_screen_zero1_BH3drugsOnly=drug_screen_zero1[,c(6,10,11)]
+drug_screen_zero1_BH3drugsOnly
+
+#remove the cells lines we have
+drug_screen_drugs=drug_screen_drugs[c(2,4,6,9:12,14,15,17,18,19,21,23),]
+colnames(drug_screen_drugs)
+drug_screen_drugs=drug_screen_drugs[,-6]
+
+#Remove the drugs using BH3 profiling drugs + BH2 mimentic drugs, remove paxol
+peptide_drug_screen_allBH3drugs=drug_screen_drugs[,c(1:2,6,8,10,11,15,17)]
+colnames(peptide_drug_screen_allBH3drugs)
+
+#just the BH3 mimentic drugs
+peptide_drug_screen_BH3drugs=drug_screen_drugs[,c(6,10,11)]
+peptide_drug_screen_BH3drugs
+
+#Drug Screen Results EC50s
+
+pdf("~/Dropbox/BH3/Results/R_Output_Files/LabMeeting_10_13.pdf")
+dev.off()
+#All Drugs
+par(cex.main=0.8)
+peptide_drug_screen_allBH3drugs_r=round(peptide_drug_screen_allBH3drugs,2)
+heatmap.2(as.matrix(peptide_drug_screen_allBH3drugs_r),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Drug Sensitivity(Drug Screen)(-logEC50)\nCommon Cell Lines Only",cexRow=0.75, cexCol=0.7,srtCol=45,margins = c(4, 9), cellnote = peptide_drug_screen_allBH3drugs_r, notecol = "black", notecex = 0.7)  
+
+#BH3 Mimetics
+par(cex.main=0.8)
+peptide_drug_screen_BH3drugs_r=round(peptide_drug_screen_BH3drugs,2)
+heatmap.2(as.matrix(peptide_drug_screen_BH3drugs_r),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Drug Sensitivity(Drug Screen)(-logEC50)\nCommon Cell Lines Only",cexRow=0.75, cexCol=0.7,srtCol=45,margins = c(4, 9), cellnote = peptide_drug_screen_BH3drugs_r, notecol = "black", notecex = 0.7)  
+
+```
+
+
+#Setting Breaks for HeatMaps
+```{r}
+#Drugs when using all the drugs 
+breaks_drug=seq(0, 1, by=.5) #41 values
+breaks2_drug=seq(1, 40, by=0.02)
+breaks_drug=append(breaks2_drug, 56)
+#create colour panel with length(breaks)-1 colours
+mycol_drug <- colorpanel(n=length(breaks_drug)-1,low="white",mid="blue",high="red")
+
+##### Peptides with drugs removed
+#Drugs when using all the drugs 
+breaks_rm_drug=seq(0, 1, by=1) #41 values
+breaks_rm_drug
+breaks2_rm_drug=seq(1, 10, by=0.02)
+breaks2_rm_drug
+breaks_rm_drug=append(breaks2_rm_drug, 19)
+breaks_rm_drug
+#create colour panel with length(breaks)-1 colours
+mycol_rm_drug <- colorpanel(n=length(breaks_rm_drug)-1,low="white",mid="blue",high="red")
+
+
+```
+
+#Plotting Everything
+
+#1) Peptide ONLY Normalization (Mean Centering)
+```{r}
+#pdf("~/Desktop/BH3_LabMeeting_10_14_15.pdf")
+#pdf("~/Desktop/BH3_10_20_15.pdf")
+
+#set the breaks 
+breaks=seq(0, 0.95, by=.5) #41 values
+breaks2=seq(0.95, 20, by=0.02)
+breaks=append(breaks2, 30)
+#create colour panel with length(breaks)-1 colours
+mycol <- colorpanel(n=length(breaks)-1,low="white",mid="blue",high="red")
+all_neg
+# Figure 1 and 2 (Peptide Normalization)
+barplot(as.matrix(all_neg),col = c(rep("red",14), rep("green",14), rep("blue",14), rep("yellow",14)), cex.names = 0.4,horiz = F,beside = T,cex.axis = 0.5,main=paste("CytochromeC Release Due to Each Peptide Alone\n(Minus Neg Ctrl, Non-Mean Centered)"), ylim = c(-20,60), las=3)
+legend("topleft",legend=c("BAD", "BIM", "NOXA" ), col=c("red", "green","blue"),lty = 1,lwd=10,cex = 1)
+barplot(as.matrix(peptide_only_neg_MC_bar),col = c(rep("red",14), rep("green",14), rep("blue",14), rep("yellow",14)), cex.names = 0.4,horiz = F,beside = T,cex.axis = 0.5,main=paste("CytochromeC Release Due to Each Peptide Alone\n(Minus Neg Ctrl, Mean Centered)"), ylim = c(-20,60), las=3)
+legend("topleft",legend=c("BAD", "BIM", "NOXA" ), col=c("red", "green","blue"),lty = 1,lwd=10,cex = 1)
+```
+
+# 2) Peptide Only BH3 Results (Mean Cented- Keep Negatives)
+```{r}
+pdf("~/Dropbox/BH3/Results/R_Output_Files/Peptide_only.pdf")
+par(cex.main=0.8)
+peptide_only_neg_MC=round(peptide_only_neg_MC, 2)
+
+
+heatmap.2(as.matrix(peptide_only_neg_MC),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(peptide_only_neg_MC), rowsep=1:length(peptide_only_neg_MC), main="Peptide Induced CytochromeC \nRelease",cexRow=0.8, cexCol=1.2,srtCol=45, margins = c(4, 13), cellnote = neg_neg_0_r, notecol = "black", notecex = 0.7)
+dev.off()
+
+peptide_only_neg_MC
+plot(peptide_only_neg_MC, type="o", col="blue")
+
+plot(bad_neg_MC[,11], type="o", col="blue")
+#lines(bim_neg_MC[,11], type="o", col="red")
+lines(noxa_neg_MC[,11], type="o", col="red")
+
+barplot(peptide_only_neg_MC)
+
+View(peptide_only_neg_MC)
+
+```

@@ -1,0 +1,2053 @@
+---
+title: "Analysis of BH3 peptide experiments"
+output: html_document
+---
+
+# This block creates the response files 
+```{r}
+
+library("psych")
+library("dplyr")
+source("~/Documents/Multipathway_Modeling/bild_signatures-master/Rmarkdowns_scripts/Key_ASSIGN_functions.Rmd")
+cell_lines_subtypes<-read.table("~/Dropbox/BH3/Data/cellLine_subtypes.txt", row.names = 1, header = 1,sep='\t')
+View(cell_lines_subtypes)
+
+if (!require("gplots")) {
+  install.packages("gplots", dependencies = TRUE)
+  library(gplots)
+}
+if (!require("RColorBrewer")) {
+  install.packages("RColorBrewer", dependencies = TRUE)
+  library(RColorBrewer)
+}
+
+setwd("~/Dropbox/BH3/Data/ForR_Round2_ChangedNA/")
+
+
+alive=CytoC=NULL
+filenames<-system("ls ", intern=TRUE)
+filenames
+cell_lines=NULL
+for (i in 1:length(filenames)){
+  cell_lines[i]=strsplit(filenames[i],split = "_")[[1]][2]
+}
+for (i in 1:length(cell_lines)){
+  cell_lines[i]=strsplit(cell_lines[i], fixed=T, ".")[[1]][1]
+}
+# Create the Live/CytoC Median Matrix
+
+
+for(fn in 1:length(filenames)){
+  f=read.csv(filenames[fn],header = T,sep='\t')[1:220,]
+  ##creating a live cell matrix
+  tmp_alive=matrix(data = NA,nrow = 10,ncol = 22)##instantiating new matrix that will have 10 rows and 22 columns
+  i=1
+  for(k in 1:220)
+  {
+    if(k%%44==1){
+      tmp_alive[i:(i+1),]<-rbind(t(f[k:(k+21),2]),t(f[(k+22):(k+43),2]))
+      i=i+2
+    } 
+    }
+  rownames(tmp_alive)<-c(paste(c("Alive_BIM_0.1","Alive_BIM_0.1_","Alive_BAD_10","Alive_BAD_10_", "Alive_NOXA_100", "Alive_NOXA_100_", "Alive_Pos_control","Alive_Pos_control_","Alive_Neg_control", "Alive_Neg_control_"),cell_lines[fn],sep="_"))
+  colnames(tmp_alive)<-c("Doxo_0.1","Doxo_0.1_", "Doxo_0.3", "Doxo_0.3_", "Carbo_100", "Carbo_100_", "Carbo_300", "Carbo_300_","AKT_10","AKt_10_", "AKT_30","AKT_30_", "MEK_3","MEK_3_","MEK_10","MEK_10_", "Bafilo_0.001","Bafilo_0.001_","Bafilo_0.01","Bafilo_0.01_","DMSO","DMSO_")
+  
+  alive=cbind(alive,t(tmp_alive))
+  ###converting the file read to a 16X24 matrix; This is to match the plate lay out
+  tmp_CytoC=matrix(data = NA,nrow = 10,ncol = 22)##instantiating new matrix that will have 16 rows and 24 columns
+  i=1
+  for(k in 1:220)
+  {
+    if(k%%44==1){
+      tmp_CytoC[i:(i+1),]<-rbind(t(f[k:(k+21),3]),t(f[(k+22):(k+43),3]))
+      i=i+2
+    } 
+  }
+  rownames(tmp_CytoC)<-c(paste(c("CytoC_BIM_0.1","CytoC_BIM_0.1_", "CytoC_BAD_10","CytoC_BAD_10_", "CytoC_NOXA_100", "CytoC_NOXA_100_", "CytoC_Pos_ctrl","CytoC_Pos_ctrl_","CytoC_Neg_ctrl", "CytoCMed_Neg_ctrl_"),cell_lines[fn],sep="_"))
+  colnames(tmp_CytoC)<-c("Doxo_0.1","Doxo_0.1_", "Doxo_0.3", "Doxo_0.3_", "Carbo_100", "Carbo_100_", "Carbo_300", "Carbo_300_","AKT_10","AKt_10_", "AKT_30","AKT_30_", "Trem_3","Trem_3_","Trem_10","Trem_10_", "Bafilo_0.001","Bafilo_0.001_","Bafilo_0.01","Bafilo_0.01_","DMSO","DMSO_")
+  
+  CytoC=cbind(CytoC,t(tmp_CytoC))
+  
+}
+Alive_CytoC=rbind(alive,colnames(CytoC),CytoC)
+write.table(Alive_CytoC,"~/Documents/Multipathway_Modeling/BH3_Profiling/Final_NewGates/BH3_AliveCytoC_NewGates_newNA.txt",sep='\t',quote=F,col.names = NA)
+read.table()
+
+
+###transforming the matrix so that the replicates are side by side
+new_cyto_c_release=matrix(data = NA,nrow = 11,ncol = 300)
+cyto_c_release<-CytoC
+k=1
+#loop through the rows
+for(i in 1:11){
+  #loop though the columns
+  for(j in 1:300){
+    if(j%%4==1){
+      new_cyto_c_release[i,j]=cyto_c_release[(2*i-1),k] #rep1
+      new_cyto_c_release[i,(j+1)]=cyto_c_release[2*i,k] #rep2
+      new_cyto_c_release[i,(j+2)]=cyto_c_release[(2*i-1),(k+1)] #rep3
+      new_cyto_c_release[i,(j+3)]=cyto_c_release[2*i,(k+1)] #rep4
+      k=(k+2)%%150
+      
+    } 
+  }
+}
+
+### Creating the mean of the repilciates 
+mean_cyto=matrix(data = 0,nrow = 11,ncol = 75)
+k=1
+#loop through rows
+for(i in 1:11){
+  # then take the mean 
+  for(j in 1:75){
+    k=4*j-3
+    mean_cyto[i,j]<-mean(new_cyto_c_release[i,(k:(k+3))],na.rm = T)
+  }
+}
+
+rownames(mean_cyto)<-c("Doxo_0.1", "Doxo_0.3", "Carbo_100", "Carbo_300", "AKT_10", "AKT_30","MEK_3","MEK_10", "Bafilo_0.001","Bafilo_0.01","DMSO")
+
+# get the column names
+colnames_mean_cyto=NULL
+j = 1
+for (i in 1:ncol(cyto_c_release)){
+  if (i%%2 == 1) {
+    tmp=colnames(cyto_c_release)[i]
+    colnames_mean_cyto[j] = sub(pattern = "CytoC_",replacement =  "",tmp)
+    j = j + 1
+  }
+}
+
+colnames(mean_cyto)=colnames_mean_cyto
+raw_mean_cyto_reponse_all=100-mean_cyto
+# Change from retention to response
+raw_mean_cyto_reponse=100-mean_cyto
+View(raw_mean_cyto_reponse_all)
+raw_mean_cyto_reponse_all<-read.table("~/Documents/Multipathway_Modeling/BH3_Profiling/BH3_Raw_CytoC_Release.txt", row.names = 1, header = 1,sep='\t')
+write.table(raw_mean_cyto_reponse_all,"~/Documents/Multipathway_Modeling/BH3_Profiling/BH3_Raw_CytoC_Release.txt",sep='\t',quote=F,col.names = NA)
+
+#remove HCC1419
+raw_mean_cyto_reponse=raw_mean_cyto_reponse_all[,-c(31,32,33,34,35)]
+View(raw_mean_cyto_reponse)
+
+write.table(t(raw_mean_cyto_reponse),"~/Documents/Multipathway_Modeling/BH3_Profiling/BH3_Raw_CytoC_Release_rm1419.txt",sep='\t',quote=F,col.names = NA)
+
+raw_mean_cyto_reponse=read.table("~/Documents/Multipathway_Modeling/BH3_Profiling/BH3_Raw_CytoC_Release_rm1419.txt",row.names = 1, header = 1,sep='\t' )
+View(raw_mean_cyto_reponse)
+raw_mean_cyto_reponse=t(raw_mean_cyto_reponse)
+
+```
+
+#Define Functions
+```{r}
+# Function for removing the background
+remove_basal<-function(x,neg){
+  return (x-neg)
+}
+
+# define the remove peptide function
+pull_peptides=function(fullMatrix) {
+bad=bim=noxa=neg=NULL
+for(i in 1:ncol(fullMatrix)){
+  tmp_col=fullMatrix[,i]
+  if(strsplit(colnames(fullMatrix)[i],split = "_")[[1]][1]=="BAD"){
+    bad=cbind(bad,tmp_col)
+    colnames(bad)[ncol(bad)]=colnames(fullMatrix)[i]
+  }
+  else if(strsplit(colnames(fullMatrix)[i],split = "_")[[1]][1]=="BIM"){
+    bim=cbind(bim,tmp_col)
+    colnames(bim)[ncol(bim)]=colnames(fullMatrix)[i]
+  }
+  else if(strsplit(colnames(fullMatrix)[i],split = "_")[[1]][1]=="NOXA"){
+    noxa=cbind(noxa,tmp_col)
+    colnames(noxa)[ncol(noxa)]=colnames(fullMatrix)[i]
+  }
+  else if(strsplit(colnames(fullMatrix)[i],split = "_")[[1]][1]=="Neg"){
+    neg=cbind(neg,tmp_col)
+    colnames(neg)[ncol(neg)]=colnames(fullMatrix)[i]
+  }
+  tmp_col=NULL
+  } 
+
+return(list(bad,bim,noxa,neg))
+}
+
+remove_drug_death=function(x,outFile){
+outFile=matrix(data = NA,ncol = ncol(x),nrow = 10)
+dimnames(outFile)=dimnames(x[1:10,])
+drug_Death=NULL
+j=k=1
+for(i in 0:13){ # loop through all 15 cols and calculate response
+  tmp<- x[,(i*5+1):(i*5+5)] #just take all cols for 1 cell line 
+  drug_Death<-tmp[,5] #get the no peptide + drug control
+  for(k in 1:10){ # dont do it for DMSO cuz alraedy subtracted there 
+    for(l in 1:5){ #then columns
+      outFile[k,(5*(i)+l)]=remove_basal(x =tmp[k,l],neg=drug_Death[k] ) 
+      }
+  }
+}
+return(outFile)
+}
+
+
+#rank order function
+outName=NULL
+rank_order=function(x,outName){
+  for (i  in 1:11){
+drug_rank=rank(x[i,], na.last="keep", ties.method= "random")
+outName=rbind(outName, drug_rank)
+}
+return(outName)
+}
+
+```
+
+#Remove Basal Death
+```{r}
+####### subtract out the basline death using the DMSO control
+cytoC_reponse_basal_neg=matrix(data = NA,ncol = ncol(raw_mean_cyto_reponse),nrow = nrow(raw_mean_cyto_reponse))
+dimnames(cytoC_reponse_basal_neg)=dimnames(raw_mean_cyto_reponse)
+basal_Death=NULL
+j=k=1
+for(i in 0:13){ # loop through all 15 cols and calculate response
+  tmp<-raw_mean_cyto_reponse[,(i*5+1):(i*5+5)] #just take all cols for 1 cell line 
+  #basal_Death<-min(tmp[,5], na.rm=TRUE) #get the no peptide + drug control
+  basal_Death=tmp[11,5]               
+  for(k in 1:nrow(tmp)){ # loop through rows
+    for(l in 1:5){ #then columns
+     # create final matrix
+      cytoC_reponse_basal_neg[k,(5*(i)+l)]=remove_basal(x =tmp[k,l],neg=basal_Death ) 
+      }
+  }
+}
+
+# Remove all the negative numbers
+#cytoC_reponse_basal_neg=pmax(cytoC_reponse_basal_neg, 0)
+
+
+colnames(cytoC_reponse_basal_neg)
+write.table(cytoC_reponse_basal_neg, "~/Documents/Multipathway_Modeling/BH3_Profiling/BH3_CytoCRelease_Minus_Death_October.txt")
+
+
+
+```
+
+#Seperate the peptides for mean centering
+```{r}
+
+bad_neg=bim_neg=noxa_neg=neg_neg=NULL
+cytoC_reponse_basal_neg_ordered=cytoC_reponse_basal_neg[,order(colnames(raw_mean_cyto_reponse))]
+View(cytoC_reponse_basal_neg_ordered)
+cytoC_reponse_basal_neg_ordered_t=t(cytoC_reponse_basal_neg_ordered)
+View(cytoC_reponse_basal_neg_ordered)
+write.table(cytoC_reponse_basal_neg_ordered, "~/Documents/Multipathway_Modeling/BH3_Profiling/BH3_Raw_CytoC_Release_m_negativeCtrl_ordered.txt",sep='\t',quote=F,col.names = NA)
+
+cytoC_reponse_basal_neg_ordered=read.table("~/Documents/Multipathway_Modeling/BH3_Profiling/BH3_Raw_CytoC_Release_m_negativeCtrl_ordered.txt",row.names = 1, header = 1,sep='\t')
+
+cellLines=c("Luminal_ERRB2_BT474","Claudin_BT549", "Basal_HCC1143","Basal_ERBB2_HCC1569" ,"Basal_HCC1806","Basal_HCC1937","Basal_ERRB2_HCC1954","Claudin_HCC38","Basal_HCC70","Basal_ERRB2_JIMT1","Luminal_MCF7","Luminal_ERBB2_MDAMB361", "Luminal_T47D", "Luminal_ERBB2_ZR7530")
+
+bad_neg=cytoC_reponse_basal_neg_ordered_t[1:14,]
+View(bad_neg)
+bim_neg=cytoC_reponse_basal_neg_ordered_t[15:28,]
+bim_neg
+noxa_neg=cytoC_reponse_basal_neg_ordered_t[43:56,]
+noxa_neg
+neg_neg=cytoC_reponse_basal_neg_ordered_t[29:42,]
+neg_neg
+
+
+cytoC_reponse_basal_neg_ordered_t[29:42,]
+
+row.names(bad_neg)=row.names(bim_neg)=row.names(noxa_neg)=row.names(neg_neg)=cellLines
+
+bad_neg[,11]
+peptide_only=cbind(bad_neg[,11],bim_neg[,11],noxa_neg[,11])
+peptide_only_0
+peptide_only_0=pmax(peptide_only,0)
+View(peptide_only_0)
+
+pdf("~/Dropbox/Multipathway_profiling_paper/Grant_U54/BAD_NOXA_Plot.pdf")
+# peptide only, set to zerp
+plot(peptide_only_0[,1],type="l", col="blue",ylim=c(0,45), xlab="", ylab="% Cytochrome C Release", xaxt='n')
+#lines(peptide_only_0[,2], type="l", col="red")
+lines(peptide_only_0[,3], type="l", col="red",xlab="Cell Lines", ylab="% Cytochrome C Release",xaxt='n')
+legend(1,45, c("BAD", "NOXA"), cex=0.8, col=c("red", "black"), lty=1)
+title("Peptide Only(Negatives to Zero)")
+axis(1, at=1:14, labels=FALSE, xaxt='n')
+lablist<-row.names(peptide_only)
+text(seq(1, 14, by=1), par("usr")[3]-1, labels = lablist, srt = 45, pos = 2, xpd = T, cex=0.55)
+
+
+plot(bad_neg_MC[,11],type="l", col="blue",ylim=c(-25,45), xlab="", ylab="% Cytochrome C Release", xaxt='n')
+#lines(peptide_only_0[,2], type="l", col="red")
+lines(noxa_neg_MC[,11], type="l", col="red",xlab="Cell Lines", ylab="% Cytochrome C Release",xaxt='n')
+legend(1,45, c("BAD", "NOXA"), cex=0.8, col=c("red", "black"), lty=1)
+title("Peptide Only(Mean-Centered)")
+axis(1, at=1:14, labels=FALSE, xaxt='n')
+lablist<-row.names(peptide_only)
+text(seq(1, 14, by=1), par("usr")[3]-1, labels = lablist, srt = 45, pos = 2, xpd = T, cex=0.55)
+
+boxplot(peptide_only_0[,1],peptide_only_0[,3], ylab="% Cytochrome C Release",names = c("BAD", "NOXA"), col = c("red", "grey"), main="BAD vs Noxa(Raw, Negatives to zero)")
+text(43, label = "p-value = 0.007", pos = 4, cex = 1, col = "black")
+row.names(peptide_only_0)
+boxplot(peptide_only_0[,1],peptide_only_0[,3], ylab="% Cytochrome C Release",names = c("BAD", "NOXA"), col = c("red", "grey"), main="BAD vs Noxa(Raw, Negatives to zero)", ylim=c(-10,40))
+text(43, label = "p-value = 0.007", pos = 4, cex = 1, col = "black")
+t.test(peptide_only_0[,1],peptide_only_0[,3]  )
+
+
+peptide_only_0_GF1=peptide_only_0[c("Luminal_ERRB2_BT474","Basal_ERBB2_HCC1569","Basal_HCC70","Luminal_MCF7", "Luminal_ERBB2_MDAMB361","Luminal_T47D", "Luminal_ERBB2_ZR7530" ),]
+peptide_only_0_GF2=peptide_only_0[c("Claudin_BT549", "Basal_HCC1143", "Basal_HCC1806", "Basal_HCC1937", "Basal_ERRB2_HCC1954", "Claudin_HCC38" , "Basal_ERRB2_JIMT1"),]
+
+View(peptide_only_0_GF1)
+View(peptide_only_0_GF2)
+
+
+peptide_only_0_GF1_MC=peptide_only_neg_MC_0[c("BT474","HCC1569","HCC70","MCF7", "MDAMB361","T47D", "ZR7530" ),]
+peptide_only_0_GF2_MC=peptide_only_neg_MC_0[c("BT549", "HCC1143", "HCC1806", "HCC1937", "HCC1954", "HCC38" , "JIMT1"),]
+peptide_only_0_GF2_MC
+
+peptide_only_GF1_MC=peptide_only_neg_MC[c("Luminal_ERRB2_BT474","Basal_ERBB2_HCC1569","Basal_HCC70","Luminal_MCF7", "Luminal_ERBB2_MDAMB361","Luminal_T47D", "Luminal_ERBB2_ZR7530" ),]
+peptide_only_GF2_MC=peptide_only_neg_MC[c("Claudin_BT549", "Basal_HCC1143", "Basal_HCC1806", "Basal_HCC1937", "Basal_ERRB2_HCC1954", "Claudin_HCC38" , "Basal_ERRB2_JIMT1"),]
+peptide_only_GF2_MC
+
+
+peptide_only_0_GF1
+
+# GF1 and GF2 for BAD
+pdf("~/Dropbox/Multipathway_profiling_paper/Grant_U54/GF1_GF2_BH3_Boxplot.pdf")
+
+peptide_only_0_GF1[,1]
+peptide_only_0_GF2[,1]
+View(peptide_only_0_GF1[,1])
+
+boxplot(peptide_only_0_GF1[,1],peptide_only_0_GF2[,1], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to BAD", ylim=c(-3,18))
+t.test(peptide_only_0_GF1[,1],peptide_only_0_GF2[,1]  )
+
+boxplot(peptide_only_0_GF1_MC[,1],peptide_only_0_GF2_MC[,1], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to BAD(MC,0)", ylim=c(-3,20))
+t.test(peptide_only_0_GF1_MC[,1],peptide_only_0_GF2_MC[,1]  )
+boxplot(peptide_only_GF1_MC[,1],peptide_only_GF2_MC[,1], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to BAD(MC)", ylim=c(-15,20))
+t.test(peptide_only_GF1_MC[,1],peptide_only_GF2_MC[,1]  )
+peptide_only_GF1_MC[,1]
+peptide_only_GF2_MC[,1]
+
+
+# GF1 and GF2 for NOXA
+boxplot(peptide_only_0_GF1[,3],peptide_only_0_GF2[,3], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to NOXA", ylim=c(-5,25))                                                                                                                                                                                              
+t.test(peptide_only_0_GF1[,3],peptide_only_0_GF2[,3]  )
+boxplot(peptide_only_0_GF1_MC[,3],peptide_only_0_GF2_MC[,3], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to NOXA(MC,0)", ylim=c(-5,35))
+t.test(peptide_only_0_GF1_MC[,3],peptide_only_0_GF2_MC[,3]  )
+boxplot(peptide_only_GF1_MC[,3],peptide_only_GF2_MC[,3], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to NOXA(MC)", ylim=c(-25,20))
+t.test(peptide_only_GF1_MC[,3],peptide_only_GF2_MC[,3]  )
+
+peptide_only_0_GF1[,2]
+
+
+#bim
+boxplot(peptide_only_0_GF1[,2],peptide_only_0_GF2[,2], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to BIM", ylim=c(-1,5))                                                                                                                                                                                              
+t.test(peptide_only_0_GF1[,2],peptide_only_0_GF2[,2]  )
+
+
+View(peptide_only_0_GF1_MC)
+peptide_only_0_GF1_MC[,2]
+peptide_only_0_GF2_MC[,2]
+
+
+boxplot(peptide_only_GF1_MC[,2],peptide_only_GF2_MC[,2], ylab="% Cytochrome C Release",names = c("AKT/BAD/IGF1R", " EGFR/KRAS/RAF"), col = c("red", "grey"), main="Response to BIM(MC)", ylim=c(-12,10))
+t.test(peptide_only_GF1_MC[,2],peptide_only_GF2_MC[,2]  )
+dev.off()
+
+
+
+
+
+
+
+
+
+peptide_only_0
+peptide_only_neg_MC_0
+peptide_only_neg_MC_0=pmax(peptide_only_neg_MC,0)
+write.table(peptide_only_neg_MC_0, file = "~/Dropbox/BH3/peptide_only.txt", sep = "\t")
+
+
+
+
+colnames(peptide_only)=c("BAD", "BIM", "NOXA")
+
+plot(bad_neg[,11], type="", col="blue",ylim=c(-30,45))
+#lines(bim_neg[,11], col="green")
+lines(noxa_neg[,11], type="o", col="red", ylim=c(-30,45))
+axis(1, at=1:14, lab=row.names(noxa_neg), ,las=1)
+
+
+all_neg=c(bad_neg[,11],bim_neg[,11],noxa_neg[,11])
+View(all_neg)
+
+
+# bad_neg_0=cytoC_reponse_basal_neg_ordered_t_0[1:14,]
+# bim_neg_0=cytoC_reponse_basal_neg_ordered_t_0[15:28,]
+# noxa_neg_0=cytoC_reponse_basal_neg_ordered_t_0[43:56,]
+neg_neg_0=pmax(neg_neg,0)
+neg_neg_0
+neg_neg
+# row.names(bad_neg_0)=row.names(bim_neg_0)=row.names(noxa_neg_0)=row.names(neg_neg_0)=cellLines
+# peptide_only_0=cbind(bad_neg_0[,11],bim_neg_0[,11],noxa_neg_0[,11])
+# colnames(peptide_only)=c("BAD", "BIM", "NOXA")
+
+```
+
+#correlate w drug icbp
+```{r}
+
+icbp_select_drugs<-read.table("~/Dropbox/Multipathway_profiling_paper/ICBP_drugs_select.txt", row.names = 1, header = 1,sep='\t')
+dim(icbp_select)
+cellLines2=c("BT474","BT549", "HCC1143","HCC1569" ,"HCC1806","HCC1937","HCC1954","HCC38","HCC70","JIMT1","MCF7","MDAMB361", "T47D", "ZR7530")
+
+View(icbp_select_drugs)
+#all drugs
+pep_drug<-merge_drop(peptide_only_neg_MC_0,drugs,by=0)
+ownames(icbp_select_drugs)
+pep_drug_select=pep_drug[,c("Carboplatin", "AG1478", "Docetaxel","PD98059" ,"Paclitaxel","Epirubicin"  , "Temsirolimus"   ,"Everolimus" ,"CGC.11047"   , "Etoposide","Doxorubicin"  , "Topotecan"  ,"CPT.11"  ,"Pemetrexed" ,"Gefitinib"  , "Gemcitabine"  , "Methotrexate","FTase.inhibitor.I" , "CGC.11144"  ,"5.FU","5.FdUR"   ,"AZD6244", "Lapatinib" , "GSK1120212" , "Erlotinib"  , "L.779450"  ,"Cisplatin" ,"BEZ235", "AS.252424" ,"BIBW2992" ,"Sunitinib.Malate",  "ICRF.193"  ,"GSK1059615","Sigma.AKT1.2.inhibitor",  "ERKi.II..FR180304." , "PF.4691502",     "Triciribine" ,"GSK2126458", "GSK2119563", "Rapamycin","Ixabepilone","GSK2141795","GSK1059868" ,"Sorafenib","GSK1838705","Tykerb.IGF1R..1.1.")]
+dim(pep_drug_select)
+View(pep_drug)
+
+pep_drug_select=pep_drug[,c("5.FdUR","5.FU","Carboplatin","CGC.11047","CGC.11144","Cisplatin","CPT.11","Docetaxel","Doxorubicin","Epirubicin","Etoposide","Gemcitabine","ICRF.193","Ixabepilone","Methotrexate","Paclitaxel","Pemetrexed","Topotecan","AS.252424","BEZ235","BIBW2992","Everolimus","GSK1059615","GSK1059868","GSK1838705","GSK2119563","GSK2126458","GSK2141795","Lapatinib","PF.4691502","Rapamycin","Sigma.AKT1.2.inhibitor","Temsirolimus","Triciribine","Tykerb.IGF1R..1.1.","AG1478","AZD6244","ERKi.II..FR180304.","Erlotinib","FTase.inhibitor.I","Gefitinib","GSK1120212","L.779450","PD98059","Sorafenib","Sunitinib.Malate")]
+View(pep_drug_select)
+
+peptide_MC_0_icbp_select=round(cor(pep_drug_select,pep_drug[,1:3],method="spearman" , use="pairwise.complete.obs"),2)
+View(peptide_MC_0_icbp_select)
+
+View(peptide_MC_0_icbp_select)
+peptide_MC_0_icbp_select_BAD_NOXA=peptide_MC_0_icbp_select[,c(1,3)]
+View(peptide_MC_0_icbp_select_BAD_NOXA)
+#all
+peptide_MC_0_icbp=round(cor(pep_drug[,14:100],pep_drug[,1:3], method="spearman", use="pairwise.complete.obs"),2)
+View(peptide_MC_0_icbp)
+is.numeric(pep_drug[,14:100])
+
+pdf("~/Dropbox/Multipathway_profiling_paper/Grant_U54/BH3_ICBP_Plot.pdf")
+
+par(cex.main=0.7)
+
+peptide_MC_0_icbp_select_BAD_NOXA
+
+heatmap.2(as.matrix(peptide_MC_0_icbp_select_BAD_NOXA),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", main="ICBP-BH3 Correlation",cexRow=0.55, cexCol=1.1,srtCol=45,margins = c(3, 9), notecex = 0.7,cellnote =peptide_MC_0_icbp_select_BAD_NOXA, dendrogram="none", Colv=F, Rowv=T,lhei = c(0.07,1))  
+dev.off()
+pep_drug[,14:100]
+par(cex.main=0.7)
+heatmap.2(as.matrix(peptide_MC_0_icbp),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black",cexRow=0.5, cexCol=0.7,srtCol=45,margins = c(3, 9), notecex = 0.7,dendrogram="none", Colv=F, Rowv=TRUE,lhei = c(0.005,1))  
+
+pdf("~/Dropbox/Multipathway_profiling_paper/Grant_U54/BH3_ICBP_Lineplot2.pdf")
+par(cex.main=0.9)
+par(mar=c(6, 4, 4, 1))
+dim(peptide_MC_0_icbp_select_BAD_NOXA)
+plot(peptide_MC_0_icbp_select_BAD_NOXA[,1],type="l", col="red",ylim=c(-1,1), xlab="", ylab="Spearman Correlation, R2", xaxt="n",lwd=3)
+lines(peptide_MC_0_icbp_select_BAD_NOXA[,2], type="l", col="blue",xlab="Cell Lines", ylab="% Cytochrome C Release",xaxt="n",lwd=3)
+legend(1, c("BAD", "NOXA"), cex=0.8, col=c("red", "blue"), lty=1)
+title("Correlation Between BH3 peptides and ICBP Drug Reponse")
+axis(1, at=1:45, labels=lablist,las=2, cex.axis=0.6)
+lablist=colnames(peptide_MC_0_icbp_select_BAD_NOXA)
+dev.off()
+View(peptide_MC_0_icbp_select_BAD_NOXA)
+dim(peptide_MC_0_icbp_select_BAD_NOXA)
+
+
+
+```
+
+
+
+
+
+
+
+
+#Plot drug only
+```{r}
+colnames(neg_neg_0)
+neg_neg_0=pmax(neg_neg, 0)
+neg_neg_0=neg_neg_0[,1:10]
+neg_neg_0_cor=round(cor(neg_neg_0),2)
+neg_neg_0
+
+cor.test(neg_neg_0[,1],neg_neg_0[,2]) # doxo is 0.62
+cor.test(neg_neg_0[,3],neg_neg_0[,4]) # carbo is 0.12
+cor.test(neg_neg_0[,5],neg_neg_0[,6])
+cor.test(neg_neg_0[,7],neg_neg_0[,8])
+cor.test(neg_neg_0[,9],neg_neg_0[,10])
+
+#Going with Carbo 300, Doxo 0.3, MEK10, AKT10, anf Baf 0.001
+neg_neg_0_drugs=neg_neg_0[,c(2,4,5,8,10)]
+neg_neg_0_drugs
+```
+
+#Mean Center the peptides
+```{r}
+
+center_scale <- function(x) {
+    scale(x, scale = FALSE)
+}
+
+bad_neg_MC=center_scale(bad_neg)
+View(bad_neg_MC)
+bim_neg_MC=center_scale(bim_neg)
+View(bim_neg_MC)
+noxa_neg_MC=center_scale(noxa_neg)
+View(noxa_neg_MC)
+neg_neg_MC=center_scale(neg_neg)
+row.names(bad_neg_MC)=row.names(bim_neg_MC)=row.names(noxa_neg_MC)=row.names(neg_neg_MC)=cellLines
+View(neg_neg_MC)
+
+#View(neg_neg_MC)
+peptide_only_neg_MC=cbind(bad_neg_MC[,11],bim_neg_MC[,11],noxa_neg_MC[,11])
+peptide_only_neg_MC
+row.names(peptide_only_neg_MC)=cellLines
+colnames(peptide_only_neg_MC)=c("BAD", "BIM", "NOXA")
+View(peptide_only_neg_MC)
+
+peptide_only_neg_MC_bar=c(bad_neg_MC[,11],bim_neg_MC[,11],noxa_neg_MC[,11])
+#View(peptide_only_neg_MC_bar)
+
+peptide_only_0
+
+#r_scale(bad_neg_0)
+# View(bad_neg_MC_0)
+# bim_neg_MC_0=center_scale(bim_neg_0)
+# View(bim_neg_MC_0)
+# noxa_neg_MC_0=center_scale(noxa_neg_0)
+# View(noxa_neg_MC_0)
+# neg_neg_MC_0=center_scale(neg_neg_0)
+# View(neg_neg_MC_0)
+
+# bad_neg_MC=merge_drop(bad_neg_MC, cell_lines_subtypes)
+# colnames(bad_neg_MC)
+# bim_neg_MC=merge_drop(bim_neg_MC, cell_lines_subtypes)
+# rownames(bim_neg_MC)
+# noxa_neg_MC=merge_drop(noxa_neg_MC, cell_lines_subtypes)
+# rownames(noxa_neg_MC)
+# neg_neg_MC=merge_drop(neg_neg_MC, cell_lines_subtypes)
+# View(neg_neg_MC[,16])
+
+# peptide_only_neg_MC_0=cbind(bad_neg_MC_0[,11],bim_neg_MC_0[,11],noxa_neg_MC_0[,11])
+# View(peptide_only_neg_MC_0)
+# row.names(peptide_only_neg_MC_0)=cellLines
+# colnames(peptide_only_neg_MC_0)=c("BAD", "BIM", "NOXA")
+```
+#Done
+
+# Now remove the Drugs
+```{r}
+####### subtract out the death due to drugs 
+cytoC_reponse_basal_neg
+# Remove drugs from the basal from the negative
+cytoC_reponse_basal_neg_0=pmax(cytoC_reponse_basal_neg,0)
+View(cytoC_reponse_basal_neg_0)
+cytoC_reponse_basal_neg_drug=NULL
+cytoC_reponse_basal_neg_drug=remove_drug_death(cytoC_reponse_basal_neg_0,cytoC_reponse_basal_neg_drug)
+View(cytoC_reponse_basal_neg_drug)
+#add back DMSO since we did not want to subtract this again
+cytoC_reponse_basal_neg_drug=rbind(cytoC_reponse_basal_neg_drug,cytoC_reponse_basal_neg_0[11,])
+
+row.names(cytoC_reponse_basal_neg_drug)=row.names(cytoC_reponse_basal_neg)
+cytoC_reponse_basal_neg_drug_0=pmax(cytoC_reponse_basal_neg_drug,0)
+View(cytoC_reponse_basal_neg_drug_0)
+
+write.table(cytoC_reponse_basal_neg_drug_0, "~/Documents/Multipathway_Modeling/BH3_Profiling/cytoC_reponse_basal_neg_drug_0.txt",sep='\t',quote=F,col.names = NA)
+
+
+```
+
+#Divide by Peptide
+```{r}
+#add one so we arn't dividing by zero 
+cytoC_reponse_basal_neg_drug_1=cytoC_reponse_basal_neg_drug_0+1
+View(t(cytoC_reponse_basal_neg_drug_1))
+
+# Divide by the peptide
+peptide_only_neg=t(cytoC_reponse_basal_neg_drug_1[11,])
+View(peptide_only_neg)
+row.names(peptide_only_neg)="DMSO"
+divide_by_peptide_neg_pep=NULL
+divide_by_peptide_neg_pep=sweep(cytoC_reponse_basal_neg_drug_1, 2, peptide_only_neg, '/')
+View(t(divide_by_peptide_neg_pep))
+
+# Make all the ones zeros again. wait to see if we should set them to zero
+divide_by_peptide_neg_pep[divide_by_peptide_neg_pep == 1] = 0
+View(divide_by_peptide_neg_pep)
+
+# divide_by_peptide_neg_pep=read.table("~/Documents/Multipathway_Modeling/BH3_Profiling/Final_NewGates/BH3_divide_by_peptide_neg_pep.txt",row.names = 1, header = 1,sep='\t')
+
+```
+
+#Seperate Peptides after dividing by peptide
+```{r}
+
+divide_by_peptide_neg_pep_ordered=divide_by_peptide_neg_pep[,order(names(raw_mean_cyto_reponse))]
+View(divide_by_peptide_neg_pep_ordered)
+
+bad_neg_pep=divide_by_peptide_neg_pep_ordered[,1:14]
+colnames(bad_neg_pep)
+bim_neg_pep=divide_by_peptide_neg_pep_ordered[,15:28]
+colnames(bim_neg_pep)
+noxa_neg_pep=divide_by_peptide_neg_pep_ordered[,43:56]
+colnames(noxa_neg_pep)
+colnames(bad_neg_pep)=colnames(bim_neg_pep)=colnames(noxa_neg_pep)=cellLines
+# there are all good
+View(bad_neg_pep)
+View(bim_neg_pep)
+View(noxa_neg_pep)
+row.names(bad_neg_pep)
+
+bad_neg_pep_rm_drug=bad_neg_pep[c(2,4,5,8,10),]
+bad_neg_pep_rm_drug
+bim_neg_pep_rm_drug=bim_neg_pep[c(2,4,5,8,10),]
+bim_neg_pep_rm_drug
+noxa_neg_pep_rm_drug=noxa_neg_pep[c(2,4,5,8,10),]
+noxa_neg_pep_rm_drug 
+
+#find the min and max
+quantile.range_bad <- quantile(bad_neg_pep_rm_drug,probs = seq(0, 1, 0.01), na.rm = TRUE)
+max(quantile.range_bad) #17.1(before rm drugs) same
+quantile.range_bim <- quantile(bim_neg_pep_rm_drug, seq(0, 1, 0.01), na.rm = TRUE)
+max(quantile.range_bim) #29.3(before rm drugs), how its 14
+quantile.range_noxa <- quantile(noxa_neg_pep_rm_drug,probs = seq(0, 1, 0.01), na.rm = TRUE)
+max(quantile.range_noxa) #20(before rm drugs) now its 18
+quantile.range_neg_neg_0 <- quantile(neg_neg_0_drugs,probs = seq(0, 1, 0.01), na.rm = TRUE)
+max(quantile.range_neg_neg_0) #56(before rm drugs)
+```
+
+
+#Plot everything for lab meeting ##################
+# 1) Drug Screen
+# 2) Peptides Only/Corr with Drug Screen
+# 3) Drugs only /Corr with Drug Screen
+# 4) Synergy//Corr with Drug Screen
+
+#Plot the drug screen results (EC50 Stuff) (NO BH3)
+```{r}
+#read in -logGI50 from drugscreen
+drug_screen_results<-read.table("~/Dropbox/Bild drug screen 2015/Plate_Layouts/updated_response_predictions.txt", row.names = 1, header = 1,sep='\t')
+View(drug_screen_results)
+
+#remove the columns I don't want 
+drug_screen_drugs2=drug_screen_results[,8:43]
+colnames(drug_screen_drugs2)
+drug_screen_drugs=NULL
+for(i in 1:ncol(drug_screen_drugs2)){
+  tmp_col=drug_screen_drugs2[,i]
+  print(tmp_col)
+  if(strsplit(colnames(drug_screen_drugs2)[i],split = "_")[[1]][1]!="Bin"){
+ drug_screen_drugs=cbind(drug_screen_drugs,tmp_col)
+  colnames(drug_screen_drugs)[ncol(drug_screen_drugs)]=colnames(drug_screen_drugs2)[i]
+  }
+  }
+row.names(drug_screen_drugs)=row.names(drug_screen_results)
+
+#pull out the zero and 1 data
+drug_screen_drugs2=drug_screen_results[,8:43]
+colnames(drug_screen_drugs2)
+drug_screen_zero1=NULL
+for(i in 1:ncol(drug_screen_drugs2)){
+  tmp_col=drug_screen_drugs2[,i]
+  print(tmp_col)
+  if(strsplit(colnames(drug_screen_drugs2)[i],split = "_")[[1]][1]=="Bin"){
+ drug_screen_zero1=cbind(drug_screen_zero1,tmp_col)
+  colnames(drug_screen_zero1)[ncol(drug_screen_zero1)]=colnames(drug_screen_drugs2)[i]
+  }
+  }
+
+#remove the response data 0 and 1s
+row.names(drug_screen_zero1)=row.names(drug_screen_results)
+drug_screen_zero1=drug_screen_zero1[,-6]
+drug_screen_zero1=drug_screen_zero1[c(2,4,6,9:12,14,15,17,18,19,21,23),]
+drug_screen_zero1_BH3drugsAll=drug_screen_zero1[,c(1:2,6,8,10,11,15,17)]
+drug_screen_zero1_BH3drugsAll
+drug_screen_zero1_BH3drugsOnly=drug_screen_zero1[,c(6,10,11)]
+drug_screen_zero1_BH3drugsOnly
+
+#remove the cells lines we have
+drug_screen_drugs=drug_screen_drugs[c(2,4,6,9:12,14,15,17,18,19,21,23),]
+colnames(drug_screen_drugs)
+drug_screen_drugs=drug_screen_drugs[,-6]
+
+#Remove the drugs using BH3 profiling drugs + BH2 mimentic drugs, remove paxol
+peptide_drug_screen_allBH3drugs=drug_screen_drugs[,c(1:2,6,8,10,11,15,17)]
+colnames(peptide_drug_screen_allBH3drugs)
+
+#just the BH3 mimentic drugs
+peptide_drug_screen_BH3drugs=drug_screen_drugs[,c(6,10,11)]
+peptide_drug_screen_BH3drugs
+
+#Drug Screen Results EC50s
+
+pdf("~/Dropbox/BH3/Results/R_Output_Files/LabMeeting_10_13.pdf")
+dev.off()
+#All Drugs
+par(cex.main=0.8)
+peptide_drug_screen_allBH3drugs_r=round(peptide_drug_screen_allBH3drugs,2)
+heatmap.2(as.matrix(peptide_drug_screen_allBH3drugs_r),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Drug Sensitivity(Drug Screen)(-logEC50)\nCommon Cell Lines Only",cexRow=0.75, cexCol=0.7,srtCol=45,margins = c(4, 9), cellnote = peptide_drug_screen_allBH3drugs_r, notecol = "black", notecex = 0.7)  
+
+#BH3 Mimetics
+par(cex.main=0.8)
+peptide_drug_screen_BH3drugs_r=round(peptide_drug_screen_BH3drugs,2)
+heatmap.2(as.matrix(peptide_drug_screen_BH3drugs_r),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Drug Sensitivity(Drug Screen)(-logEC50)\nCommon Cell Lines Only",cexRow=0.75, cexCol=0.7,srtCol=45,margins = c(4, 9), cellnote = peptide_drug_screen_BH3drugs_r, notecol = "black", notecex = 0.7)  
+
+```
+
+
+#Setting Breaks for HeatMaps
+```{r}
+#Drugs when using all the drugs 
+breaks_drug=seq(0, 1, by=.5) #41 values
+breaks2_drug=seq(1, 40, by=0.02)
+breaks_drug=append(breaks2_drug, 56)
+#create colour panel with length(breaks)-1 colours
+mycol_drug <- colorpanel(n=length(breaks_drug)-1,low="white",mid="blue",high="red")
+
+##### Peptides with drugs removed
+#Drugs when using all the drugs 
+breaks_rm_drug=seq(0, 1, by=1) #41 values
+breaks_rm_drug
+breaks2_rm_drug=seq(1, 10, by=0.02)
+breaks2_rm_drug
+breaks_rm_drug=append(breaks2_rm_drug, 19)
+breaks_rm_drug
+#create colour panel with length(breaks)-1 colours
+mycol_rm_drug <- colorpanel(n=length(breaks_rm_drug)-1,low="white",mid="blue",high="red")
+
+
+```
+
+#Plotting Everything
+
+#1) Peptide ONLY Normalization (Mean Centering)
+```{r}
+#pdf("~/Desktop/BH3_LabMeeting_10_14_15.pdf")
+#pdf("~/Desktop/BH3_10_20_15.pdf")
+
+#set the breaks 
+breaks=seq(0, 0.95, by=.5) #41 values
+breaks2=seq(0.95, 20, by=0.02)
+breaks=append(breaks2, 30)
+#create colour panel with length(breaks)-1 colours
+mycol <- colorpanel(n=length(breaks)-1,low="white",mid="blue",high="red")
+all_neg
+# Figure 1 and 2 (Peptide Normalization)
+barplot(as.matrix(all_neg),col = c(rep("red",14), rep("green",14), rep("blue",14), rep("yellow",14)), cex.names = 0.4,horiz = F,beside = T,cex.axis = 0.5,main=paste("CytochromeC Release Due to Each Peptide Alone\n(Minus Neg Ctrl, Non-Mean Centered)"), ylim = c(-20,60), las=3)
+legend("topleft",legend=c("BAD", "BIM", "NOXA" ), col=c("red", "green","blue"),lty = 1,lwd=10,cex = 1)
+barplot(as.matrix(peptide_only_neg_MC_bar),col = c(rep("red",14), rep("green",14), rep("blue",14), rep("yellow",14)), cex.names = 0.4,horiz = F,beside = T,cex.axis = 0.5,main=paste("CytochromeC Release Due to Each Peptide Alone\n(Minus Neg Ctrl, Mean Centered)"), ylim = c(-20,60), las=3)
+legend("topleft",legend=c("BAD", "BIM", "NOXA" ), col=c("red", "green","blue"),lty = 1,lwd=10,cex = 1)
+```
+
+# 2) Peptide Only BH3 Results (Mean Cented- Keep Negatives)
+```{r}
+pdf("~/Dropbox/BH3/Results/R_Output_Files/Peptide_only.pdf")
+par(cex.main=0.8)
+peptide_only_neg_MC=round(peptide_only_neg_MC, 2)
+
+
+heatmap.2(as.matrix(peptide_only_neg_MC),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(peptide_only_neg_MC), rowsep=1:length(peptide_only_neg_MC), main="Peptide Induced CytochromeC \nRelease",cexRow=0.8, cexCol=1.2,srtCol=45, margins = c(4, 13), cellnote = neg_neg_0_r, notecol = "black", notecex = 0.7)
+dev.off()
+
+
+
+
+peptide_only_neg_MC
+plot(peptide_only_neg_MC, type="o", col="blue")
+
+plot(bad_neg_MC[,11], type="o", col="blue")
+#lines(bim_neg_MC[,11], type="o", col="red")
+lines(noxa_neg_MC[,11], type="o", col="red")
+
+barplot(peptide_only_neg_MC)
+
+View(peptide_only_neg_MC)
+
+# peptide_only_0=round(peptide_only_0, 2)
+# heatmap.2(as.matrix(peptide_only_0),col=bluered, cellnote = peptide_only_0, notecol = "black", trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="CytoC Release for Each Peptide\n(Not-Mean Centered, Negs to 0)", cexRow=0.6, cexCol=0.8,srtCol=45, margins = c(4, 7))
+
+# barplot(as.matrix(peptide_only_0),col = c(rep("red",14), rep("green",14), rep("blue",14), rep("yellow",14)), cex.names = 0.4,horiz = F,beside = T,cex.axis = 0.5,main=paste("CytochromeC Release Due to Each Peptide Alone\n(Minus Neg Ctrl, Non-Mean Centered)"), ylim = c(-20,60), las=3)
+# # legend("topleft",legend=c("BAD", "BIM", "NOXA" ), col=c("red", "green","blue", "yellow"),lty = 1,lwd=10,cex = 1)
+
+########
+
+# neg_neg_0_r=round(neg_neg_0, 2)
+# heatmap.2(as.matrix(neg_neg_0_r),col=mycol_drug, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Response to Drugs Across \n Breast Cancer Subtypes",cexRow=0.75, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = neg_neg_0_r, notecol = "black", notecex = 0.7, breaks=breaks_drug)   
+
+# neg_neg_0_cor=round(cor(neg_neg_0,method="spearman", use="pairwise.complete.obs"),2)
+# neg_neg_0_cor
+# heatmap.2(as.matrix(neg_neg_0_cor),col=bluered,  na.rm=TRUE, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Correlation Between Drug \n Doses (All Cell Lines)",cexRow=0.75, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = neg_neg_0_cor, notecol = "black", notecex = 0.7)  
+
+######## 
+#peptides
+
+# bad_neg_pep_r=round(bad_neg_pep, 2)
+# heatmap.2(as.matrix(t(bad_neg_pep_r)),col=mycol, trace='none', breaks=breaks,na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Response to BAD Across \n Breast Cancer Subtypes",cexRow=0.75, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = t(bad_neg_pep_r), notecol = "black", notecex = 0.7)          
+# 
+# bim_neg_pep_r=round(bim_neg_pep, 2)
+# heatmap.2(as.matrix(t(bim_neg_pep_r)),col=mycol, trace='none', breaks=breaks,na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Response to BIM Across \n Breast Cancer Subtypes",cexRow=0.75, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = t(bim_neg_pep_r), notecol = "black", notecex = 0.7)          
+# 
+# #mycol_noxa <- colorpanel(length(break_noxa)-1,low="white",mid="blue",high="magenta")
+# noxa_neg_pep_r=round(noxa_neg_pep, 2)
+# heatmap.2(as.matrix(t(noxa_neg_pep_r)),col=mycol, trace='none',na.color="black",  density.info = 'none', breaks=breaks,sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Response to NOXA Across \n Breast Cancer Subtypes",cexRow=0.75, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = t(noxa_neg_pep_r), notecol = "black", notecex = 0.7)          
+
+#legend("topright",legend = c("Basal", "ERBB2-amp", "Claudin-low","Luminal", "NA"), col = c("gray", "blue","brown", "purple", "black"),  lty= 1,lwd = 10,cex = 0.55)
+#RowSideColors = c(rep("gray", sum(bad_neg_MC$Transcriptional.subtype...ERBB2.status=="Basal")),rep("blue", sum(bad_neg_MC$Transcriptional.subtype...ERBB2.status=="ERBB2-amp")),rep("brown", sum(bad_neg_MC$Transcriptional.subtype...ERBB2.status=="Claudin-low")),rep("purple", sum(bad_neg_MC$Transcriptional.subtype...ERBB2.status=="Luminal")))
+
+# peptide_only_neg_MC_0=round(peptide_only_neg_MC_0, 2)
+# heatmap.2(as.matrix(peptide_only_neg_MC_0),col=bluered, cellnote = peptide_only_neg_MC_0,notecol = "black",  trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="CytoC Release for Each Peptide \n(Mean Centered,Negs to 0 )",cexRow=0.75, cexCol=0.8,srtCol=45)
+
+# peptide_only=round(peptide_only, 2)
+# heatmap.2(as.matrix(peptide_only),col=bluered, cellnote = peptide_only, notecol = "black",  trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="CytoC Release for Each Peptide\n(Not-Mean Centered, Keep Negs)",cexRow=0.6, cexCol=0.8,srtCol=45, margins = c(4, 7))
+```
+
+#Now correlate with drug screen results with BH3 peptides
+# 1) Using -log EC50
+```{r}
+test=peptide_only_neg_MC
+#lets try mean centering, its the same as the raw data. 
+
+# ALl drugs from the drug screen 
+drug_screen_peptide_MC_cor=cor(drug_screen_drugs, peptide_only_neg_MC, method="spearman", use="pairwise.complete.obs")
+drug_screen_peptide_MC_cor=round(drug_screen_peptide_MC_cor, 2)
+par(cex.main=0.7)
+heatmap.2(as.matrix(drug_screen_peptide_MC_cor),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Correlation Between All Drugs(drug screen)\n & Peptide Induced CytoC Release in\n Breast Cancer Cell Lines(MC)",cexRow=0.75, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = drug_screen_peptide_MC_cor, notecol = "black", notecex = 0.7)  
+
+
+# BH3 mimetics Drugs only
+peptide_drug_screen_BH3drugs_MC_cor=cor(peptide_drug_screen_BH3drugs, peptide_only_neg_MC, method="spearman", use="pairwise.complete.obs")
+peptide_drug_screen_BH3drugs_MC_cor=round(peptide_drug_screen_BH3drugs_MC_cor, 2)
+par(cex.main=0.7)
+heatmap.2(as.matrix(peptide_drug_screen_BH3drugs_MC_cor),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Correlation Between BH3 Drugs(drug screen)\n & Peptide Induced CytoC Release in\n Breast Cancer Cell Lines(MC)",cexRow=0.75, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = peptide_drug_screen_BH3drugs_MC_cor, notecol = "black", notecex = 0.7) 
+
+# All Drugs From BH3
+peptide_drug_screen_allBH3drugs_MC_cor=cor(peptide_drug_screen_allBH3drugs, peptide_only_neg_MC, method="spearman", use="pairwise.complete.obs")
+peptide_drug_screen_allBH3drugs_MC_cor=round(peptide_drug_screen_allBH3drugs_MC_cor, 2)
+par(cex.main=0.7)
+heatmap.2(as.matrix(peptide_drug_screen_allBH3drugs_MC_cor),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Correlation Between Drugs(drug screen)\n & Peptide Induced CytoC Release in\n Breast Cancer Cell Lines(MC)",cexRow=0.75, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = peptide_drug_screen_allBH3drugs_MC_cor, notecol = "black", notecex = 0.7)   
+
+
+#pdf("~/Dropbox/BH3/Results/Peptide_BH3Drugs_Boxplots.pdf")
+  
+# boxplot2(peptide_only_neg_MC_0[,1]~drug_screen_zero1[,6], main="CytochromeC Release in Breast Cancer Cells(Drug Screen)",ylab="% CytoC Release", names=c("Non-Responders","Responders"))
+# mtext(side = 3,text = paste("BAD/UMI_zero p-val:",round(t.test(peptide_only_neg_MC_0[,1]~drug_screen_zero1[,6])$p.value,digits=3),sep="")) 
+# 
+# boxplot2(peptide_only_neg_MC_0[,1]~drug_screen_zero1[,10], main="CytochromeC Release in Breast Cancer Cells(Drug Screen)",ylab="% CytoC Release", names=c("Non-Responders","Responders"))
+# mtext(side = 3,text = paste("BAD/Navitaclax_zero p-val:",round(t.test(peptide_only_neg_MC_0[,1]~drug_screen_zero1[,10])$p.value,digits=3),sep="")) 
+# 
+# boxplot2(peptide_only_neg_MC_0[,1]~drug_screen_zero1[,11], main="CytochromeC Release in Breast Cancer Cells(Drug Screen) \n BAD/Obatoclax",ylab="% CytoC Release", names=c("Non-Responders","Responders"))
+# mtext(side = 3,text = paste("p-val:",round(t.test(peptide_only_neg_MC_0[,1]~drug_screen_zero1[,11])$p.value,digits=3),sep="")) 
+# 
+# # BIM
+# boxplot2(peptide_only_neg_MC_0[,2]~drug_screen_zero1[,6], main="CytochromeC Release in Breast Cancer Cells(Drug Screen)",ylab="% CytoC Release", names=c("Non-Responders","Responders"))
+# mtext(side = 3,text = paste("BIM/UMI_zero p-val:",round(t.test(peptide_only_neg_MC_0[,2]~drug_screen_zero1[,6])$p.value,digits=3),sep="")) 
+# 
+# boxplot2(peptide_only_neg_MC_0[,2]~drug_screen_zero1[,10], main="CytochromeC Release in Breast Cancer Cells(Drug Screen)",ylab="% CytoC Release", names=c("Non-Responders","Responders"))
+# mtext(side = 3,text = paste("BIM/Navitaclax_zero p-val:",round(t.test(peptide_only_neg_MC_0[,2]~drug_screen_zero1[,10])$p.value,digits=3),sep="")) 
+# 
+# boxplot2(peptide_only_neg_MC_0[,2]~drug_screen_zero1[,11], main="CytochromeC Release in Breast Cancer Cells(Drug Screen) \n BIM/Obatoclax",ylab="% CytoC Release", names=c("Non-Responders","Responders"))
+# mtext(side = 3,text = paste("p-val:",round(t.test(peptide_only_neg_MC_0[,2]~drug_screen_zero1[,11])$p.value,digits=3),sep="")) 
+# 
+# #NOXA
+# boxplot2(peptide_only_neg_MC_0[,3]~drug_screen_zero1[,6], main="CytochromeC Release in Breast Cancer Cells(Drug Screen)",ylab="% CytoC Release", names=c("Non-Responders","Responders"))
+# mtext(side = 3,text = paste("NOXA/UMI_zero p-val:",round(t.test(peptide_only_neg_MC_0[,2]~drug_screen_zero1[,6])$p.value,digits=3),sep="")) 
+# 
+# boxplot2(peptide_only_neg_MC_0[,3]~drug_screen_zero1[,10], main="CytochromeC Release in Breast Cancer Cells(Drug Screen)",ylab="% CytoC Release", names=c("Non-Responders","Responders"))
+# mtext(side = 3,text = paste("NOXA/Navitaclax_zero p-val:",round(t.test(peptide_only_neg_MC_0[,2]~drug_screen_zero1[,10])$p.value,digits=3),sep="")) 
+# 
+# boxplot2(peptide_only_neg_MC_0[,3]~drug_screen_zero1[,11], main="CytochromeC Release in Breast Cancer Cells(Drug Screen) \n BIM/Obatoclax",ylab="% CytoC Release", names=c("Non-Responders","Responders"))
+# mtext(side = 3,text = paste("NOXA/Obatoclx p-val:",round(t.test(peptide_only_neg_MC_0[,2]~drug_screen_zero1[,11])$p.value,digits=3),sep="")) 
+
+# didn't work, not enough observations. None were significant. Just plot the peptide ones : 3 peptides : 3 drugs nine graphs 
+```
+
+#Correlate BH3-memetics from Drug Screen with peptides
+# 1) (% response drug screen)
+```{r}
+View(neg_neg_0)
+#neg_neg_0=neg_neg_0[,c(2,4,5,8,10)]
+drugScreen_DrugRespose=read.table("~/Dropbox/Bild drug screen 2015/Plate_Layouts/Response/DrugScreen_Response_Shelley.txt", row.names=1, header = T,sep='\t', check.names=FALSE)
+View(drugScreen_DrugRespose)
+colnames(drugScreen_DrugRespose)=paste(colnames(drugScreen_DrugRespose),drugScreen_DrugRespose[1,], sep="_")
+
+#only keep cell lines used to BH3
+drugScreen_DrugRespose_allDrugs=drugScreen_DrugRespose[c(3,5,7,10:13,15,16,18,19,20,22,24),]
+drugScreen_DrugRespose_BH3Assay=drugScreen_DrugRespose_allDrugs[,c(6,13,21,78,85)]
+drugScreen_DrugRespose_BH3Drugs=drugScreen_DrugRespose_allDrugs[,c(48:59,90:95)]
+View(drugScreen_DrugRespose_BH3Drugs)
+
+#All Drugs
+par(cex.main=0.8)
+drugScreen_DrugRespose_BH3Assay=round(drugScreen_DrugRespose_BH3Assay,2)
+heatmap.2(as.matrix(drugScreen_DrugRespose_BH3Assay),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Drug Sensitivity(Drug Screen)(% Response)\nCommon Cell Lines Only",cexRow=0.75, cexCol=0.7,srtCol=45,margins = c(4, 9), cellnote = drugScreen_DrugRespose_BH3Assay, notecol = "black", notecex = 0.7)  
+
+#BH3 Mimetics
+par(cex.main=0.8)
+drugScreen_DrugRespose_BH3Drugs=round(drugScreen_DrugRespose_BH3Drugs,2)
+heatmap.2(as.matrix(drugScreen_DrugRespose_BH3Drugs),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Drug Screen(% Response) for BH3 Drugs \nCommon Cell Lines Only",cexRow=0.75, cexCol=0.7,srtCol=45,margins = c(4, 9), cellnote =drugScreen_DrugRespose_BH3Drugs, notecol = "black", notecex = 0.6, Colv = FALSE)  
+
+drugScreen_DrugRespose_Navatoclax=drugScreen_DrugRespose_BH3Drugs[,1:6]
+colnames(drugScreen_DrugRespose_Navatoclax)
+drugScreen_DrugRespose_Obata=drugScreen_DrugRespose_BH3Drugs[,7:12]
+colnames(drugScreen_DrugRespose_Obata)
+drugScreen_DrugRespose_UMI=drugScreen_DrugRespose_BH3Drugs[,13:18]
+colnames(drugScreen_DrugRespose_UMI)
+peptide_only_0=pmax(peptide_only, 0)
+peptide_only_0
+
+peptide_raw=round(cor(drugScreen_DrugRespose_BH3Drugs,peptide_only, method="spearman", use="pairwise.complete.obs"),2)
+peptide_raw_0=round(cor(drugScreen_DrugRespose_BH3Drugs,peptide_only_0, method="spearman", use="pairwise.complete.obs"),2)
+peptide_MC=round(cor(drugScreen_DrugRespose_BH3Drugs,peptide_only_neg_MC, method="spearman", use="pairwise.complete.obs"),2)
+peptide_MC_0=round(cor(drugScreen_DrugRespose_BH3Drugs,peptide_only_neg_MC_0, method="spearman", use="pairwise.complete.obs"),2)
+
+peptide_raw_Nav=round(cor(drugScreen_DrugRespose_Navatoclax,peptide_only, method="spearman", use="pairwise.complete.obs"),2)
+peptide_raw_0_Nav=round(cor(drugScreen_DrugRespose_Navatoclax,peptide_only_0, method="spearman", use="pairwise.complete.obs"),2)
+peptide_MC_Nav=round(cor(drugScreen_DrugRespose_Navatoclax,peptide_only_neg_MC, method="spearman", use="pairwise.complete.obs"),2)
+peptide_MC_0_Nav=round(cor(drugScreen_DrugRespose_Navatoclax,peptide_only_neg_MC_0, method="spearman", use="pairwise.complete.obs"),2)
+
+peptide_raw_Obata=round(cor(drugScreen_DrugRespose_Obata,peptide_only, method="spearman", use="pairwise.complete.obs"),2)
+peptide_raw_0_Obata=round(cor(drugScreen_DrugRespose_Obata,peptide_only_0, method="spearman", use="pairwise.complete.obs"),2)
+peptide_MC_Obata=round(cor(drugScreen_DrugRespose_Obata,peptide_only_neg_MC, method="spearman", use="pairwise.complete.obs"),2)
+peptide_MC_0_Obata=round(cor(drugScreen_DrugRespose_Obata,peptide_only_neg_MC_0, method="spearman", use="pairwise.complete.obs"),2)
+
+peptide_raw_UMI=round(cor(drugScreen_DrugRespose_UMI,peptide_only, method="spearman", use="pairwise.complete.obs"),2)
+peptide_raw_0_UMI=round(cor(drugScreen_DrugRespose_UMI,peptide_only_0, method="spearman", use="pairwise.complete.obs"),2)
+peptide_MC_UMI=round(cor(drugScreen_DrugRespose_UMI,peptide_only_neg_MC, method="spearman", use="pairwise.complete.obs"),2)
+peptide_MC_0_UMI=round(cor(drugScreen_DrugRespose_UMI,peptide_only_neg_MC_0, method="spearman", use="pairwise.complete.obs"),2)
+
+#pdf("~/Dropbox/BH3/Results/R_Output_Files/PeptidesVSBH3Drugs.pdf")
+
+par(cex.main=0.7)
+heatmap.2(as.matrix(peptide_MC_Nav),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Correlation Between Drug Response(Navitoclax)\n & Peptide Induced CytoC Release(Mean-Cented, With Negatives)",cexRow=0.75, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = peptide_MC_Nav, notecol = "black", notecex = 0.7)   
+
+par(cex.main=0.7)
+heatmap.2(as.matrix(peptide_MC_0_Nav),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Correlation Between Drug Response(Navitoclax) &\n  Peptide Induced CytoC Release\n(Mean-Cented, With Negatives to 0 )",cexRow=0.75, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = peptide_MC_0_Nav, notecol = "black", notecex = 0.7)   
+
+par(cex.main=0.7)
+heatmap.2(as.matrix(peptide_raw_Nav),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Correlation Between Drug Response(Navitoclax)\n & Peptide Induced CytoC Release(Raw, With Negatives)",cexRow=0.75, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = peptide_raw_Nav, notecol = "black", notecex = 0.7)   
+
+par(cex.main=0.7)
+heatmap.2(as.matrix(peptide_raw_0_Nav),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Correlation Between Drug Response(Navitoclax)\n & Peptide Induced CytoC Release(Raw, Negatives Set to 0)",cexRow=0.75, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = peptide_raw_0_Nav, notecol = "black", notecex = 0.7)   
+  
+#Plot Obata
+
+par(cex.main=0.7)
+heatmap.2(as.matrix(peptide_MC_Obata),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Correlation Between Drug Response(Obatoclax)\n & Peptide Induced CytoC Release(Mean-Cented, With Negatives)",cexRow=0.75, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = peptide_MC_Obata, notecol = "black", notecex = 0.7)   
+
+par(cex.main=0.7)
+heatmap.2(as.matrix(peptide_MC_0_Obata),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Correlation Between Drug Response(Obatoclax) &\n  Peptide Induced CytoC Release\n(Mean-Cented, With Negatives to 0 )",cexRow=0.75, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = peptide_MC_0_Obata, notecol = "black", notecex = 0.7)   
+
+par(cex.main=0.7)
+heatmap.2(as.matrix(peptide_raw_Obata),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Correlation Between Drug Response(Obatoclax)\n & Peptide Induced CytoC Release(Raw, With Negatives)",cexRow=0.75, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = peptide_raw_Obata, notecol = "black", notecex = 0.7)   
+
+par(cex.main=0.7)
+heatmap.2(as.matrix(peptide_raw_0_Obata),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Correlation Between Drug Response(Obatoclax)\n & Peptide Induced CytoC Release(Raw, Negatives Set to 0)",cexRow=0.75, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = peptide_raw_0_Obata, notecol = "black", notecex = 0.7)   
+  
+#Plot UMI 
+par(cex.main=0.7)
+heatmap.2(as.matrix(peptide_MC_UMI),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Correlation Between Drug Response(UMI-77)\n & Peptide Induced CytoC Release(Mean-Cented, With Negatives)",cexRow=0.75, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = peptide_MC_UMI, notecol = "black", notecex = 0.7)   
+
+par(cex.main=0.7)
+heatmap.2(as.matrix(peptide_MC_0_UMI),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Correlation Between Drug Response(UMI-77) &\n  Peptide Induced CytoC Release\n(Mean-Cented, With Negatives to 0 )",cexRow=0.75, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = peptide_MC_0_UMI, notecol = "black", notecex = 0.7)   
+
+par(cex.main=0.7)
+heatmap.2(as.matrix(peptide_raw_UMI),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Correlation Between Drug Response(UMI-77)\n & Peptide Induced CytoC Release(Raw, With Negatives)",cexRow=0.75, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = peptide_raw_UMI, notecol = "black", notecex = 0.7)   
+
+par(cex.main=0.7)
+heatmap.2(as.matrix(peptide_raw_0_UMI),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Correlation Between Drug Response(UMI-77)\n & Peptide Induced CytoC Release(Raw, Negatives Set to 0)",cexRow=0.75, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = peptide_raw_0_UMI, notecol = "black", notecex = 0.7)   
+  
+#Choose a drug dose for each BH3 drug
+
+# par(cex.main=0.7)
+# heatmap.2(as.matrix(peptide_MC),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Correlation Between Drug Response(drug screen)\n & Peptide Induced CytoC Release(Mean-Cented, With Negatives)",cexRow=0.75, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = peptide_MC, notecol = "black", notecex = 0.7)   
+# 
+# par(cex.main=0.7)
+# heatmap.2(as.matrix(peptide_MC_0),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Correlation Between Drug Response(drug screen) &\n  Peptide Induced CytoC Release\n(Mean-Cented, With Negatives to 0 )",cexRow=0.75, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = peptide_MC_0, notecol = "black", notecex = 0.7)   
+# 
+# par(cex.main=0.7)
+# heatmap.2(as.matrix(peptide_raw),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Correlation Between Drug Response(drug screen)\n & Peptide Induced CytoC Release(Raw, With Negatives)",cexRow=0.75, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = peptide_raw, notecol = "black", notecex = 0.7)   
+# 
+# par(cex.main=0.7)
+# heatmap.2(as.matrix(peptide_raw_0),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Correlation Between Drug Response(drug screen)\n & Peptide Induced CytoC Release(Raw, Negatives Set to 0)",cexRow=0.75, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = peptide_raw_0, notecol = "black", notecex = 0.7)   
+
+
+```
+
+#Correlate peptide response(BH3) with signatues 
+```{r}
+colnames(drug_screen_results)
+signatues=drug_screen_results[c(2,4,6,9:12,14,15,17,18,19,21,23),44:59]
+View(signatues)
+colnames(signatues)
+#View(signatues_single)
+
+signatues_Col=c("AKT_Single", "HER2_Single", "IGF1R_Single", "BAD_Single", "ERK_Single", "RAF_Single", "EGFR_Single", "KRASQG_Single", "KRASQV_Single", "KRASWT_Single", "AKT_Multi", "BAD_Multi", "HER2_Multi", "IGF1R_Multi", "ERK_Multi", "RAF_Multi")
+signatues_Col
+colnames(signatues)=signatues_Col
+signatues_single=signatues[,1:10]
+colnames(signatues_single)
+signatues_single_noERKKRAS=signatues_single[,c(-5,-10)]
+(signatues_single_noERKKRAS)
+colnames(signatues_single_noERKKRAS)=signatues_Col_single
+signatues_Col_single=c("AKT", "HER2", "IGF1R", "BAD", "RAF", "EGFR", "KRASQG", "KRASQV")
+
+# peptide_onlyMC_sig_cor=cor(signatues, peptide_only_neg_MC, method="spearman", use="pairwise.complete.obs")
+# peptide_onlyMC_sig_cor=round(peptide_onlyMC_sig_cor, 2)
+# par(cex.main=0.7)
+heatmap.2(as.matrix(peptide_onlyMC_sig_cor),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Correlation Between Signatures & Peptide Induced \nCytoC Release in Breast Cancer Cell Lines",cexRow=0.7, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = peptide_onlyMC_sig_cor, notecol = "black", notecex = 0.7)   
+# 
+# peptide_onlyMC_sig_cor=cor(signatues_single, peptide_only_neg_MC, method="spearman", use="pairwise.complete.obs")
+# peptide_onlyMC_sig_cor=round(peptide_onlyMC_sig_cor, 2)
+# par(cex.main=0.7)
+heatmap.2(as.matrix(peptide_onlyMC_sig_cor),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Correlation Between Signatures & Peptide Induced \nCytoC Release in Breast Cancer Cell Lines",cexRow=0.7, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = peptide_onlyMC_sig_cor, notecol = "black", notecex = 0.7)   
+
+pdf("~/Dropbox/BH3/Results/R_Output_Files/Signature_Peptide_Cor.pdf")
+peptide_onlyMC_sig_cor=cor(signatues_single_noERKKRAS, peptide_only_neg_MC, method="spearman", use="pairwise.complete.obs")
+peptide_onlyMC_sig_cor=round(peptide_onlyMC_sig_cor, 2)
+par(cex.main=0.7)
+heatmap.2(as.matrix(peptide_onlyMC_sig_cor),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Correlation Between Peptide Induced CytochromeC \n Release and Pathway Predictions ",cexRow=1.2, cexCol=1.2,srtCol=45,margins = c(4, 9), cellnote =peptide_onlyMC_sig_cor , notecol = "black", notecex = 0.7)   
+dev.off()
+
+#cellnote = peptide_onlyMC_sig_cor
+
+```
+
+############ DRUGS
+#1) BH3 Drugs Results
+#2) EC50 corrs
+#3) % Response Corrs
+```{r}
+
+# BH3 profiling results: Drug only, all cell lines
+neg_neg_0_drugs=round(neg_neg_0_drugs,2)
+View(neg_neg_0_drugs)
+par(cex.main=0.7)
+neg_neg_0_drugs
+heatmap.2(as.matrix(neg_neg_0_drugs),col=mycol,  na.rm=TRUE, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(neg_neg_0_drugs), rowsep=1:length(neg_neg_0_drugs), main="BH3: Drug Induced Cytochrome C Release Across \n Breast Cancer Subtypes",cexRow=0.75, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = neg_neg_0_drugs, notecol = "black", notecex = 0.7)  
+
+# BH3 profiling results: Correlating all drugs with eachother
+neg_neg_0_drugs_cor=round(cor(neg_neg_0_drugs,method="spearman", use="pairwise.complete.obs"),2)
+heatmap.2(as.matrix(neg_neg_0_drugs_cor),col=bluered,  na.rm=TRUE, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(neg_neg_0_drugs_cor), rowsep=1:length(neg_neg_0_drugs_cor), main="BH3: Correlation Between Drugs in BH3 Assay \n (All Cell Lines, No Peptide)",cexRow=0.75, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = neg_neg_0_drugs_cor, notecol = "black", notecex = 0.7)  
+
+#Correalte peptides with drugs (respose)(respose data %)
+#drugs only are neg. 
+
+####### EC50 Corrs######
+
+# Only drugs used in BH3 assay
+drugscrn_BH3drugs=round(cor(peptide_drug_screen_allBH3drugs,good_doses_only,method="spearman", use="pairwise.complete.obs"),2)
+par(cex.main=0.7)
+heatmap.2(as.matrix(drugscrn_BH3drugs),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="-LogEC50: Corr Between Drug Screen & \n BH3 Profiling",cexRow=0.7, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = drugscrn_BH3drugs, notecol = "black", notecex = 0.7)  
+
+# # All Drugs from Drug Screen
+# drugscrn_BH3drugs_all=round(cor(drug_screen_drugs,good_doses_only,method="spearman", use="pairwise.complete.obs"),2)
+# par(cex.main=0.8)
+# heatmap.2(as.matrix(drugscrn_BH3drugs_all),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Corr Between Drug Response(drug screen) & \n Drug Induced CytoC Release in \n Breast Cancer Cell Lines",cexRow=0.7, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = drugscrn_BH3drugs_all, notecol = "black", notecex = 0.7)   
+
+
+###### % Response Cors ###########
+##Corelate BH3 with Drug Response % for the dose
+drug_only_cor=round(cor(drugScreen_DrugRespose_BH3Assay,neg_neg_0, method="spearman", use="pairwise.complete.obs"),2)
+par(cex.main=0.7)
+heatmap.2(as.matrix(drug_only_cor),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Drug Response %: Correlation Between Drug Screen\n & BH3 profiling",cexRow=0.75, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = drug_only_cor, notecol = "black", notecex = 0.7)  
+
+drugs_only=neg_neg_0[,1:10]
+drugs_only
+good_doses_only=drugs_only[,c(2,4,5,8,10)]
+peptide_drug_only=cbind(good_doses_only,peptide_only_neg_MC)
+```
+
+#now correlate drug response(BH3) with signatures
+```{r}
+
+View(signatues)
+
+drug_signature_cor=round(cor(signatues, good_doses_only, method="spearman", use="pairwise.complete.obs"),2)
+par(cex.main=0.7)
+heatmap.2(as.matrix(drug_signature_cor),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Correlation Between Signatures & Drug \n Inducted CytoC Release in Breast Cancer\n Cell Lines",cexRow=0.7, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = drug_signature_cor, notecol = "black", notecex = 0.7)
+
+drug_signature_cor=round(cor(signatues_single, good_doses_only, method="spearman", use="pairwise.complete.obs"),2)
+par(cex.main=0.7)
+heatmap.2(as.matrix(drug_signature_cor),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Correlation Between Signatures & Drug \n Inducted CytoC Release in Breast Cancer\n Cell Lines",cexRow=0.7, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = drug_signature_cor, notecol = "black", notecex = 0.7) 
+
+drug_signature_cor=round(cor(signatues_single_noERKKRAS, good_doses_only, method="spearman", use="pairwise.complete.obs"),2)
+par(cex.main=0.7)
+heatmap.2(as.matrix(drug_signature_cor),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Correlation Between Signatures & Drug \n Inducted CytoC Release in Breast Cancer\n Cell Lines",cexRow=0.7, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = drug_signature_cor, notecol = "black", notecex = 0.7) 
+```
+
+
+#Synergy Results
+```{r}
+bad_neg_pep_rm_drug_r=round(bad_neg_pep_rm_drug, 2)
+heatmap.2(as.matrix(t(bad_neg_pep_rm_drug_r)),col=mycol_rm_drug, trace='none', breaks=breaks_rm_drug,na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(bad_neg_pep_rm_drug_r), rowsep=1:length(bad_neg_pep_rm_drug_r), main="Synergy Between BAD and Drugs Across \n Breast Cancer Subtypes",cexRow=0.75, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = t(bad_neg_pep_rm_drug_r), notecol = "black", notecex = 0.7)          
+
+bim_neg_pep_rm_drug_r=round(bim_neg_pep_rm_drug, 2)
+heatmap.2(as.matrix(t(bim_neg_pep_rm_drug_r)),col=mycol_rm_drug, trace='none',na.color="black",  density.info = 'none', breaks=breaks_rm_drug,sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(bim_neg_pep_rm_drug_r), rowsep=1:length(bim_neg_pep_rm_drug_r), main="Synergy Between BIM and Drugs Across \n Breast Cancer Subtypes",cexRow=0.75, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = t(bim_neg_pep_rm_drug_r), notecol = "black", notecex = 0.7)       
+
+#mycol_noxa <- colorpanel(length(break_noxa)-1,low="white",mid="blue",high="magenta")
+noxa_neg_pep_rm_drug_r=round(noxa_neg_pep_rm_drug, 2)
+heatmap.2(as.matrix(t(noxa_neg_pep_rm_drug_r)),col=mycol_rm_drug, trace='none',na.color="black",  density.info = 'none', breaks=breaks_rm_drug,sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(noxa_neg_pep_rm_drug_r), rowsep=1:length(noxa_neg_pep_rm_drug_r), main="Synergy Between NOXA and Drugs Across \n Breast Cancer Subtypes",cexRow=0.75, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = t(noxa_neg_pep_rm_drug_r), notecol = "black", notecex = 0.7)   
+
+
+#### Correlate with Synergy EC50 data
+
+synergy_signature_cor_bad=round(cor(signatues_single_noERKKRAS, t(bad_neg_pep_rm_drug), method="spearman", use="pairwise.complete.obs"),2)
+par(cex.main=0.7)
+heatmap.2(as.matrix(synergy_signature_cor_bad),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Correlation Between Signatures & Drug/BAD \n Synergy in Breast Cancer Cell Lines",cexRow=0.7, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = synergy_signature_cor_bad, notecol = "black", notecex = 0.7)
+
+synergy_signature_cor_bim=round(cor(signatues_single_noERKKRAS, t(bim_neg_pep_rm_drug), method="spearman", use="pairwise.complete.obs"),2)
+par(cex.main=0.7)
+heatmap.2(as.matrix(synergy_signature_cor_bim),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Correlation Between Signatures and Drug/BIM \n Synergy in Breast Cancer Cell Lines",cexRow=0.7, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = synergy_signature_cor_bim, notecol = "black", notecex = 0.7)  
+
+synergy_signature_cor_noxa=round(cor(signatues_single_noERKKRAS, t(noxa_neg_pep_rm_drug), method="spearman", use="pairwise.complete.obs"),2)
+par(cex.main=0.7)
+heatmap.2(as.matrix(synergy_signature_cor_noxa),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Corr. Between Signatures and Drug/NOXA \n Synergy in Breast Cancer Cell Lines",cexRow=0.7, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = synergy_signature_cor_noxa, notecol = "black", notecex = 0.7) 
+
+# synergy_signature_cor_bad=round(cor(signatues, t(bad_neg_pep_rm_drug), method="spearman", use="pairwise.complete.obs"),2)
+# par(cex.main=0.7)
+# heatmap.2(as.matrix(synergy_signature_cor_bad),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Correlation Between Signatures & Drug/BAD \n Synergy in Breast Cancer Cell Lines",cexRow=0.7, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = synergy_signature_cor_bad, notecol = "black", notecex = 0.7) 
+# 
+# synergy_signature_cor_bad=round(cor(signatues_single, t(bad_neg_pep_rm_drug), method="spearman", use="pairwise.complete.obs"),2)
+# par(cex.main=0.7)
+# heatmap.2(as.matrix(synergy_signature_cor_bad),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Correlation Between Signatures & Drug/BAD \n Synergy in Breast Cancer Cell Lines",cexRow=0.7, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = synergy_signature_cor_bad, notecol = "black", notecex = 0.7)
+
+# synergy_signature_cor_bim=round(cor(signatues, t(bim_neg_pep_rm_drug), method="spearman", use="pairwise.complete.obs"),2)
+# par(cex.main=0.7)
+# heatmap.2(as.matrix(synergy_signature_cor_bim),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Correlation Between Signatures and Drug/BIM \n Synergy in Breast Cancer Cell Lines",cexRow=0.7, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = synergy_signature_cor_bim, notecol = "black", notecex = 0.7)  
+# 
+# synergy_signature_cor_bim=round(cor(signatues_single, t(bim_neg_pep_rm_drug), method="spearman", use="pairwise.complete.obs"),2)
+# par(cex.main=0.7)
+# heatmap.2(as.matrix(synergy_signature_cor_bim),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Correlation Between Signatures and Drug/BIM \n Synergy in Breast Cancer Cell Lines",cexRow=0.7, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = synergy_signature_cor_bim, notecol = "black", notecex = 0.7)  
+
+# synergy_signature_cor_noxa=round(cor(signatues, t(noxa_neg_pep_rm_drug), method="spearman", use="pairwise.complete.obs"),2)
+# par(cex.main=0.7)
+# heatmap.2(as.matrix(synergy_signature_cor_noxa),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Corr. Between Signatures and Drug/NOXA \n Synergy in Breast Cancer Cell Lines",cexRow=0.7, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = synergy_signature_cor_noxa, notecol = "black", notecex = 0.7) 
+# 
+# synergy_signature_cor_noxa=round(cor(signatues_single, t(noxa_neg_pep_rm_drug), method="spearman", use="pairwise.complete.obs"),2)
+# par(cex.main=0.7)
+# heatmap.2(as.matrix(synergy_signature_cor_noxa),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Corr. Between Signatures and Drug/NOXA \n Synergy in Breast Cancer Cell Lines",cexRow=0.7, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = synergy_signature_cor_noxa, notecol = "black", notecex = 0.7) 
+
+#Correlate with Synergy(respose data %)
+bim_neg_pep_rm_drug
+
+synergy_bim_cor=round(cor(t(bim_neg_pep_rm_drug),drugScreen_DrugRespose_BH3Assay, method="spearman", use="pairwise.complete.obs"),2)
+synergy_bad_cor=round(cor(t(bad_neg_pep_rm_drug),drugScreen_DrugRespose_BH3Assay, method="spearman", use="pairwise.complete.obs"),2)
+synergy_noxa_cor=round(cor(t(noxa_neg_pep_rm_drug),drugScreen_DrugRespose_BH3Assay, method="spearman", use="pairwise.complete.obs"),2)
+
+synergy_bim_cor
+par(cex.main=0.7)
+heatmap.2(as.matrix(synergy_bim_cor),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Correlation Between Drug Response %(drug screen)\n & BIM/drug Synergy",cexRow=0.75, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = synergy_bim_cor, notecol = "black", notecex = 0.7)  
+
+par(cex.main=0.7)
+heatmap.2(as.matrix(synergy_bad_cor),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Correlation Between Drug Response %(drug screen)\n & BAD/Drug Synergy",cexRow=0.75, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = synergy_bad_cor, notecol = "black", notecex = 0.7)  
+
+par(cex.main=0.7)
+heatmap.2(as.matrix(synergy_noxa_cor),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test), main="Correlation Between Drug Response %(drug screen)\n & NOXA/Drug Synergy",cexRow=0.75, cexCol=0.8,srtCol=45,margins = c(4, 9), cellnote = synergy_bim_cor, notecol = "black", notecex = 0.7)  
+
+dev.off()
+
+```
+
+
+
+
+
+
+
+
+
+
+#Plot everything
+```{r}
+##############################
+
+# plot_everything("~/Dropbox/BH3/Final_NewGates/BH3_Graphs_New_Normorlization_newNA_rmdrugs2.pdf", DMSO_only = ranked_DMSO_only, bad=ranked_bad_rmdrug, bim= ranked_bim_rmdrug, noxa= ranked_noxa_rmdrug, all_peptides = ranked_all_rmdrug, bad_sub = subtype_pred_bad_response_rmdrug, bim_sub = subtype_pred_bim_response_rmdrug , noxa_sub = subtype_pred_noxa_response_rmdrug  )
+# 
+# # Remove drug and rm HCC1419
+# plot_everything("~/Dropbox/BH3/Final_NewGates/BH3_Graphs_New_Normorlization_newNA_rmdrugs_rm1419.pdf", DMSO_only = ranked_DMSO_only, bad=ranked_bad_rmdrug_rm1419, bim= ranked_bim_rmdrug_rm1419, noxa= ranked_noxa_rmdrug_rm1419, all_peptides = ranked_all_rmdrug_rm1419, bad_sub = subtype_pred_bad_response_rmdrug_rm1419, bim_sub = subtype_pred_bim_response_rmdrug_rm1419 , noxa_sub = subtype_pred_noxa_response_rmdrug_rm1419, DMSO_only_subtype= DMSO_only_subtype  )
+# 
+# # Remove drug and rm HCC1419 and subtract peptides
+# plot_everything("~/Dropbox/BH3/Final_NewGates/BH3_Graphs_New_Normorlization_minusPeptide.pdf", DMSO_only = all_prenorm_DMSO, bad=ranked_bad_rmdrug_rm1419, bim= ranked_bim_rmdrug_rm1419, noxa= ranked_noxa_rmdrug_rm1419, all_peptides = ranked_all_rmdrug_rm1419, bad_subtype = subtype_pred_bad_response_rmdrug_rm1419, bim_subtype = subtype_pred_bim_response_rmdrug_rm1419 , noxa_subtype = subtype_pred_noxa_response_rmdrug_rm1419)
+# 
+# # Set the negatives to zeros and divide out the peptides (Diving basal death by true control)
+# 
+# plot_everything("~/Dropbox/BH3/Final_NewGates/BH3_Graphs_New_Normorlization_minusPeptde_usingNegative4.pdf", bad= bad_neg[-11,], bim= bim_neg[-11,] , noxa= noxa_neg[-11,] , bad_subtype = subtype_pred_bad_response_neg, bim_subtype = subtype_pred_bim_response_neg , noxa_subtype = subtype_pred_noxa_response_neg)
+# 
+# break_noxa=(seq(1,10, by=0.025))
+# plot_everything("~/Dropbox/BH3/Final_NewGates/BH3_Graphs_New_Normorlization_minusPeptde_usingRowMin4.pdf", bad= bad_rowmin[-11,], bim= bim_rowmin[-11,] , noxa= noxa_rowmin[-11,] , bad_subtype = subtype_pred_bad_response_rowmin, bim_subtype = subtype_pred_bim_response_rowmin , noxa_subtype = subtype_pred_noxa_response_rowmin)
+
+
+# #pdf("~/Dropbox/BH3/Final_NewGates/testing3.pdf")
+# heatmap.2(as.matrix(test, na.rm=TRUE, na.color="black", RowSideColors = c(rep("gray", sum(subtype_pred_bad_response_rowmin$Transcriptional.subtype...ERBB2.status=="Basal")),rep("blue", sum(subtype_pred_bad_response_rowmin$Transcriptional.subtype...ERBB2.status=="ERBB2-amp")),rep("brown", sum(subtype_pred_bad_response_rowmin$Transcriptional.subtype...ERBB2.status=="Claudin-low")),rep("purple", sum(subtype_pred_bad_response_rowmin$Transcriptional.subtype...ERBB2.status=="Luminal"))) ,cexRow=0.7, cexCol=0.7,srtCol=45,col= bluered, density.info = 'none',trace="none",main="Response to BAD Peptide Across \n Breast Cancer Subtypes(not scaled)"))
+# #dev.off()
+
+# breaks=seq(0, 1, by=1) #41 values
+# breaks2=seq(1, 11, by=0.01)
+# breaks=append(breaks2, 17)
+# breaks
+# #create colour panel with length(breaks)-1 colours
+# mycol <- colorpanel(n=length(breaks)-1,low="white",mid="blue",high="magenta")
+# 
+# drug_cors_bad=round(cor(t(bad_neg[-11,]),method="spearman", use="pairwise.complete.obs"),2)
+# View(drug_cors_bad)
+# drug_cors_bim=round(cor(t(bim_neg[-11,]),method="spearman", use="pairwise.complete.obs"),2)
+# drug_cors_noxa=round(cor(t(noxa_neg[-11,]),method="spearman", use="pairwise.complete.obs"),2)
+# # following code limits the lowest and highest color to 5%, and 95% of your range, respectively
+# quantile.range_cor_bad <- quantile(drug_cors_bad,probs = seq(0, 1, 0.01), na.rm = TRUE)
+# quantile.range_cor_bad 
+# quantile.range_cor_bim <- quantile(drug_cors_bim,probs = seq(0, 1, 0.01), na.rm = TRUE)
+# quantile.range_cor_bim 
+# quantile.range_cor_noxa <- quantile(drug_cors_noxa,probs = seq(0, 1, 0.01), na.rm = TRUE)
+# quantile.range_cor_noxa 
+# 
+# palette.breaks_cor_bad=seq(quantile.range_cor_bad["5%"], quantile.range_cor_bad["95%"],0.1 )
+# palette.breaks_cor_bad
+# palette.breaks_cor_bim=seq(quantile.range_cor_bim["5%"], quantile.range_cor_bim["95%"],0.1 )
+# palette.breaks_cor_bim
+# palette.breaks_cor_noxa=seq(quantile.range_cor_noxa["5%"], quantile.range_cor_noxa["95%"],0.1 )
+# 
+# quantile.range_bad <- quantile(subtype_pred_bad_response_rowmin[,22:31],probs = seq(0, 1, 0.01), na.rm = TRUE)
+# quantile.range_bad
+# quantile.range_bim <- quantile(subtype_pred_bim_response_rowmin[,22:31], seq(0, 1, 0.01), na.rm = TRUE)
+# quantile.range_bim
+# quantile.range_noxa <- quantile(subtype_pred_noxa_response_rowmin[,22:31],probs = seq(0, 1, 0.01), na.rm = TRUE)
+# quantile.range_noxa_neg <- quantile(subtype_pred_noxa_response_neg[,22:31],probs = seq(0, 1, 0.01), na.rm = TRUE)
+# quantile.range_noxa_neg
+# max(quantile.range_noxa_neg, rm.na=TRUE)
+# 
+# palette.breaks_bad=seq(quantile.range_bad["16%"], quantile.range_bad["99%"],0.1 )
+# palette.breaks_bad
+# palette.breaks_bim=seq(quantile.range_bim ["38%"], quantile.range_bim["97%"],0.1 )
+# palette.breaks_bim
+# palette.breaks_noxa=seq(quantile.range_noxa["1%"], quantile.range_noxa["100%"],0.1 )
+# palette.breaks_noxa
+# 
+# View(subtype_pred_bad_response_neg)
+# View(subtype_pred_noxa_response_neg)
+# max(subtype_pred_bad_response_rowmin[,22:31], na.rm=TRUE)
+# max(subtype_pred_bad_response_neg[,22:31], na.rm=TRUE)
+# 
+# max(subtype_pred_bim_response_rowmin[,22:31], na.rm=TRUE)
+# max(subtype_pred_bim_response_neg[,22:31], na.rm=TRUE)
+# 
+# max(subtype_pred_noxa_response_rowmin[,22:31], na.rm=TRUE)
+# max(subtype_pred_noxa_response_neg[,22:31], na.rm=TRUE)
+# View(subtype_pred_noxa_response_rowmin)
+# View(subtype_pred_noxa_response_neg)
+# 
+# max(bad_rowmin, na.rm=TRUE)
+# max(bim_neg, na.rm=TRUE)
+# max(bim_rowmin, na.rm=TRUE)
+# max(noxa_neg, na.rm=TRUE)
+# max(noxa_rowmin, na.rm=TRUE)
+
+
+```
+
+# Define the plot everything function
+```{r}
+# plot_everything=function(PDFname, bad, bim, noxa, bad_subtype, bim_subtype, noxa_subtype){
+# pdf(PDFname)
+#  
+#  #unranked raw
+# barplot(as.matrix(raw_mean_cyto_reponse_ordered[11,1:56]),col = c(rep("red",14), rep("green",14), rep("blue",14), rep("yellow",14)), cex.names = 0.4,horiz = F,beside = T,cex.axis = 0.5,main=paste("CytochromeC Release Due to Each Peptide Alone\n(Raw, Unranked)"), ylim = c(0,60), las=3)
+# legend("topleft",legend=c("BAD", "BIM", "No Peptide", "NOXA" ), col=c("red", "green","blue", "yellow"),lty = 1,lwd=10,cex = 1)
+# 
+# #ranked raw
+# 
+# ranked_raw_all[11,1:56]
+# barplot(as.matrix(ranked_raw_all[11,1:56]),col = c(rep("red",14), rep("green",14), rep("blue",14), rep("yellow",14)), cex.names = 0.4,horiz = F,beside = T,cex.axis = 0.5,main=paste("CytochromeC Release Due to Each Peptide Alone\n(Raw, Ranked)"), ylim = c(0,25), las=3)
+# legend("topleft",legend=c("BAD", "BIM", "No Peptide", "NOXA" ), col=c("red", "green","blue", "yellow"),lty = 1,lwd=10,cex = 1)
+# 
+# #raw
+# mycol_raw <- colorpanel(1001,low="white",mid="blue",high="red")
+# 
+# peptide_only_raw=round(peptide_only_raw,2)
+# heatmap.2(as.matrix(peptide_only_raw),col=mycol_raw , trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), cellnote = (peptide_only_raw), notecol= "black", rowsep=1:length(test),RowSideColors = c(rep("gray", sum(noxa_subtype_raw$Transcriptional.subtype...ERBB2.status=="Basal")),rep("blue", sum(noxa_subtype_raw$Transcriptional.subtype...ERBB2.status=="ERBB2-amp")),rep("brown", sum(noxa_subtype_raw$Transcriptional.subtype...ERBB2.status=="Claudin-low")),rep("purple", sum(noxa_subtype_raw$Transcriptional.subtype...ERBB2.status=="Luminal"))), main="CytoC Release(Peptide Alone)\n(Raw, Unranked)",cexRow=0.75, cexCol=0.8,srtCol=45)          
+# legend("topright",legend = c("Basal", "ERBB2-amp", "Claudin-low","Luminal", "NA"), col = c("gray", "blue","brown", "purple", "black"),  lty= 1,lwd = 10,cex = 0.55)
+# 
+# heatmap.2(as.matrix(peptide_only_raw_rank),col=mycol_raw, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), cellnote = (peptide_only_raw_rank), notecol= "black", rowsep=1:length(test),RowSideColors = c(rep("gray", sum(noxa_subtype_raw$Transcriptional.subtype...ERBB2.status=="Basal")),rep("blue", sum(noxa_subtype_raw$Transcriptional.subtype...ERBB2.status=="ERBB2-amp")),rep("brown", sum(noxa_subtype_raw$Transcriptional.subtype...ERBB2.status=="Claudin-low")),rep("purple", sum(noxa_subtype_raw$Transcriptional.subtype...ERBB2.status=="Luminal"))), main="CytoC Release(Peptide Alone)\n(Raw,Ranked)",cexRow=0.75, cexCol=0.8,srtCol=45)          
+# legend("topright",legend = c("Basal", "ERBB2-amp", "Claudin-low","Luminal", "NA"), col = c("gray", "blue","brown", "purple", "black"),  lty= 1,lwd = 10,cex = 0.55)
+# #dev.off()
+
+######### Normalized
+
+
+
+#  drug_cors_bad=round(cor(t(bad),method="spearman", use="pairwise.complete.obs"),2)
+#  heatmap.2(drug_cors_bad,cellnote=drug_cors_bad, notecol="black",notecex=0.7,  col = bluered,density.info = "none",trace="none",margins = c(10,8),main="Drug correlations(BAD)")
+#  drug_cors_bim=round(cor(t(bim),method="spearman", use="pairwise.complete.obs"),2)
+#  
+#  heatmap.2(drug_cors_bim,cellnote=drug_cors_bim, notecol="black",notecex=0.7,  col = bluered,density.info = "none",trace="none",margins = c(10,8),main="Drug correlations(BIM)")
+#  drug_cors_noxa=round(cor(t(noxa),method="spearman", use="pairwise.complete.obs"),2)
+#  
+#  heatmap.2(drug_cors_noxa,cellnote=drug_cors_noxa, notecol="black",notecex=0.7, col = bluered,density.info = "none",trace="none",margins = c(10,8),main="Drug correlations(NOXA)")
+
+
+# heatmap.2(as.matrix(bim_subtype[,22:31]), na.rm=TRUE, na.color="black", RowSideColors = c(rep("gray", sum(bim_subtype$Transcriptional.subtype...ERBB2.status=="Basal")),rep("blue", sum(bim_subtype$Transcriptional.subtype...ERBB2.status=="ERBB2-amp")),rep("brown", sum(bim_subtype$Transcriptional.subtype...ERBB2.status=="Claudin-low")),rep("purple", sum(bim_subtype$Transcriptional.subtype...ERBB2.status=="Luminal"))),cexRow=0.7, cexCol=0.7,srtCol=45,breaks=palette.breaks_bim, col=bluered,density.info = 'none',trace="none",main="Response to BIM Peptide Across \n Breast Cancer Subtypes(not scaled)")
+# par(lend = 1)          
+# legend("topright",legend = c("Basal", "ERBB2-amp", "Claudin-low","Luminal", "NA"), col = c("gray", "blue","brown", "purple", "black"),  lty= 1,lwd = 10,cex = 0.55)
+# 
+# heatmap.2(as.matrix(noxa_subtype[,22:31]), na.rm=TRUE, na.color="black", RowSideColors = c(rep("gray", sum(noxa_subtype$Transcriptional.subtype...ERBB2.status=="Basal")),rep("blue", sum(noxa_subtype$Transcriptional.subtype...ERBB2.status=="ERBB2-amp")),rep("brown", sum(noxa_subtype$Transcriptional.subtype...ERBB2.status=="Claudin-low")),rep("purple", sum(noxa_subtype$Transcriptional.subtype...ERBB2.status=="Luminal"))),cexRow=0.7, cexCol=0.7,srtCol=45,breaks=palette.breaks_noxa, col=bluered,density.info = 'none',trace="none",main="Response to NOXA Peptide Across \n Breast Cancer Subtypes(not scaled)")
+# par(lend = 1)          
+# legend("topright",legend = c("Basal", "ERBB2-amp", "Claudin-low","Luminal", "NA"), col = c("gray", "blue","brown", "purple", "black"),  lty= 1,lwd = 10,cex = 0.55)
+# 
+
+# #plotting all pepties for all drugs
+# heatmap.2(as.matrix(t(all_peptides)), na.rm=TRUE, na.color="black", col=bluered,density.info = "none",trace="none",margins = c(10,8.2),cexRow=0.45, main="CytoC Release(all peptides)\nRaw-Basal Death-Drug Death")
+
+#Correlating Drugs with each other for each peptide
+
+# drug_cors=round(cor(t(all_peptides),method="spearman", use="pairwise.complete.obs"),2)
+# heatmap.2(drug_cors,cellnote=drug_cors, notecol="black",notecex=0.7,breaks=bk, col = bluered,density.info = "none",trace="none",margins = c(10,8),main="Drug correlations All Peptides")
+
+# Plotting the response in each peptide for peptides seperatly
+# heatmap.2(as.matrix(t(bad)), na.rm=TRUE, na.color="black", col=bluered,density.info = "none",trace="none",margins = c(10,8.2),cexRow=0.7, main="CytoC Release(BAD)\nRaw-Basal Death-Drug Death")
+# heatmap.2(as.matrix(t(bim)), na.rm=TRUE, na.color="black", col=bluered,density.info = "none",trace="none",margins = c(10,8.2),cexRow=0.7, main="CytoC Release(BIM)\nRaw-Basal Death-Drug Death")
+# heatmap.2(as.matrix(t(noxa)), na.rm=TRUE, na.color="black", col=bluered,density.info = "none",trace="none",margins = c(10,8.2),cexRow=0.7, main="CytoC Release(NOXA)\nRaw-Basal Death-Drug Death")
+
+# heatmap.2(as.matrix(t(Neg_only_raw_mean_cytoC_minus_death)), na.rm=TRUE, na.color="black", col=bluered,density.info = "none",trace="none", margins = c(10,8.2),cexRow=0.45, main="CytoC Release for Drug Only\n(no peptide)(RAW-Basal Death)")
+
+ # barplot((as.matrix(DMSO_only)),col = c(rep("red",15), rep("green",15), rep("blue",15)), cex.names = 0.5,horiz = F,beside = T,cex.axis = 0.5,main=paste("CytoC Release Ranked Peptide Only (no drug)\n(Raw Data - Basal Death - Drug Death)"), ylim = c(0,30))
+# legend("topright",legend=c("BAD", "BIM", "NOXA" ), col=c("red", "green","blue"),lty = 1,lwd=10,cex = 1)
+
+# #subtypes
+# #DMSO only subtype
+# heatmap.2(as.matrix(DMSO_only_subtype[,22:24]), na.rm=TRUE, na.color="black", RowSideColors = c(rep("gray", sum(DMSO_only_subtype$Transcriptional.subtype...ERBB2.status=="Basal")),rep("blue", sum(DMSO_only_subtype$Transcriptional.subtype...ERBB2.status=="ERBB2-amp")),rep("brown", sum(DMSO_only_subtype$Transcriptional.subtype...ERBB2.status=="Claudin-low")),rep("purple", sum(DMSO_only_subtype$Transcriptional.subtype...ERBB2.status=="Luminal"))),cexRow=0.7, cexCol=0.7,srtCol=45,col=bluered,density.info = 'none',trace="none",main="Response to Peptide(no drug) Across \n Breast Cancer Subtypes(")
+# par(lend = 1)          
+# legend("topright",legend = c("Basal", "ERBB2-amp", "Claudin-low","Luminal", "NA"), col = c("gray", "blue","brown", "purple", "black"),  lty= 1,lwd = 10,cex = 0.55)
+#dev.off()
+} 
+
+```
+
+#Normalization True Neg and subtracting out the positive control(Jeremy Ryan way) (Not using)
+```{r}
+# ####Create Normalization Function###
+# peptide_norm<-function(x,pos,neg){
+#   return (1-((x-pos)/(neg-pos)))
+# }
+# 
+# ### normalization with True Negative Control
+# #Remove the Controls for the heat maps
+# normalized_cyto_c_release_no_control=NULL
+# normalized_cyto_c_release_no_control <- alt_normalized_cyto_c_release[-11,c(-4, -5,-9,-10,-14,-15,-19,-20,-24,-25,-29,-30,-34,-35, -39,-40,-44,-45,-49,-50,-54,-55,-59,-60,-64,-65,-69,-70,-74,-75)]
+# normalized_cyto_c_release_no_control_wDMSO <- alt_normalized_cyto_c_release[,c(-4, -5,-9,-10,-14,-15,-19,-20,-24,-25,-29,-30,-34,-35, -39,-40,-44,-45,-49,-50,-54,-55,-59,-60,-64,-65,-69,-70,-74,-75)]
+# write.table(alt_normalized_cyto_c_release,"~/Documents/Multipathway_Modeling/BH3_Profiling/Final_NewGates/Normalized_BH3_CytoC_NewGates.txt",sep='\t',quote=F,col.names = NA)
+# write.table(normalized_cyto_c_release_no_control,"~/Documents/Multipathway_Modeling/BH3_Profiling/Final_NewGates/Normalized_BH3_CytoC_NewGates_NoControls.txt",sep='\t',quote=F,col.names = NA)
+# 
+# #Remove Pos Control
+# normalized_cyto_c_release_TrueNeg_noPos=NULL
+# for(i in 1:ncol(normalized_cyto_c_release_TrueNeg)){
+#   tmp_col=normalized_cyto_c_release_TrueNeg[,i]
+#   if(strsplit(colnames(normalized_cyto_c_release_TrueNeg)[i],split = "_")[[1]][1]!="Pos"){
+#     normalized_cyto_c_release_TrueNeg_noPos=cbind(normalized_cyto_c_release_TrueNeg_noPos,tmp_col)
+#     colnames(normalized_cyto_c_release_TrueNeg_noPos)[ncol(normalized_cyto_c_release_TrueNeg_noPos)]=colnames(normalized_cyto_c_release_TrueNeg)[i]    
+#   }
+# }
+# 
+#  # Remove DMSO from True Control Norm
+# normalized_cyto_c_release_TrueNeg_DMSO=t(normalized_cyto_c_release_TrueNeg[11,])
+# normalized_cyto_c_release_TrueNeg_DMSO=normalized_cyto_c_release_TrueNeg_DMSO[,order(colnames(normalized_cyto_c_release_TrueNeg_DMSO))]
+# normalized_cyto_c_release_TrueNeg_DMSO=t(normalized_cyto_c_release_TrueNeg_DMSO)
+# row.names(normalized_cyto_c_release_TrueNeg_DMSO)="DMSO"
+# # Remove the No Drug/Peptide only controls 
+# Neg_Ctrl_TrueNeg=normalized_cyto_c_release_TrueNeg[,c(5,10,15,20,25,30,35,40,45,50,55,60,65,70,75)]
+```
+
+# Old not using
+```{r}
+# ### Normalzing to the No Peptide + Drug Control
+# normalized_cyto_c_release_noPeptide_Drug=matrix(data = NA,ncol = ncol(mean_cyto),nrow = nrow(mean_cyto))
+# dimnames(normalized_cyto_c_release_noPeptide_Drug)=dimnames(mean_cyto)
+# neg_noPeptide=NULL
+# j=k=1
+# for(i in 0:14){ # loop through all 15 cols and calculate response
+#   tmp<-mean_cyto[,(i*5+1):(i*5+5)] #just take all cols for 1 cell line 
+#   pos<-mean(tmp[,4],na.rm = T) #get the mean of the + controls
+#   neg_noPeptide<-tmp[,5] #get the no peptide + drug control
+#   for(k in 1:nrow(tmp)){ # loop through rows
+#     for(l in 1:5){ #then columns
+#      # create final matrix
+#       normalized_cyto_c_release_noPeptide_Drug[k,(5*(i)+l)]=peptide_norm(x =tmp[k,l],pos = pos,neg=neg_noPeptide[k] ) 
+#       }
+#   }
+# }
+# 
+# #Remove Pos control 
+# View(normalized_cyto_c_release_noPeptide_Drug)
+# 
+# write.table(normalized_cyto_c_release_noPeptide_Drug,"~/Documents/Multipathway_Modeling/BH3_Profiling/Final_NewGates/Normalized_BH3_CytoC_NewGates_Norm_noPeptide_Drug.txt",sep='\t',quote=F,col.names = NA)
+# 
+# normalized_cyto_c_release_noPeptide_Drug_noPos=NULL
+# 
+# for(i in 1:ncol(normalized_cyto_c_release_noPeptide_Drug)){
+#   tmp_col=normalized_cyto_c_release_noPeptide_Drug[,i]
+#   if(strsplit(colnames(normalized_cyto_c_release_noPeptide_Drug)[i],split = "_")[[1]][1]!="Pos"){
+#     normalized_cyto_c_release_noPeptide_Drug_noPos=cbind(normalized_cyto_c_release_noPeptide_Drug_noPos,tmp_col)
+#     colnames(normalized_cyto_c_release_noPeptide_Drug_noPos)[ncol(normalized_cyto_c_release_noPeptide_Drug_noPos)]=colnames(normalized_cyto_c_release_noPeptide_Drug)[i]    
+#   }
+# }
+# 
+# View(normalized_cyto_c_release_noPeptide_Drug_noPos)
+# normalized_cyto_c_release_noPeptide_Drug_noCtrls=normalized_cyto_c_release_noPeptide_Drug_noPos[,c(-4,-8,-12,-16,-20,-24,-28,-32,-36,-40,-44,-48,-52,-56,-60)]
+# 
+# View(normalized_cyto_c_release_noPeptide_Drug_noCtrls)
+# 
+# #Get DMSO peptide control
+# View(normalized_cyto_c_release_noPeptide_Drug)
+# normalized_cyto_c_release_noPeptide_DMSO=normalized_cyto_c_release_noPeptide[11,]
+# normalized_cyto_c_release_noPeptide_DMSO=t(normalized_cyto_c_release_noPeptide)
+# normalized_cyto_c_release_noPeptide_DMSO=normalized_cyto_c_release_noPeptide_DMSO[,order(colnames(normalized_cyto_c_release_noPeptide_DMSO))]
+# row.names(normalized_cyto_c_release_noPeptide_DMSO)="DMSO"
+# View(normalized_cyto_c_release_noPeptide_DMSO)
+# 
+# # Normalizing with No Peptide/DMSO and True Control are correlated for the most part. 
+# 
+# cor(t(normalized_cyto_c_release_no_control),t(normalized_cyto_c_release_to_noPeptide_noCtrl[-11,]), method="spearman", use="pairwise.complete.ob" )
+# normalized_cyto_c_release_to_noPeptide_noCtrl=normalized_cyto_c_release_to_noPeptide[,c(-4, -5,-9,-10,-14,-15,-19,-20,-24,-25,-29,-30,-34,-35, -39,-40,-44,-45,-49,-50,-54,-55,-59,-60,-64,-65,-69,-70,-74,-75)]
+
+```
+
+
+#Create Plots(not using)
+```{r}
+# #####Creating PDFs
+# pdf("~/Dropbox/BH3/Final_NewGates/Graphs_NewGates_2.pdf")
+# 
+# #### RAW Data
+# # Barplot Peptide only + DMSO no normalization
+# len(raw_mean_cyto_reponse_DMSO)
+# barplot((as.matrix(raw_mean_cyto_reponse_DMSO)),col = c(rep("red",15), rep("green",15), rep("blue",15), rep("magenta",15), rep("yellow",15)), cex.names = 0.5,horiz = F,beside = T,cex.axis = 0.5,main=paste("Cytochrome C Release Only Across Breast Cancer Cell Lines\n(Raw Data)"),ylim = c(0,100))
+# 
+# legend("topleft",legend=c("BAD", "BIM","No Peptide", "NOXA", "Positive Ctrl"), col=c("red", "green","blue", "magenta", "yellow"),lty = 1,lwd=10,cex = 0.5) 
+# 
+# dim(normalized_cyto_c_release_TrueNeg_DMSO)
+# # Bar Plot Peptides Alone using Normaliztion with True Negative(No peptide no drug) 
+# barplot((as.matrix(normalized_cyto_c_release_TrueNeg_DMSO)),col = c(rep("red",15), rep("green",15), rep("blue",15), rep("magenta",15), rep("yellow",15)), cex.names = 0.5,horiz = F, xaxt="n",beside = T,cex.axis = 0.5,main=paste("Respose to Peptides Only Across Breast Cancer Cell Lines\n(Same with both Normalization Methods)"),ylim = c(0,1))
+# legend("topleft",legend=c("BAD", "BIM","No Peptide", "NOXA", "Positive Ctrl"), col=c("red", "green","blue", "magenta", "yellow"),lty = 1,lwd=10,cex = 0.5) 
+
+# #par(las=2)
+# # barplot((as.matrix(Neg_ctrl_raw)),col = c("cadetblue", "blue","brown" ,"green","red","darkblue","darkgreen","orange","aquamarine","darkolivegreen","darkcyan","coral"),  cex.names = 0.5,horiz = F,beside = T,,cex.axis = 0.5,main=paste("Respose to Drugs Only Across Breast Cancer Cell Lines(no peptide)"),ylim = c(0,100))
+# # legend("topright",legend=rownames(Neg),col=c("cadetblue", "blue","brown" ,"green","red","darkblue","darkgreen","orange","bisque","darkorchid","cyan","coral"),lty = 1,lwd=10,cex = 0.5)
+# 
+# pdf("~/Dropbox/BH3/Final_NewGates/BH3_Testing_Normalizations.pdf")
+# 
+# pdf("~/Dropbox/BH3/Final_NewGates/Peptides_Only_Raked_Raw.pdf")
+# ### RAW ranked DMS)
+# 
+# barplot((as.matrix(raw_ranked_all_peptides)),col = c(rep("red",15), rep("green",15), rep("blue",15), rep("magenta",15)), cex.names = 0.5,horiz = F,beside = T,cex.axis = 0.5,main=paste("CytoC Release Peptide Only (no drug)\n(Raw Data)"), ylim = c(0,30))
+# legend("topleft",legend=c("BAD", "BIM", "NOXA", "No Peptide"  ), col=c("red", "green","blue", "magenta"),lty = 1,lwd=10,cex = 0.5) 
+# 
+# dev.off()
+# 
+# View(bad_raw_rank_DMSO)
+# 
+# # Peptide Raw Data
+# heatmap.2(as.matrix(t(raw_mean_cyto_reponse_noPos)), na.rm=TRUE, na.color="black", col=bluered,density.info = "none",trace="none",margins = c(10,8.2),cexRow=0.45, main="CytoC Release by Peptide only\n(No Drugs)(RAW)")
+# 
+# #Peptide only Drug/nopeptide True Norm
+# heatmap.2(as.matrix(t(normalized_cyto_c_release_TrueNeg_noPos)), na.rm=TRUE, na.color="black", col=bluered,density.info = "none",trace="none",margins = c(10,8.2),cexRow=0.45, main="CytoC Release by Peptide only\n(No Drugs)\n(No Peptide/DMSO Norm)")
+# 
+# bk <- seq(-0.6, 0.7, by=0.025)
+# heatmap.2(as.matrix(t(normalized_cyto_c_release_noPeptide_Drug_noCtrls)), na.rm=TRUE, na.color="black", col=bluered,density.info = "none",trace="none", margins = c(10,8.2),cexRow=0.45, symm=F,symkey=F,symbreaks=T, scale="none", main="CytoC Release by Peptide only\n(No Drugs)\n(No Peptide/Drug Norm)", breaks=bk)
+# 
+# # Heat Map Drugs but no peptides RAW
+# 
+# heatmap.2(as.matrix(Neg_ctrl_raw), cellnote=round(Neg_ctrl_raw,2), notecol="black", notecex=0.6, na.rm=TRUE, na.color="black", col=bluered,density.info = "none",trace="none",margins = c(10,8.2),main="CytoC Release by Drugs only\n(No Peptides)(RAW)")
+# 
+# # Heat Map Drugs but no peptides True neg
+# 
+# heatmap.2(as.matrix(Neg_Ctrl_TrueNeg), cellnote=round(Neg_Ctrl_TrueNeg,2), notecol="black", notecex=0.6, na.rm=TRUE, na.color="black", col=bluered,density.info = "none",trace="none",margins = c(10,8.2),main="CytoC Release by Drugs only\n(No Peptides)\n(No Peptide/DMSO Ctrl Norm)")
+# 
+# ####BAD-based
+# heatmap.2(as.matrix(subtype_pred_bad_response[,22:31]), na.rm=TRUE, na.color="black", RowSideColors = c(rep("gray", sum(subtype_pred_bad_response$Transcriptional.subtype...ERBB2.status=="Basal")),rep("blue", sum(subtype_pred_bad_response$Transcriptional.subtype...ERBB2.status=="ERBB2-amp")),rep("brown", sum(subtype_pred_bad_response$Transcriptional.subtype...ERBB2.status=="Claudin-low")),rep("purple", sum(subtype_pred_bad_response$Transcriptional.subtype...ERBB2.status=="Luminal"))),col=bluered,density.info = 'none',trace="none",margins=c(7,7.7),main="Response to BAD Peptide Across \n All Breast Cancer Subtypes(not scaled)")
+# #,scale='col')#,Rowv=F,Colv=F)
+# par(lend = 1)           # square line ends for the color legend
+# legend("topright",legend = c("Basal", "ERBB2-amp", "Claudin-low","Luminal", "NA"), col = c("gray", "blue","brown","purple","black"),  lty= 1,lwd = 10,cex = 0.55)
+# 
+# 
+# ####BIM-based
+# heatmap.2(as.matrix(subtype_pred_bim_response[,22:31]), na.rm=TRUE, na.color="black", RowSideColors = c(rep("gray", sum(subtype_pred_bim_response$Transcriptional.subtype...ERBB2.status=="Basal")),rep("blue", sum(subtype_pred_bim_response$Transcriptional.subtype...ERBB2.status=="ERBB2-amp")),rep("brown", sum(subtype_pred_bim_response$Transcriptional.subtype...ERBB2.status=="Claudin-low")),rep("purple", sum(subtype_pred_bim_response$Transcriptional.subtype...ERBB2.status=="Luminal"))),col=bluered,density.info = 'none',trace="none",margins=c(7,7.7),main="Response to BIM Peptide Across \n Breast Cancer Subtypes(not scaled)")#,scale='row')#,Rowv=F,Colv=F)
+# par(lend = 1)           # square line ends for the color legend
+# legend("topright",legend = c("Basal", "ERBB2-amp", "Claudin-low","Luminal", "NA"), col = c("gray", "blue","brown", "purple", "black"),  lty= 1,lwd = 10,cex = 0.55)
+# 
+# ####NOXA-based
+# heatmap.2(as.matrix(subtype_pred_noxa_response[,22:31]), na.rm=TRUE, na.color="black", RowSideColors = c(rep("gray", sum(subtype_pred_noxa_response$Transcriptional.subtype...ERBB2.status=="Basal")),rep("blue", sum(subtype_pred_noxa_response$Transcriptional.subtype...ERBB2.status=="ERBB2-amp")),rep("brown", sum(subtype_pred_noxa_response$Transcriptional.subtype...ERBB2.status=="Claudin-low")),rep("purple", sum(subtype_pred_noxa_response$Transcriptional.subtype...ERBB2.status=="Luminal"))),col=bluered,density.info = 'none',trace="none",margins=c(7,7.7),main="Response to Noxa Peptide Across \n  Breast Cancer Subtypes(not scaled)")#,scale='row')#,Rowv=F,Colv=F)
+# par(lend = 1)           # square line ends for the color legend
+# legend("topright",legend = c("Basal", "ERBB2-amp", "Claudin-low","Luminal", "NA"), col = c("gray", "blue","brown","purple", "black"),  lty= 1,lwd = 10,cex = 0.55)
+# 
+# #write.table(subtype_pred_response,"~/Dropbox/BH3/Final/subtype_preds_response_0926.txt",sep='\t',col.names = NA,quote = F)
+# 
+# #pdf("~/Dropbox/BH3/Final_NewGates/testing.pdf")
+# 
+# # all the peptides DONE
+# heatmap.2(as.matrix(rbind(t(bim),t(bad),t(noxa))), na.rm=TRUE, na.color="black", RowSideColors = c(rep("gray", ncol(bim)),rep("blue", ncol(bad)),rep("brown", ncol(noxa))),col=bluered,density.info = 'none',trace="none",margins=c(7,7.7),main="Response to BH3 Peptides Across \n Breast Cancer Cell Lines(not scaled)")#,scale='row')#,Rowv=F,Colv=F)
+# par(lend = 1)           # square line ends for the color legend
+# legend("topright",legend = c("BIM", "BAD", "NOXA", "NA"), col = c("gray", "blue","brown", "Black"),  lty= 1,lwd = 10,cex = 0.55)
+# 
+# # Peptide Respose across subtypes
+# heatmap.2(as.matrix(alt_normalized_cyto_c_release_t_subtypes[2:11]), na.rm=TRUE, na.color="black", RowSideColors = c(rep("gray", sum(alt_normalized_cyto_c_release_t_subtypes$Subtypes=="basal")),rep("blue", sum(alt_normalized_cyto_c_release_t_subtypes$Subtypes=="basal/HER2 positive")),rep("brown", sum(alt_normalized_cyto_c_release_t_subtypes$Subtypes=="claudin-low")),rep("purple", sum(alt_normalized_cyto_c_release_t_subtypes$Subtypes=="luminal")),rep("green",sum(alt_normalized_cyto_c_release_t_subtypes$Subtypes=="luminal/HER2 positive"))),col=bluered,density.info = 'none',trace="none",margins=c(7,8.2),main="Respose to BH3 Peptides Across \n Breat Cancer Subtypes(not scaled)")#,scale='row')#,Rowv=F,Colv=F)
+# par(lend = 1)           # square line ends for the color legend
+# legend("topright",legend = c("Basal", "HER2-Basal","Claudin-low","Luminal","HER2-Luminal","NA"), col = c("gray", "blue","brown" ,"purple","green", "Black"),  lty= 1,lwd = 10,cex = 0.55)
+# 
+# par(mfrow=c(1,3))
+# # simple heat maps without subtypes
+# heatmap.2(as.matrix(bad),col = bluered,na.rm=TRUE, na.color="black", density.info = "none",trace="none",margins = c(10,8.2),main="Response to BAD 10 uM")
+# heatmap.2(as.matrix(bim),na.rm=TRUE, na.color="black", col = bluered,density.info = "none",trace="none",margins = c(10,8.2),main="Response to BIM 0.1 uM")
+# heatmap.2(as.matrix(noxa), na.rm=TRUE, na.color="black", col=bluered,density.info = "none",trace="none",margins = c(10,8.2),main="Response to NOXA 100 uM")
+# 
+# # try to correlate one column to another seperatly 
+# 
+# bad_t=t(bad)
+# bim_t=t(bim)
+# bim_t
+# noxa_t=t(noxa)
+# noxa_t
+# # Correlations using complete.obs
+# #bad
+# tmp_drug_bad=round(cor(bad_t,method="spearman", use="pairwise.complete.obs"), 2)
+# tmp_drug_bad
+# heatmap.2(tmp_drug_bad,cellnote=tmp_drug_bad, notecol="black",notecex=0.7, col = bluered,density.info = "none",trace="none",margins = c(10,8),main="Drug correlations with \nBAD 10 uM")
+# #bim
+# tmp_drug_bim=round(cor(bim_t,method="spearman", use="complete.obs"),2)
+# tmp_drug_bim
+# heatmap.2(tmp_drug_bim,cellnote=tmp_drug_bim, notecol="black",notecex=0.7, col = bluered,density.info = "none",trace="none",margins = c(10,8),main="Drug correlations with \nBIM 0.1 uM")
+# #noxa
+# tmp_drug_noxa=round(cor(noxa_t,method="spearman", use="complete.obs"),2)
+# tmp_drug_noxa
+# heatmap.2(tmp_drug_noxa,cellnote=tmp_drug_noxa, notecol="black",notecex=0.7, col = bluered,density.info = "none",trace="none",margins = c(10,8), main="Drug correlations with \nNOXA 100 uM")
+# 
+# subtype_bad<-merge_drop(cell_lines_subtypes,t(bad))
+# par(mfrow=c(2,2), mar = c(6, 4.1, 4.1, 2.1)+ 0.1)
+# par(las=2)
+# boxplot2(subtype_bad[,22]~subtype_bad[,5],main=paste("Response across subtypes:\n BAD 10 uM with",colnames(subtype_bad)[22],sep=" "), ylim=c(-0.5,1))
+# boxplot2(subtype_bad[,23]~subtype_bad[,5],main=paste("Response across subtypes:\n BAD 10 uM with",colnames(subtype_bad)[23],sep=" "),ylim=c(-0.5,1))
+# boxplot2(subtype_bad[,24]~subtype_bad[,5],main=paste("Response across subtypes:\n BAD 10 uM with",colnames(subtype_bad)[24],sep=" "),ylim=c(-0.5,1))
+# boxplot2(subtype_bad[,25]~subtype_bad[,5],main=paste("Response across subtypes:\n BAD 10 uM with",colnames(subtype_bad)[25],sep=" "),ylim=c(-0.5,1))
+# 
+# par(mfrow=c(2,2), mar = c(6, 4.1, 4.1, 2.1)+ 0.1)
+# par(las=2)
+# boxplot2(subtype_bad[,26]~subtype_bad[,5],main=paste("Response across subtypes:\n BAD 10 uM with",colnames(subtype_bad)[26],sep=" "), ylim=c(-0.5,1))
+# boxplot2(subtype_bad[,27]~subtype_bad[,5],main=paste("Response across subtypes:\n BAD 10 uM with",colnames(subtype_bad)[27],sep=" "),ylim=c(-0.5,1))
+# boxplot2(subtype_bad[,28]~subtype_bad[,5],main=paste("Response across subtypes:\n BAD 10 uM with",colnames(subtype_bad)[28],sep=" "),ylim=c(-0.5,1))
+# boxplot2(subtype_bad[,29]~subtype_bad[,5],main=paste("Response across subtypes:\n BAD 10 uM with",colnames(subtype_bad)[29],sep=" "),ylim=c(-0.5,1))
+# 
+# par(mfrow=c(2,2), mar = c(6, 4.1, 4.1, 2.1)+ 0.1)
+# par(las=2)
+# boxplot2(subtype_bad[,30]~subtype_bad[,5],main=paste("Response across subtypes:\n BAD 10 uM with",colnames(subtype_bad)[30],sep=" "), ylim=c(-0.5,1))
+# boxplot2(subtype_bad[,31]~subtype_bad[,5],main=paste("Response across subtypes:\n BAD 10 uM with",colnames(subtype_bad)[31],sep=" "),ylim=c(-0.5,1))
+# 
+# 
+# #box plots
+# subtype_bad<-merge_drop(cell_lines_subtypes,t(bad))
+# par(mfrow=c(2,2), mar = c(6, 4.1, 4.1, 2.1)+ 0.1)
+# par(las=2)
+# for(i in (ncol(cell_lines_subtypes)+1):ncol(subtype_bad)){
+#   
+#   boxplot2(subtype_bad[,i]~subtype_bad[,5],main=paste("Response across subtypes:\n BAD 10 uM with",colnames(subtype_bad)[i],sep=" "))
+# }
+# subtype_bim<-merge_drop(cell_lines_subtypes,t(bim))
+# par(mfrow=c(2,2), mar = c(6, 4.1, 4.1, 2.1)+ 0.1)
+#   par(las=2)
+# for(i in (ncol(cell_lines_subtypes)+1):ncol(subtype_bim)){
+#   boxplot2(subtype_bim[,i]~subtype_bim[,5],main=paste("Response across subtypes:\n BIM 0.1 uM with",colnames(subtype_bim)[i],sep=" "))
+# }
+# subtype_noxa<-merge_drop(cell_lines_subtypes,t(noxa))
+# par(mfrow=c(2,2), mar = c(6, 4.1, 4.1, 2.1)+ 0.1)
+#   par(las=2)
+# for(i in (ncol(cell_lines_subtypes)+1):ncol(subtype_noxa)){
+#   boxplot2(subtype_noxa[,i]~subtype_noxa[,5],main=paste("Response across subtypes:\n NOXA 100 uM with",colnames(subtype_noxa)[i],sep=" "))
+# }
+# 
+# #long barplots
+# par(mfrow=c(1,1),par(las=2) )
+# barplot((bad),cex.names = 0.45,horiz = F,beside = T,col = c("cadetblue", "blue","brown" ,"green","red","darkblue","darkgreen","orange","aquamarine","darkolivegreen","darkcyan","coral"),cex.axis = 0.5,xlab = "Cell lines",ylab = "Response",main="Respose to BAD peptide + drugs across cell lines")
+#  legend("topright",legend=rownames(bad),col=c("cadetblue", "blue","brown" ,"green","red","darkblue","darkgreen","orange","aquamarine","darkolivegreen","darkcyan","coral"),lty = 1,lwd=10,cex = 0.6)
+#  
+#  barplot((bim),cex.names = 0.45,horiz = F,beside = T,col = c("cadetblue", "blue","brown" ,"green","red","darkblue","darkgreen","orange","aquamarine","darkolivegreen","darkcyan","coral"),cex.axis = 0.5,xlab = "Cell lines",ylab = "Response",main="BIM peptide and drug combo respone\nacross cell lines")
+#  legend("topright",legend=rownames(bim),col=c("cadetblue", "blue","brown" ,"green","red","darkblue","darkgreen","orange","aquamarine","darkolivegreen","darkcyan","coral"),lty = 1,lwd=10,cex = 0.6)
+#  barplot((noxa),cex.names = 0.45,horiz = F,beside = T,col = c("cadetblue", "blue","brown" ,"green","red","darkblue","darkgreen","orange","aquamarine","darkolivegreen","darkcyan","coral"),cex.axis = 0.5,xlab = "Cell lines",ylab = "Response",main="NOXA peptide and drug combo respone\nacross cell lines")
+#  legend("topright",legend=rownames(noxa),col=c("cadetblue", "blue","brown" ,"green","red","darkblue","darkgreen","orange","aquamarine","darkolivegreen","darkcyan","coral"),lty = 1,lwd=10,cex = 0.6)
+# 
+# # pdf("~/Dropbox/BH3/Final_NewGates/testing.pdf")
+# dim(bad)
+# par(mfrow=c(1,3), las=2)
+# for(i in 1:ncol(bad)){ 
+#   if(i==10){
+#   barplot((bad)[1:10,i],cex.names = 0.5,horiz = F,xaxt="n",beside = T,col = c("cadetblue", "blue","brown" ,"green","red","darkblue","darkgreen","orange","bisque","darkorchid","cyan","coral"),cex.axis = 0.5,main=paste("BAD in ",colnames(bad)[i],sep=" "),ylim = c(-0.35,0.9))
+# # legend("topleft",legend=rownames(bad),col=c("cadetblue", "blue","brown" ,"green","red","darkblue","darkgreen","orange","bisque","darkorchid","cyan","coral"),lty = 1,lwd=10,cex = 0.45)
+#  barplot((bim)[1:10,i],cex.names = 0.5,horiz = F,xaxt="n",beside = T,col = c("cadetblue", "blue","brown" ,"green","red","darkblue","darkgreen","orange","bisque","darkorchid","cyan","coral"),cex.axis = 0.5,main=paste("BIM in ",colnames(bim)[i],sep=" "),ylim = c(-0.35,0.9))
+#  legend("topleft",legend=rownames(bim),col=c("cadetblue", "blue","brown" ,"green","red","darkblue","darkgreen","orange","bisque","darkorchid","cyan","coral"),lty = 1,lwd=10,cex = 1)
+#  barplot((noxa)[1:10,i],cex.names = 0.5,horiz = F,xaxt="n",beside = T,col = c("cadetblue", "blue","brown" ,"green","red","darkblue","darkgreen","orange","bisque","darkorchid","cyan","coral"),cex.axis = 0.5,main=paste("NOXA in ",colnames(bad)[i],sep=" "),ylim = c(-0.35,0.9))
+# # legend("topleft",legend=rownames(noxa),col=c("cadetblue", "blue","brown" ,"green","red","darkblue","darkgreen","orange","bisque","darkorchid","cyan","coral"),lty = 1,lwd=10,cex = 0.45)
+# }
+# else{
+#    barplot((bad)[1:10,i],cex.names = 0.5,horiz = F,xaxt="n",beside = T,col = c("cadetblue", "blue","brown" ,"green","red","darkblue","darkgreen","orange","bisque","darkorchid","cyan","coral"),cex.axis = 0.5,main=paste("BAD in ",colnames(bad)[i],sep=" "),ylim = c(-0.35,0.7))
+# # legend("topleft",legend=rownames(bad),col=c("cadetblue", "blue","brown" ,"green","red","darkblue","darkgreen","orange","bisque","darkorchid","cyan","coral"),lty = 1,lwd=10,cex = 0.45)
+#  barplot((bim)[1:10,i],cex.names = 0.5,horiz = F,xaxt="n",beside = T,col = c("cadetblue", "blue","brown" ,"green","red","darkblue","darkgreen","orange","bisque","darkorchid","cyan","coral"),cex.axis = 0.5,main=paste("BIM in ",colnames(bim)[i],sep=" "),ylim = c(-0.35,0.7))
+#  legend("topleft",legend=rownames(bim),col=c("cadetblue", "blue","brown" ,"green","red","darkblue","darkgreen","orange","bisque","darkorchid","cyan","coral"),lty = 1,lwd=10,cex = 1)
+#  barplot((noxa)[1:10,i],cex.names = 0.5,horiz = F,xaxt="n",beside = T,col = c("cadetblue", "blue","brown" ,"green","red","darkblue","darkgreen","orange","bisque","darkorchid","cyan","coral"),cex.axis = 0.5,main=paste("NOXA in ",colnames(bad)[i],sep=" "),ylim = c(-0.35,0.7))
+# # legend("topleft",legend=rownames(noxa),col=c("cadetblue", "blue","brown" ,"green","red","darkblue","darkgreen","orange","bisque","darkorchid","cyan","coral"),lty = 1,lwd=10,cex = 0.45) 
+# }
+# 
+# }
+#dev.off()
+
+```
+
+#Not really using old plotting stuff
+```{r}
+
+# raw_mean_cyto_reponse_DMSO=t(raw_mean_cyto_reponse[11,])
+# rownames(raw_mean_cyto_reponse_DMSO)="DMSO"
+# View(raw_mean_cyto_reponse_DMSO)
+# #remove postive controls
+# 
+# #Remove Pos Control
+# raw_mean_cyto_reponse_noPos=NULL
+# for(i in 1:ncol(raw_mean_cyto_reponse)){
+#   tmp_col=raw_mean_cyto_reponse[,i]
+#   if(strsplit(colnames(raw_mean_cyto_reponse)[i],split = "_")[[1]][1]!="Pos"){
+#     raw_mean_cyto_reponse_noPos=cbind(raw_mean_cyto_reponse_noPos,tmp_col)
+#     colnames(raw_mean_cyto_reponse_noPos)[ncol(raw_mean_cyto_reponse_noPos)]=colnames(raw_mean_cyto_reponse)[i]    
+#   }
+# }
+# 
+# View(raw_mean_cyto_reponse_noPos[,15])
+# write.table(raw_mean_cyto_reponse_noPos,"~/Documents/Multipathway_Modeling/BH3_Profiling/Final_NewGates/RAW_Means_Repose__noPos.txt",sep='\t',quote=F,col.names = NA)
+
+# #Remove Pos Control
+# raw_mean_cyto_reponse_DMSO_noPos=NULL
+# for(i in 1:ncol(raw_mean_cyto_reponse_DMSO)){
+#   tmp_col=raw_mean_cyto_reponse_DMSO[,i]
+#   if(strsplit(colnames(raw_mean_cyto_reponse_DMSO)[i],split = "_")[[1]][1]!="Pos"){
+#     raw_mean_cyto_reponse_DMSO_noPos=cbind(raw_mean_cyto_reponse_DMSO_noPos,tmp_col)
+#     colnames(raw_mean_cyto_reponse_DMSO_noPos)[ncol(raw_mean_cyto_reponse_DMSO_noPos)]=colnames(raw_mean_cyto_reponse_DMSO)[i]    
+#   }
+# }
+
+# #order the DMSO + peptide
+# raw_mean_cyto_reponse_DMSO=t(raw_mean_cyto_reponse_DMSO)
+# rownames(raw_mean_cyto_reponse_DMSO)="DMSO"
+# colnames(raw_mean_cyto_reponse_DMSO)
+# raw_mean_cyto_reponse_DMSO=raw_mean_cyto_reponse_DMSO[,order(colnames(raw_mean_cyto_reponse_DMSO))]
+
+# # Pull out the ones that got drug but no peptide
+# Neg_ctrl_raw=NULL
+# for(i in 1:ncol(raw_mean_cyto_reponse)){
+#   tmp_col=raw_mean_cyto_reponse[,i]
+#   if(strsplit(colnames(raw_mean_cyto_reponse)[i],split = "_")[[1]][1]=="Neg"){
+#     Neg_ctrl_raw=cbind(Neg_ctrl_raw,tmp_col)
+#     colnames(Neg_ctrl_raw)[ncol(Neg_ctrl_raw)]=colnames(raw_mean_cyto_reponse)[i]
+#   }
+#   
+#   tmp_col=NULL
+# }
+# 
+# row.names(Neg_ctrl_raw)=row.names(mean_cyto)
+# #barplots comparing DMSO to no peptide 
+#  barplot.default(noxa[11:12,],horiz = F,cex.names = 0.3,beside = T,col=c("darkblue","lightblue"),legend=c("DMSO+NOXA","DMSO Neg peptide"),main = "NOXA only response")
+#  barplot.default(bim[11:12,],horiz = F,cex.names = 0.3,beside = T,col=c("darkblue","lightblue"),legend=c("DMSO+BIM","DMSO Neg peptide"),main = "BIM only response")
+#   barplot.default(bad[11:12,],horiz = F,cex.names = 0.3,beside = T,col=c("darkblue","lightblue"),legend=c("DMSO+BAD","DMSO Neg peptide"),main = "BAD only response")
+#barplot.default(t(alt_normalized_cyto_c_release[1,]),horiz = F,cex.names = 0.5)#,beside = T,col=c("darkblue","lightblue"))#,legend=rownames##(alt_normalized_cyto_c_release)[1],main = "BAD only response")
+
+# pdf("~/Dropbox/BH3/Final_NewGates/BH3_Graphs_New_Normorlization_newNA.pdf")
+# 
+# #plotting all pepties for all drugs
+# heatmap.2(as.matrix(t(ranked_all)), na.rm=TRUE, na.color="black", col=bluered,density.info = "none",trace="none",margins = c(10,8.2),cexRow=0.45, main="CytoC Release(all peptides)\nRaw-Basal Death-Drug Death")
+# 
+# # Plotting the response in each peptide for peptides seperatly
+# heatmap.2(as.matrix(t(ranked_bad)), na.rm=TRUE, na.color="black", col=bluered,density.info = "none",trace="none",margins = c(10,8.2),cexRow=0.7, main="CytoC Release(BAD)\nRaw-Basal Death-Drug Death")
+# 
+# heatmap.2(as.matrix(t(ranked_bim)), na.rm=TRUE, na.color="black", col=bluered,density.info = "none",trace="none",margins = c(10,8.2),cexRow=0.7, main="CytoC Release(BIM)\nRaw-Basal Death-Drug Death")
+# 
+# heatmap.2(as.matrix(t(ranked_noxa)), na.rm=TRUE, na.color="black", col=bluered,density.info = "none",trace="none",margins = c(10,8.2),cexRow=0.7, main="CytoC Release(NOXA)\nRaw-Basal Death-Drug Death")
+# 
+# #Correlating Drugs with each other for each peptide
+# bk <- seq(-0.2, 1, by=0.025)
+# drug_cors_bad=round(cor(t(ranked_bad),method="spearman", use="pairwise.complete.obs"),2)
+# heatmap.2(drug_cors_bad,cellnote=drug_cors_bad, notecol="black",notecex=0.7, breaks=bk,  col = bluered,density.info = "none",trace="none",margins = c(10,8),main="Drug correlations(BAD)")
+# 
+# drug_cors_bim=round(cor(t(ranked_bim),method="spearman", use="pairwise.complete.obs"),2)
+# heatmap.2(drug_cors_bim,cellnote=drug_cors_bim, notecol="black",notecex=0.7, breaks=bk, col = bluered,density.info = "none",trace="none",margins = c(10,8),main="Drug correlations(BIM)")
+# 
+# drug_cors_noxa=round(cor(t(ranked_noxa),method="spearman", use="pairwise.complete.obs"),2)
+# heatmap.2(drug_cors_noxa,cellnote=drug_cors_noxa, notecol="black",notecex=0.7, breaks=bk, col = bluered,density.info = "none",trace="none",margins = c(10,8),main="Drug correlations(NOXA)")
+# 
+# drug_cors=round(cor(t(ranked_all),method="spearman", use="pairwise.complete.obs"),2)
+# heatmap.2(drug_cors,cellnote=drug_cors, notecol="black",notecex=0.7,breaks=bk, col = bluered,density.info = "none",trace="none",margins = c(10,8),main="Drug correlations All Peptides")
+# 
+# heatmap.2(as.matrix(subtype_pred_bim_response[,22:31]), na.rm=TRUE, na.color="black", RowSideColors = c(rep("gray", sum(subtype_pred_bim_response$Transcriptional.subtype...ERBB2.status=="Basal")),rep("blue", sum(subtype_pred_bim_response$Transcriptional.subtype...ERBB2.status=="ERBB2-amp")),rep("brown", sum(subtype_pred_bim_response$Transcriptional.subtype...ERBB2.status=="Claudin-low")),rep("purple", sum(subtype_pred_bim_response$Transcriptional.subtype...ERBB2.status=="Luminal"))),cexRow=0.7, cexCol=0.7,srtCol=45,col=bluered,density.info = 'none',trace="none",main="Response to BIM Peptide Across \n Breast Cancer Subtypes(not scaled)")
+# par(lend = 1)          
+# legend("topright",legend = c("Basal", "ERBB2-amp", "Claudin-low","Luminal", "NA"), col = c("gray", "blue","brown", "purple", "black"),  lty= 1,lwd = 10,cex = 0.55)
+# 
+# heatmap.2(as.matrix(subtype_pred_bad_response[,22:31]), na.rm=TRUE, na.color="black", RowSideColors = c(rep("gray", sum(subtype_pred_bad_response$Transcriptional.subtype...ERBB2.status=="Basal")),rep("blue", sum(subtype_pred_bad_response$Transcriptional.subtype...ERBB2.status=="ERBB2-amp")),rep("brown", sum(subtype_pred_bad_response$Transcriptional.subtype...ERBB2.status=="Claudin-low")),rep("purple", sum(subtype_pred_bad_response$Transcriptional.subtype...ERBB2.status=="Luminal"))),cexRow=0.7, cexCol=0.7,srtCol=45,col=bluered,density.info = 'none',trace="none",main="Response to BAD Peptide Across \n Breast Cancer Subtypes(not scaled)")
+# par(lend = 1)          
+# legend("topright",legend = c("Basal", "ERBB2-amp", "Claudin-low","Luminal", "NA"), col = c("gray", "blue","brown", "purple", "black"),  lty= 1,lwd = 10,cex = 0.55)
+# 
+# heatmap.2(as.matrix(subtype_pred_noxa_response[,22:31]), na.rm=TRUE, na.color="black", RowSideColors = c(rep("gray", sum(subtype_pred_noxa_response$Transcriptional.subtype...ERBB2.status=="Basal")),rep("blue", sum(subtype_pred_noxa_response$Transcriptional.subtype...ERBB2.status=="ERBB2-amp")),rep("brown", sum(subtype_pred_noxa_response$Transcriptional.subtype...ERBB2.status=="Claudin-low")),rep("purple", sum(subtype_pred_noxa_response$Transcriptional.subtype...ERBB2.status=="Luminal"))),cexRow=0.7, cexCol=0.7,srtCol=45,col=bluered,density.info = 'none',trace="none",main="Response to NOXA Peptide Across \n Breast Cancer Subtypes(not scaled)")
+# par(lend = 1)          
+# legend("topright",legend = c("Basal", "ERBB2-amp", "Claudin-low","Luminal", "NA"), col = c("gray", "blue","brown", "purple", "black"),  lty= 1,lwd = 10,cex = 0.55)
+# 
+# dev.off()
+```
+
+#Working with only raw data, which we are not doing any more
+```{r}
+# raw_mean_cyto_reponse_ordered=raw_mean_cyto_reponse[,order(names(raw_mean_cyto_reponse))]
+# # Plot each peptide seperatly  #in the function
+# # barplot(as.matrix(raw_mean_cyto_reponse_ordered[11,1:56]),col = c(rep("red",14), rep("green",14), rep("blue",14), rep("yellow",14)), cex.names = 0.4,horiz = F,beside = T,cex.axis = 0.5,main=paste("CytochromeC Release Due to Each Peptide Alone\n(Raw, Unranked)"), ylim = c(0,60), las=3)
+# # legend("topleft",legend=c("BAD", "BIM", "No Peptide", "NOXA" ), col=c("red", "green","blue", "yellow"),lty = 1,lwd=10,cex = 1)
+# # 
+# #pull peptides
+# pull_peptides_raw=pull_peptides(raw_mean_cyto_reponse)
+# bad_raw=do.call(rbind.data.frame,pull_peptides_raw[1])
+# bim_raw=do.call(rbind.data.frame,pull_peptides_raw[2])
+# noxa_raw=do.call(rbind.data.frame,pull_peptides_raw[3])
+# neg_raw=do.call(rbind.data.frame,pull_peptides_raw[4])
+# row.names(bad_raw)=row.names(bim_raw)=row.names(noxa_raw)=row.names(neg_raw)=row.names(raw_mean_cyto_reponse)
+# 
+# #write them out to a file 
+# write.table(bad_raw,"~/Documents/Multipathway_Modeling/BH3_Profiling/BH3_Raw_CytoC_Release_Sep_Peptide.txt",sep='\t',quote=F,col.names = NA)
+# write.table(bim_raw,"~/Documents/Multipathway_Modeling/BH3_Profiling/BH3_Raw_CytoC_Release_Sep_Peptide.txt",sep='\t',quote=F,col.names = NA, append=TRUE)
+# write.table(noxa_raw,"~/Documents/Multipathway_Modeling/BH3_Profiling/BH3_Raw_CytoC_Release_Sep_Peptide.txt",sep='\t',quote=F,col.names = NA, append=TRUE)
+# write.table(neg_raw,"~/Documents/Multipathway_Modeling/BH3_Profiling/BH3_Raw_CytoC_Release_Sep_Peptide.txt",sep='\t',quote=F,col.names = NA, append=TRUE)
+# 
+# #add the subtypes
+# bad_subtype_raw=bad_raw
+# bim_subtype_raw=bim_raw
+# noxa_subtype_raw=noxa_raw
+# neg_subtype_raw=neg_raw
+# cellLines=c("BT474","HCC1143","HCC1569" ,"HCC1806","T47D","BT549","HCC70","JIMT1","MCF7","HCC1937","HCC1954","HCC38", "MDAMB361", "ZR7530")
+# colnames(bad_subtype_raw)=colnames(bim_subtype_raw)=colnames(noxa_subtype_raw)=colnames(neg_subtype_raw)=cellLines
+
+# # Merge with subtypes Keep only the particular drugs and remove HCC1419
+# bad_subtype_raw<-merge_drop(cell_lines_subtypes,t(bad_subtype_raw))
+# View(bad_subtype_raw)
+# bim_subtype_raw<-merge_drop(cell_lines_subtypes,t(bim_subtype_raw))
+# noxa_subtype_raw<-merge_drop(cell_lines_subtypes,t(noxa_subtype_raw))
+# neg_subtype_raw<-merge_drop(cell_lines_subtypes,t(neg_subtype_raw))
+# 
+# #take the peptide only
+# peptide_only_raw=cbind(bad_subtype_raw[,32],bim_subtype_raw[,32],noxa_subtype_raw[,32],neg_subtype_raw[,32])
+# row.names(peptide_only_raw)=row.names(bad_subtype_raw)
+# colnames(peptide_only_raw)=c("BAD","BIM", "NOXA", "No Peptide")
+# View(peptide_only_raw)
+# 
+# heatmap.2(as.matrix(peptide_only_raw),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test),RowSideColors = c(rep("gray", sum(noxa_subtype_raw$Transcriptional.subtype...ERBB2.status=="Basal")),rep("blue", sum(noxa_subtype_raw$Transcriptional.subtype...ERBB2.status=="ERBB2-amp")),rep("brown", sum(noxa_subtype_raw$Transcriptional.subtype...ERBB2.status=="Claudin-low")),rep("purple", sum(noxa_subtype_raw$Transcriptional.subtype...ERBB2.status=="Luminal"))), main="CytoC Release(Peptide Alone)\n(Raw, Unranked)",cexRow=0.75, cexCol=0.8,srtCol=45)          
+#  legend("topright",legend = c("Basal", "ERBB2-amp", "Claudin-low","Luminal", "NA"), col = c("gray", "blue","brown", "purple", "black"),  lty= 1,lwd = 10,cex = 0.55)
+# 
+# #rank peptides
+# bad_raw_rank=bim_raw_rank=noxa_raw_rank=neg_raw_rank=NULL
+# bad_raw_rank=rank_order(bad_raw, bad_raw_rank)
+# bim_raw_rank=rank_order(bim_raw, bim_raw_rank)
+# noxa_raw_rank=rank_order(noxa_raw, noxa_raw_rank)
+# neg_raw_rank=rank_order(neg_raw, neg_raw_rank)
+# row.names(bad_raw_rank)=row.names(bim_raw_rank)=row.names(noxa_raw_rank)=row.names(neg_raw_rank)=row.names(raw_mean_cyto_reponse)
+# ranked_raw_all=NULL
+# ranked_raw_all=cbind(bad_raw_rank,bim_raw_rank,noxa_raw_rank, neg_raw_rank)
+# 
+# # barplot(as.matrix(ranked_raw_all[11,1:56]),col = c(rep("red",14), rep("green",14), rep("blue",14), rep("yellow",14)), cex.names = 0.4,horiz = F,beside = T,cex.axis = 0.5,main=paste("CytochromeC Release Due to Each Peptide Alone\n(Raw, Ranked)"), ylim = c(0,25), las=3)
+# # # legend("topleft",legend=c("BAD", "BIM", "No Peptide", "NOXA" ), col=c("red", "green","blue", "yellow"),lty = 1,lwd=10,cex = 1)
+# 
+# ######### RANKEd
+# #add the subtypes
+# bad_subtype_raw_rank=bad_raw_rank
+# bim_subtype_raw_rank=bim_raw_rank
+# noxa_subtype_raw_rank=noxa_raw_rank
+# neg_subtype_raw_rank=neg_raw_rank
+# cellLines=c("BT474","HCC1143","HCC1569" ,"HCC1806","T47D","BT549","HCC70","JIMT1","MCF7","HCC1937","HCC1954","HCC38", "MDAMB361", "ZR7530")
+# colnames(bad_subtype_raw_rank)=colnames(bim_subtype_raw_rank)=colnames(noxa_subtype_raw_rank)=colnames(neg_subtype_raw_rank)=cellLines
+# 
+# # Merge with subtypes Keep only the particular drugs and remove HCC1419
+# bad_subtype_raw_rank<-merge_drop(cell_lines_subtypes,t(bad_subtype_raw_rank))
+# bim_subtype_raw_rank<-merge_drop(cell_lines_subtypes,t(bim_subtype_raw_rank))
+# noxa_subtype_raw_rank<-merge_drop(cell_lines_subtypes,t(noxa_subtype_raw_rank))
+# neg_subtype_raw_rank<-merge_drop(cell_lines_subtypes,t(neg_subtype_raw_rank))
+# 
+# #take the peptide only
+# peptide_only_raw_rank=cbind(bad_subtype_raw_rank[,32],bim_subtype_raw_rank[,32],noxa_subtype_raw_rank[,32],neg_subtype_raw_rank[,32])
+# row.names(peptide_only_raw_rank)=row.names(bad_subtype_raw_rank)
+# colnames(peptide_only_raw_rank)=c("BAD","BIM", "NOXA", "No Peptide")
+# View(peptide_only_raw_rank)
+# 
+# heatmap.2(as.matrix(peptide_only_raw_rank[,1:3]),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test),RowSideColors = c(rep("gray", sum(noxa_subtype_raw$Transcriptional.subtype...ERBB2.status=="Basal")),rep("blue", sum(noxa_subtype_raw$Transcriptional.subtype...ERBB2.status=="ERBB2-amp")),rep("brown", sum(noxa_subtype_raw$Transcriptional.subtype...ERBB2.status=="Claudin-low")),rep("purple", sum(noxa_subtype_raw$Transcriptional.subtype...ERBB2.status=="Luminal"))), main="CytoC Release(Peptide Alone)\n(Raw,Ranked)",cexRow=0.75, cexCol=0.8,srtCol=45)          
+# legend("topright",legend = c("Basal", "ERBB2-amp", "Claudin-low","Luminal", "NA"), col = c("gray", "blue","brown", "purple", "black"),  lty= 1,lwd = 10,cex = 0.55)
+```
+
+#Try normaalzing with minRow value. 
+```{r}
+# # Remove basal death but with the row min this time
+# cytoC_reponse_basal_rowmin=matrix(data = NA,ncol = ncol(raw_mean_cyto_reponse),nrow = nrow(raw_mean_cyto_reponse))
+# dimnames(cytoC_reponse_basal_rowmin)=dimnames(raw_mean_cyto_reponse)
+# basal_Death=NULL
+# j=k=1
+# for(i in 0:13){ # loop through all 15 cols and calculate response
+#   tmp<-raw_mean_cyto_reponse[,(i*5+1):(i*5+5)] #just take all cols for 1 cell line             
+#   #print(tmp)
+#   for(k in 1:11){ # loop through rows
+#     basal_Death<-min(tmp[k,], na.rm=TRUE) #get the no peptide + drug control  
+#     print(basal_Death)
+#     for(l in 1:5){ #then columns
+#      # create final matrix
+#       cytoC_reponse_basal_rowmin[k,(5*(i)+l)]=remove_basal(x =tmp[k,l],neg=basal_Death ) 
+#       }
+#   }
+# }
+# 
+# 
+# #think this is good to go
+# #gives a warning for the 4 whole rows with NA
+# View(cytoC_reponse_basal_rowmin)
+# 22-12cor.test(cytoC_reponse_basal_rowmin,cytoC_reponse_basal_neg) #0.93
+# 
+# write.table(t(cytoC_reponse_basal_rowmin),"~/Documents/Multipathway_Modeling/BH3_Profiling/BH3_Raw_CytoC_Release_m_rowMin.txt",sep='\t',quote=F,col.names = NA)
+# 
+# 
+# cytoC_reponse_basal_rowmin_ordered=cytoC_reponse_basal_rowmin[,order(names(raw_mean_cyto_reponse))]
+# View(cytoC_reponse_basal_rowmin_ordered)
+# colnames(cytoC_reponse_basal_rowmin_ordered)
+# 
+# pep_only_rowmin=NULL
+# pep_only_rowmin=c(cytoC_reponse_basal_rowmin_ordered[11,1:14],cytoC_reponse_basal_rowmin_ordered[11,15:28], cytoC_reponse_basal_rowmin_ordered[11,43:56], cytoC_reponse_basal_rowmin_ordered[11,29:42] )
+# View(pep_only_rowmin)
+# 
+# cytoC_reponse_basal_rowmin_ordered[11,29:42]
+# 
+# # Plot each peptide seperatly  #in the function
+# barplot(as.matrix(cytoC_reponse_basal_rowmin_ordered[11,1:56]),col = c(rep("red",14), rep("green",14), rep("blue",14), rep("yellow",14)), cex.names = 0.4,horiz = F,beside = T,cex.axis = 0.5,main=paste("CytochromeC Release Due to Each Peptide Alone\n(Basal Death Removed, Unranked)"), ylim = c(0,60), las=3)
+# legend("topleft",legend=c("BAD", "BIM", "No Peptide", "NOXA" ), col=c("red", "green","blue", "yellow"),lty = 1,lwd=10,cex = 1)
+# 
+# #add the subtypes
+# bad_subtype_min =cytoC_reponse_basal_rowmin_ordered[,1:14]
+# View(bad_subtype_min)
+# bim_subtype_min =cytoC_reponse_basal_rowmin_ordered[,15:28]
+# noxa_subtype_min =cytoC_reponse_basal_rowmin_ordered[,29:42]
+# neg_subtype_min =cytoC_reponse_basal_rowmin_ordered[,43:56]
+# neg_subtype_min
+# cellLines=c("BT474","HCC1143","HCC1569" ,"HCC1806","T47D","BT549","HCC70","JIMT1","MCF7","HCC1937","HCC1954","HCC38", "MDAMB361", "ZR7530")
+# colnames(bad_subtype_min )=colnames(bim_subtype_min )=colnames(noxa_subtype_min )=colnames(neg_subtype_min )=cellLines
+# 
+# # Merge with subtypes Keep only the particular drugs and remove HCC1419
+# bad_subtype_min <-merge_drop(cell_lines_subtypes,t(bad_subtype_min ))
+# View(bad_subtype_min )
+# bim_subtype_min <-merge_drop(cell_lines_subtypes,t(bim_subtype_min ))
+# noxa_subtype_min <-merge_drop(cell_lines_subtypes,t(noxa_subtype_min ))
+# neg_subtype_min <-merge_drop(cell_lines_subtypes,t(neg_subtype_min ))
+# 
+# #take the peptide only
+# peptide_only_min =cbind(bad_subtype_min [,32],bim_subtype_min [,32],noxa_subtype_min [,32],neg_subtype_min [,32])
+# row.names(peptide_only_min )=row.names(bad_subtype_min )
+# colnames(peptide_only_min )=c("BAD","BIM", "NOXA", "No Peptide")
+# View(peptide_only_min )
+# 
+# heatmap.2(as.matrix(peptide_only_min),col=mycol, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test),RowSideColors = c(rep("gray", sum(bad_subtype_min_rank$Transcriptional.subtype...ERBB2.status=="Basal")),rep("blue", sum(bad_subtype_min_rank$Transcriptional.subtype...ERBB2.status=="ERBB2-amp")),rep("brown", sum(bad_subtype_min_rank$Transcriptional.subtype...ERBB2.status=="Claudin-low")),rep("purple", sum(bad_subtype_min_rank$Transcriptional.subtype...ERBB2.status=="Luminal"))), main="CytoC Release(Peptide Alone)\n(min,unRanked)",cexRow=0.75, cexCol=0.8,srtCol=45)          
+# legend("topright",legend = c("Basal", "ERBB2-amp", "Claudin-low","Luminal", "NA"), col = c("gray", "blue","brown", "purple", "black"),  lty= 1,lwd = 10,cex = 0.55)
+# #####
+# rank_bad_rowmin=rank_bim_rowmin=rank_noxa_rowmin=rank_neg_rowmin=NULL
+# rank_bad_rowmin=rank_order(cytoC_reponse_basal_rowmin_ordered[,1:14], rank_bad_rowmin)
+# rank_bad_rowmin
+# rank_bim_rowmin=rank_order(cytoC_reponse_basal_rowmin_ordered[,15:28], rank_bim_rowmin)
+# rank_bim_rowmin
+# rank_noxa_rowmin=rank_order(cytoC_reponse_basal_rowmin_ordered[,43:56], rank_noxa_rowmin)
+# rank_noxa_rowmin
+# rank_neg_rowmin=rank_order(cytoC_reponse_basal_rowmin_ordered[,29:42], rank_neg_rowmin)
+# rank_neg_rowmin
+# row.names(rank_bad_rowmin)=row.names(rank_bim_rowmin)=row.names(rank_noxa_rowmin)=row.names(rank_noxa_rowmin)=row.names(rank_neg_rowmin)=row.names(cytoC_reponse_basal_rowmin_ordered)
+# #add the subtypes
+# bad_subtype_min_rank=rank_bad_rowmin
+# bim_subtype_min_rank=rank_bim_rowmin
+# noxa_subtype_min_rank=rank_noxa_rowmin
+# neg_subtype_min_rank=rank_neg_rowmin
+# cellLines=c("BT474","HCC1143","HCC1569" ,"HCC1806","T47D","BT549","HCC70","JIMT1","MCF7","HCC1937","HCC1954","HCC38", "MDAMB361", "ZR7530")
+# colnames(bad_subtype_min_rank)=colnames(bim_subtype_min_rank)=colnames(noxa_subtype_min_rank)=colnames(neg_subtype_min_rank)=cellLines
+# 
+# # Merge with subtypes Keep only the particular drugs and remove HCC1419
+# bad_subtype_min_rank<-merge_drop(cell_lines_subtypes,t(bad_subtype_min_rank))
+# View(bad_subtype_min_rank)
+# bim_subtype_min_rank<-merge_drop(cell_lines_subtypes,t(bim_subtype_min_rank))
+# noxa_subtype_min_rank<-merge_drop(cell_lines_subtypes,t(noxa_subtype_min_rank))
+# neg_subtype_min_rank<-merge_drop(cell_lines_subtypes,t(neg_subtype_min_rank))
+# 
+# #take the peptide only
+# peptide_only_min_rank=cbind(bad_subtype_min_rank[,32],bim_subtype_min_rank[,32],noxa_subtype_min_rank[,32],neg_subtype_min_rank[,32])
+# row.names(peptide_only_min_rank)=row.names(bad_subtype_min_rank)
+# colnames(peptide_only_min_rank)=c("BAD","BIM", "NOXA", "No Peptide")
+# View(peptide_only_min_rank)
+# View(peptide_only_raw_rank)
+# 
+# mycol_rnk <- colorpanel(n=length(breaks)-1,low="white",mid="grey",high="red")
+# 
+# heatmap.2(as.matrix(peptide_only_min_rank[,1:3]),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test),RowSideColors = c(rep("gray", sum(bad_subtype_min_rank$Transcriptional.subtype...ERBB2.status=="Basal")),rep("blue", sum(bad_subtype_min_rank$Transcriptional.subtype...ERBB2.status=="ERBB2-amp")),rep("brown", sum(bad_subtype_min_rank$Transcriptional.subtype...ERBB2.status=="Claudin-low")),rep("purple", sum(bad_subtype_min_rank$Transcriptional.subtype...ERBB2.status=="Luminal"))), main="CytoC Release-Peptide Only\n(Minus Basal Death(RowMin),Ranked)",cexRow=0.75, cexCol=0.8,srtCol=45)          
+# legend("topright",legend = c("Basal", "ERBB2-amp", "Claudin-low","Luminal", "NA"), col = c("gray", "blue","brown", "purple", "black"),  lty= 1,lwd = 10,cex = 0.55)
+
+# Remove drugs from the mine of the rows matrix
+# cytoC_reponse_basal_rowmin_drug=NULL
+# cytoC_reponse_basal_rowmin_drug=remove_drug_death(cytoC_reponse_basal_rowmin,cytoC_reponse_basal_rowmin_drug)
+# cytoC_reponse_basal_rowmin_drug=pmax(cytoC_reponse_basal_rowmin_drug, 0)
+# cytoC_reponse_basal_rowmin_drug=rbind(cytoC_reponse_basal_rowmin_drug,cytoC_reponse_basal_rowmin[11,])
+# row.names(cytoC_reponse_basal_rowmin_drug)=row.names(cytoC_reponse_basal_rowmin)
+# View(cytoC_reponse_basal_rowmin_drug)
+# 
+# cor.test(cytoC_reponse_basal_rowmin_drug,cytoC_reponse_basal_neg_drug) #0.99
+# divide_by_peptide_rowmin_pep[divide_by_peptide_rowmin_pep == 1] = 0
+# divide_by_peptide_rowmin_pep=sweep(cytoC_reponse_basal_rowmin_drug_1, 2, peptide_only_rowmin, '/')
+# divide_by_peptide_rowmin=NULL
+# peptide_only_rowmin=t(cytoC_reponse_basal_rowmin_drug_1[11,])
+# cytoC_reponse_basal_rowmin_drug_1=cytoC_reponse_basal_rowmin_drug+1
+# View(peptide_only_rowmin)
+# row.names(peptide_only_neg)=row.names(peptide_only_rowmin)="DMSO"
+# write.table(divide_by_peptide_rowmin_pep,"~/Documents/Multipathway_Modeling/BH3_Profiling/Final_NewGates/BH3_divide_by_peptide_rowmin_pep.txt",sep='\t',quote=F,col.names = NA)
+# write.table(divide_by_peptide_neg_pep,"~/Documents/Multipathway_Modeling/BH3_Profiling/Final_NewGates/BH3_divide_by_peptide_neg_pep.txt",sep='\t',quote=F,col.names = NA)
+# pull_peptides_divide_peptide_rowmin=pull_peptides(divide_by_peptide_rowmin_pep)
+# 
+# bad_rowmin=do.call(rbind.data.frame, pull_peptides_divide_peptide_rowmin[1])
+# View(bad_rowmin)
+# bim_rowmin=do.call(rbind.data.frame, pull_peptides_divide_peptide_rowmin[2])
+# noxa_rowmin=do.call(rbind.data.frame, pull_peptides_divide_peptide_rowmin[3])
+# bad_subtype_rowmin=bad_rowmin
+# bim_subtype_rowmin=bim_rowmin
+# noxa_subtype_rowmin=noxa_rowmin
+# colnames(bad_subtype_neg)=colnames(bad_subtype_rowmin)=colnames(bim_subtype_neg)=colnames(bim_subtype_rowmin)=colnames(noxa_subtype_neg)=colnames(noxa_subtype_rowmin)=cellLines
+# 
+# subtype_pred_bad_response_rowmin<-merge_drop(cell_lines_subtypes,t(bad_subtype_rowmin))
+# subtype_pred_bad_response_rowmin=subtype_pred_bad_response_rowmin[,-32]
+# subtype_pred_bim_response_rowmin<-merge_drop(cell_lines_subtypes,t(bim_subtype_rowmin))
+# subtype_pred_bim_response_rowmin=subtype_pred_bim_response_rowmin[,-32]
+# subtype_pred_noxa_response_rowmin<-merge_drop(cell_lines_subtypes,t(noxa_subtype_rowmin))
+# subtype_pred_noxa_response_rowmin=subtype_pred_noxa_response_rowmin[,-32]
+
+```
+
+
+#Old rank code, not raking anymore
+```{r}
+
+# # Rank them 
+# ranked_bad=NULL
+# View(ranked_bad)
+# ranked_bad=rank_order(bad_raw_mean_cyto_reponse_minus_death_minus_drug_min, ranked_bad )
+# row.names(ranked_bad)=row.names(bad_raw_mean_cyto_reponse_minus_death_minus_drug_min)
+# ranked_bad_rmdrug=ranked_bad[c(2,4,5,8,10),]
+# ranked_bad_rmdrug_rm1419=ranked_bad[c(2,4,5,8,10),-7]
+# 
+# ranked_bim=NULL
+# ranked_bim=rank_order(bim_raw_mean_cyto_reponse_minus_death_minus_drug_min, ranked_bim )
+# row.names(ranked_bim)=row.names(bim_raw_mean_cyto_reponse_minus_death_minus_drug_min)
+# ranked_bim_rmdrug=ranked_bim[c(2,4,5,8,10),]
+# ranked_bim_rmdrug_rm1419=ranked_bim[c(2,4,5,8,10),-7]
+# ranked_bim_rmdrug
+# 
+# ranked_noxa=NULL
+# ranked_noxa=rank_order(noxa_raw_mean_cyto_reponse_minus_death_minus_drug_min, ranked_noxa )
+# row.names(ranked_noxa)=row.names(noxa_raw_mean_cyto_reponse_minus_death_minus_drug_min)
+# ranked_noxa_rmdrug=ranked_noxa[c(2,4,5,8,10),]
+# ranked_noxa_rmdrug_rm1419=ranked_noxa[c(2,4,5,8,10),-7]
+# View(ranked_noxa_rmdrug_rm1419)
+# 
+# # add them all back together
+# ranked_all_rmdrug=cbind(ranked_bad_rmdrug,ranked_bim_rmdrug, ranked_noxa_rmdrug)
+# ranked_all_rmdrug_rm1419=cbind(ranked_bad_rmdrug_rm1419,ranked_bim_rmdrug_rm1419, ranked_noxa_rmdrug_rm1419)
+# View(ranked_all_rmdrug_rm1419)
+
+```
+
+#Trying to rank the data with basal subtracted out(old code for peptide only)
+```{r}
+# # Don't think we are ranking anymore due to negatives but keep it in for now to compare 
+# # rank_bad_ neg=rank_bim_neg=rank_noxa_neg=rank_neg_neg=NULL
+# # rank_bad_neg=rank_order(cytoC_reponse_basal_neg_ordered[,1:14], rank_bad_neg)
+# # rank_bad_neg
+# # rank_bim_neg=rank_order(cytoC_reponse_basal_neg_ordered[,15:28], rank_bim_neg)
+# # rank_bim_neg
+# # rank_noxa_neg=rank_order(cytoC_reponse_basal_neg_ordered[,43:56], rank_noxa_neg)
+# # rank_noxa_neg
+# # rank_neg_neg=rank_order(cytoC_reponse_basal_neg_ordered[,29:42], rank_neg_neg)
+# # rank_neg_neg
+# # row.names(rank_bad_neg)=row.names(rank_bim_neg)=row.names(rank_noxa_neg)=row.names(rank_noxa_neg)=row.names(rank_neg_neg)=row.names(cytoC_reponse_basal_neg_ordered)
+# # 
+# # #add the subtypes
+# # bad_subtype_min_rank=rank_bad_neg
+# # bim_subtype_min_rank=rank_bim_neg
+# # noxa_subtype_min_rank=rank_noxa_neg
+# # neg_subtype_min_rank=rank_neg_neg
+# 
+# # colnames(bad_subtype_min_rank)=colnames(bim_subtype_min_rank)=colnames(noxa_subtype_min_rank)=colnames(neg_subtype_min_rank)=cellLines
+# # 
+# # # Merge with subtypes Keep only the particular drugs and remove HCC1419
+# # bad_subtype_min_rank<-merge_drop(cell_lines_subtypes,t(bad_subtype_min_rank))
+# # View(bad_subtype_min_rank)
+# # bim_subtype_min_rank<-merge_drop(cell_lines_subtypes,t(bim_subtype_min_rank))
+# # noxa_subtype_min_rank<-merge_drop(cell_lines_subtypes,t(noxa_subtype_min_rank))
+# # neg_subtype_min_rank<-merge_drop(cell_lines_subtypes,t(neg_subtype_min_rank))
+# # 
+# # #take the peptide only
+# # peptide_only_min_rank=cbind(bad_subtype_min_rank[,32],bim_subtype_min_rank[,32],noxa_subtype_min_rank[,32],neg_subtype_min_rank[,32])
+# # row.names(peptide_only_min_rank)=row.names(bad_subtype_min_rank)
+# # colnames(peptide_only_min_rank)=c("BAD","BIM", "NOXA", "No Peptide")
+# # View(peptide_only_min_rank)
+# # View(peptide_only_raw_rank)
+# # 
+# mycol_rnk <- colorpanel(n=length(breaks)-1,low="white",mid="blue",high="red")
+# # 
+# 
+# View(peptide_only_min_rank[,1:3])
+# heatmap.2(as.matrix(peptide_only_min_rank[,1:3]),col=bluered, trace='none',na.color="black",  density.info = 'none',sepwidth=c(0.01, 0.01), sepcolor="black", colsep=1:length(test), rowsep=1:length(test),RowSideColors = c(rep("gray", sum(bad_subtype_min_rank$Transcriptional.subtype...ERBB2.status=="Basal")),rep("blue", sum(bad_subtype_min_rank$Transcriptional.subtype...ERBB2.status=="ERBB2-amp")),rep("brown", sum(bad_subtype_min_rank$Transcriptional.subtype...ERBB2.status=="Claudin-low")),rep("purple", sum(bad_subtype_min_rank$Transcriptional.subtype...ERBB2.status=="Luminal"))), main="CytoC Release-Peptide Only\n(Minus Basal Death(neg),Ranked)",cexRow=0.75, cexCol=0.8,srtCol=45)          
+# #legend("topright",legend = c("Basal", "ERBB2-amp", "Claudin-low","Luminal", "NA"), col = c("gray", "blue","brown", "purple", "black"),  lty= 1,lwd = 10,cex = 0.55)
+```
+
+# Seperate the peptides, rank them, and add subtypes
+```{r}
+
+# # remove peptides from final normalized matrix
+# pull_peptides_divide_peptide_neg=pull_peptides(divide_by_peptide_neg_pep)
+# )
+# 
+# bad_neg=do.call(rbind.data.frame, pull_peptides_divide_peptide_neg[1])
+# bim_neg=do.call(rbind.data.frame, pull_peptides_divide_peptide_neg[2])
+# noxa_neg=do.call(rbind.data.frame, pull_peptides_divide_peptide_neg[3])
+# 
+# # Add subtype
+# bad_subtype_neg=bad_neg
+# bim_subtype_neg=bim_neg
+# noxa_subtype_neg=noxa_neg
+# 
+# colnames(bad_subtype_neg)=colnames(bim_subtype_neg)=colnames(noxa_subtype_neg)=cellLines
+# 
+# # Merge with subtypes Keep only the particular drugs and remove HCC1419
+# subtype_pred_bad_response_neg<-merge_drop(cell_lines_subtypes,t(bad_subtype_neg))
+# subtype_pred_bad_response_neg=subtype_pred_bad_response_neg[,-32]
+# #View(subtype_pred_bad_response_neg)
+# subtype_pred_bim_response_neg<-merge_drop(cell_lines_subtypes,t(bim_subtype_neg))
+# subtype_pred_bim_response_neg=subtype_pred_bim_response_neg[,-32]
+# #View(subtype_pred_bim_response_neg)
+# 
+# subtype_pred_noxa_response_neg<-merge_drop(cell_lines_subtypes,t(noxa_subtype_neg))
+# subtype_pred_noxa_response_neg=subtype_pred_noxa_response_neg[,-32]
+# #View(subtype_pred_noxa_response_neg)
+# 
+# 
+# #Dont bother pulling out the negative because they are wrong because of the vision of the negative control into all ones. 
+
+
+#add subtypes 
+# #remove some of the drugs
+
+# ranked_bad_subtype=ranked_bad
+# ranked_bim_subtype=ranked_bim
+# ranked_noxa_subtype=ranked_noxa
+# colnames(ranked_bad_subtype)=cellLines
+# colnames(ranked_bim_subtype)=cellLines
+# colnames(ranked_noxa_subtype)=cellLines
+# # Merge with subtypes Keep only the particular drugs and remove HCC1419
+# subtype_pred_bad_response<-merge_drop(cell_lines_subtypes,t(ranked_bad_subtype))
+# subtype_pred_bad_response_rmdrug=subtype_pred_bad_response[,-c(22,24,27, 28,30,32)]
+# subtype_pred_bad_response_rmdrug_rm1419=subtype_pred_bad_response[-4,-c(22,24,27, 28,30,32)]
+# subtype_pred_bim_response<-merge_drop(cell_lines_subtypes,t(ranked_bim_subtype))
+# subtype_pred_bim_response_rmdrug=subtype_pred_bim_response[,-c(22,24,27, 28,30,32)]
+# subtype_pred_bim_response_rmdrug_rm1419=subtype_pred_bim_response[-4,-c(22,24,27, 28,30,32)]
+# subtype_pred_noxa_response<-merge_drop(cell_lines_subtypes,t(ranked_noxa_subtype))
+# subtype_pred_noxa_response_rmdrug=subtype_pred_noxa_response[,-c(22,24,27, 28,30,32)]
+# subtype_pred_noxa_response_rmdrug_rm1419=subtype_pred_noxa_response[-4,-c(22,24,27, 28,30,32)]
+```
