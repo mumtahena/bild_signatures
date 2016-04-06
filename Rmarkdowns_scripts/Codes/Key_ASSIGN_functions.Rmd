@@ -1,6 +1,7 @@
 library(devtools)
 install_github("wevanjohnson/ASSIGN")
 library(ASSIGN)
+
 gatherFile<-function(baseDir){###gathers all the prediction from baseDir/*/*/pathway_activity_testset* format
   setwd(baseDir)
   filenames<-system("ls */*/pathway_activity_testset*", intern=TRUE)
@@ -166,3 +167,4 @@ testSig_multi <- function(sigProteins, numGenes=NA,geneList =NULL, trainingData,
 #}
 
 #sum(!rownames(temp)%in%rownames(temp1))
+
